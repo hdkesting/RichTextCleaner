@@ -18,15 +18,15 @@
                 x:Name="TextContent">
                 <Run FontWeight="Bold">Cleaning up HTML fragments.</Run><LineBreak/><LineBreak/>
                 <Run>Select and copy (a part of) an HTML page.</Run><LineBreak/>
-                <Run>Click the "paste" button below to insert the HTML source.</Run><LineBreak/>
-                <Run>Click the "Clear styling" button to remove all "class" and "style" attributes. This also copies the new text onto the clipboard.</Run><LineBreak/>
+                <Run>Click the "Paste" button below to insert the HTML source, or press Ctrl-V.</Run><LineBreak/><LineBreak/>
+                <Run>Click the "Clear styling" button (or Ctrl-C) to remove all "class" and "style" attributes. This also copies the new text onto the clipboard.</Run><LineBreak/>
                 <Run>Paste into a Rich Text editor.</Run><LineBreak/><LineBreak/>
                 <Run>OR use the "text only" button to get just the text, without any HTML</Run>
             </TextBlock>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Margin="2" Click="CopyFromClipboard">Paste (HTML) from clipboard</Button>
-            <Button Margin="2" Click="ClearStylingAndCopy">Clear styling and copy HTML to clipboard</Button>
+            <Button Margin="2" Click="CopyFromClipboard" ToolTip="Ctrl-V">Paste (HTML) from clipboard</Button>
+            <Button Margin="2" Click="ClearStylingAndCopy" ToolTip="Ctrl-C">Clear styling and copy HTML to clipboard</Button>
             <Button Margin="2" Click="PlainTextAndCopy">Get text only and copy TEXT to clipboard</Button>
             <Label>© Hans Kesting 2019</Label>
         </StackPanel>

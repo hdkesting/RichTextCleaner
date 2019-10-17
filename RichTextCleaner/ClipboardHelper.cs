@@ -127,6 +127,25 @@ EndSelection:<<<<<<<<4";
             Clipboard.SetDataObject(dataObject, true);
         }
 
+        public static string? GetTextFromClipboard()
+        {
+            if (Clipboard.ContainsText(TextDataFormat.Html))
+            {
+                return GetHtmlFragment(Clipboard.GetText(TextDataFormat.Html));
+
+            }
+            else if (Clipboard.ContainsText(TextDataFormat.UnicodeText))
+            {
+                return Clipboard.GetText(TextDataFormat.UnicodeText);
+            }
+            else if (Clipboard.ContainsText(TextDataFormat.Text))
+            {
+                return Clipboard.GetText(TextDataFormat.Text);
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Generate HTML fragment data string with header that is required for the clipboard.
         /// </summary>
@@ -249,5 +268,29 @@ EndSelection:<<<<<<<<4";
             }
             return count;
         }
+
+        private static string GetHtmlFragment(string html)
+        {
+            // pasted HTML has some extra details (like where it came from) - remove that
+            if (string.IsNullOrWhiteSpace(html))
+            {
+                return string.Empty;
+            }
+
+            int idx = html.IndexOf(StartFragment, StringComparison.Ordinal);
+            if (idx >= 0)
+            {
+                html = html.Substring(idx + ClipboardHelper.StartFragment.Length);
+            }
+
+            idx = html.IndexOf(EndFragment, StringComparison.Ordinal);
+            if (idx >= 0)
+            {
+                html = html.Substring(0, idx);
+            }
+
+            return html;
+        }
+
     }
 }
