@@ -5,6 +5,9 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
+    <StartupObject>RichTextCleaner.App</StartupObject>
+    <Authors>Hans Kesting</Authors>
+    <Product>Rich Text Cleaner</Product>
   </PropertyGroup>
 
   <ItemGroup>
