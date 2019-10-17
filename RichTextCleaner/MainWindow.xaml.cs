@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using HtmlAgilityPack;
 
 namespace RichTextCleaner
@@ -139,28 +140,7 @@ namespace RichTextCleaner
 
         private string CleanupText(string text)
         {
-            var sb = new StringBuilder(text.Length);
-            using (var sr = new StringReader(text))
-            {
-                string? line;
-                while ((line = sr.ReadLine()) != null)
-                {
-#pragma warning disable S2583 // Conditionally executed blocks should be reachable - false positive (can't be null but CAN be whitespace)
-                    if (string.IsNullOrWhiteSpace(line))
-#pragma warning restore S2583 // Conditionally executed blocks should be reachable
-                    {
-                        sb.AppendLine();
-                    }
-                    else
-                    {
-                        sb.AppendLine(line.TrimEnd());
-                    }
-                }
-            }
-
-            text = sb.ToString();
-
-            text = Regex.Replace(text, @"(\r\n)+", Environment.NewLine, RegexOptions.Multiline);
+            text = Regex.Replace(text, @"(\s*\r\n){3,}", Environment.NewLine+Environment.NewLine, RegexOptions.Multiline);
 
             return text;
         }
@@ -196,8 +176,16 @@ namespace RichTextCleaner
                             break;
 
                         case "DIV":
-                        case "TABLE":
+                            sb.AppendLine();
                             ProcessChildren(sb, node);
+                            sb.AppendLine();
+                            break;
+
+                        case "TABLE":
+                            sb.AppendLine();
+                            sb.AppendLine(new string('-', 10));
+                            ProcessChildren(sb, node);
+                            sb.AppendLine(new string('-', 10));
                             sb.AppendLine();
                             break;
 
@@ -228,6 +216,24 @@ namespace RichTextCleaner
                 {
                     ConvertToPlainText(sb, child);
                 }
+            }
+        }
+
+        private void Grid_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                // "Ctrl-V" - paste
+                case System.Windows.Input.Key.V:
+                    // ignored (don't know how): check for Ctrl
+                    this.CopyFromClipboard(this, new RoutedEventArgs());
+
+                    break;
+
+                // "Ctrl-C" - copy
+                case System.Windows.Input.Key.C:
+                    this.ClearStylingAndCopy(this, new RoutedEventArgs());
+                    break;
             }
         }
     }
