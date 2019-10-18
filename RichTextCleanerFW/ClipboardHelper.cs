@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows;
 
-namespace RichTextCleaner
+namespace RichTextCleanerFW
 {
     // source: https://gist.github.com/ArthurHub/10729205
     /// <summary>
@@ -88,7 +88,11 @@ EndSelection:<<<<<<<<4";
         /// <param name="plainText">the plain text</param>
         public static DataObject CreateDataObject(string html, string plainText)
         {
-            html ??= String.Empty;
+            if (string.IsNullOrWhiteSpace(html))
+            {
+                html = String.Empty;
+            }
+
             var htmlFragment = GetHtmlDataString(html);
 
             // re-encode the string so it will work correctly (fixed in CLR 4.0)
@@ -127,7 +131,7 @@ EndSelection:<<<<<<<<4";
             Clipboard.SetDataObject(dataObject, true);
         }
 
-        public static string? GetTextFromClipboard()
+        public static string GetTextFromClipboard()
         {
             if (Clipboard.ContainsText(TextDataFormat.Html))
             {
