@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace RichTextCleaner
+namespace RichTextCleaner.Common
 {
     public static class TextCleaner
     {
@@ -170,11 +170,11 @@ namespace RichTextCleaner
                 }
             }
 
-            void ProcessChildren(StringBuilder sb, HtmlNode node)
+            void ProcessChildren(StringBuilder sb1, HtmlNode node1)
             {
-                foreach (var child in node.ChildNodes)
+                foreach (var child in node1.ChildNodes)
                 {
-                    ConvertToPlainText(sb, child);
+                    ConvertToPlainText(sb1, child);
                 }
             }
         }

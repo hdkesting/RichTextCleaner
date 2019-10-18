@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using RichTextCleaner.Common;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RichTextCleaner
 {
@@ -48,7 +50,7 @@ namespace RichTextCleaner
         }
 
 
-        private void Grid_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Grid_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
@@ -56,12 +58,16 @@ namespace RichTextCleaner
                 case System.Windows.Input.Key.V:
                     // ignored (don't know how): check for Ctrl
                     this.CopyFromClipboard(this, new RoutedEventArgs());
-
                     break;
 
                 // "Ctrl-C" - copy
                 case System.Windows.Input.Key.C:
                     this.ClearStylingAndCopy(this, new RoutedEventArgs());
+                    break;
+
+                // "Ctrl-T"- copy text
+                case System.Windows.Input.Key.T:
+                    this.PlainTextAndCopy(this, new RoutedEventArgs());
                     break;
             }
         }
