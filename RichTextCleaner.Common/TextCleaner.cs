@@ -13,8 +13,9 @@ namespace RichTextCleaner.Common
         {
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
-            RemoveNonCMSElements(doc.DocumentNode);
+            RemoveNonCMSElements(doc);
             ClearStyling(doc.DocumentNode);
+            TranslateNodes(doc);
 
             using (var sw = new StringWriter())
             {
@@ -23,62 +24,90 @@ namespace RichTextCleaner.Common
             }
 
             return html;
+        }
 
-            void RemoveNonCMSElements(HtmlNode document)
+        private static void ClearStyling(HtmlNode node)
+        {
+            if (node != null)
             {
-                RemoveNodes(document, ".//iframe");
-                RemoveNodes(document, ".//noscript");
-                RemoveNodes(document, ".//script");
-            }
-
-            void RemoveNodes(HtmlNode document, string xpath)
-            {
-                var toremove = document.SelectNodes(xpath);
-                if (toremove != null)
+                switch (node.NodeType)
                 {
-                    foreach (var node in toremove)
-                    {
-                        node.Remove();
-                    }
+                    case HtmlNodeType.Document:
+                        ProcessChildren(node);
+                        break;
+
+                    case HtmlNodeType.Element:
+                        if (node.Attributes.Contains("style"))
+                        {
+                            node.Attributes.Remove("style");
+                        }
+
+                        if (node.Attributes.Contains("class"))
+                        {
+                            node.Attributes.Remove("class");
+                        }
+                        ProcessChildren(node);
+                        break;
                 }
             }
 
-            void ClearStyling(HtmlNode node)
+            void ProcessChildren(HtmlNode parent)
             {
-                if (node != null)
+                if (parent.ChildNodes != null && parent.ChildNodes.Any())
                 {
-                    switch (node.NodeType)
-                    {
-                        case HtmlNodeType.Document:
-                            ProcessChildren(node);
-                            break;
-
-                        case HtmlNodeType.Element:
-                            if (node.Attributes.Contains("style"))
-                            {
-                                node.Attributes.Remove("style");
-                            }
-
-                            if (node.Attributes.Contains("class"))
-                            {
-                                node.Attributes.Remove("class");
-                            }
-                            ProcessChildren(node);
-                            break;
-                    }
-                }
-            }
-
-            void ProcessChildren(HtmlNode node)
-            {
-                if (node.ChildNodes != null && node.ChildNodes.Any())
-                {
-                    foreach (var child in node.ChildNodes)
+                    foreach (var child in parent.ChildNodes)
                     {
                         ClearStyling(child);
                     }
                 }
             }
+        }
+
+        private static void RemoveNonCMSElements(HtmlDocument document)
+        {
+            RemoveNodes(document.DocumentNode, ".//iframe");
+            RemoveNodes(document.DocumentNode, ".//noscript");
+            RemoveNodes(document.DocumentNode, ".//script");
+
+            void RemoveNodes(HtmlNode node, string xpath)
+            {
+                var toremove = node.SelectNodes(xpath);
+                if (toremove != null)
+                {
+                    foreach (var child in toremove)
+                    {
+                        child.Remove();
+                    }
+                }
+            }
+        }
+
+        private static void TranslateNodes(HtmlDocument document)
+        {
+            Replace(document.DocumentNode, "b", "strong");
+            Replace(document.DocumentNode, "i", "em");
+
+            void Replace(HtmlNode node, string oldtag, string newtag)
+            {
+                if (node.Name.Equals(oldtag, StringComparison.OrdinalIgnoreCase))
+                {
+                    node.Name = newtag;
+                }
+
+                ProcessChildren(node, oldtag, newtag);
+            }
+
+            void ProcessChildren(HtmlNode parent, string oldtag, string newtag)
+            {
+                if (parent.ChildNodes != null && parent.ChildNodes.Any())
+                {
+                    foreach (var child in parent.ChildNodes)
+                    {
+                        Replace(child, oldtag, newtag);
+                    }
+                }
+            }
+
         }
 
         public static string HtmlToPlainText(string html)

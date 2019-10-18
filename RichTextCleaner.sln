@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RichTextCleaner.Common", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RichTextCleanerFW", "RichTextCleanerFW\RichTextCleanerFW.csproj", "{4C185AEC-138E-43EF-9A44-8FB3850A2B51}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RichTextCleanerSetup", "RichTextCleanerSetup\RichTextCleanerSetup.vdproj", "{9EF0522B-46A2-48B3-996D-4FA783410AD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,8 @@ Global
 		{4C185AEC-138E-43EF-9A44-8FB3850A2B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C185AEC-138E-43EF-9A44-8FB3850A2B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C185AEC-138E-43EF-9A44-8FB3850A2B51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EF0522B-46A2-48B3-996D-4FA783410AD2}.Debug|Any CPU.ActiveCfg = Debug
+		{9EF0522B-46A2-48B3-996D-4FA783410AD2}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
