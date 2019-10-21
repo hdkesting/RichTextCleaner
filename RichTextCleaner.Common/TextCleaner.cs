@@ -16,6 +16,7 @@ namespace RichTextCleaner.Common
             RemoveNonCMSElements(doc);
             ClearStyling(doc.DocumentNode);
             TranslateNodes(doc);
+            RemoveEmptySpans(doc);
 
             using (var sw = new StringWriter())
             {
@@ -24,6 +25,29 @@ namespace RichTextCleaner.Common
             }
 
             return html;
+        }
+
+        private static void RemoveEmptySpans(HtmlDocument document)
+        {
+            // empty span nodes - remove
+            var spans = document.DocumentNode.SelectNodes(".//span[normalize-space(.) = '']");
+            if (spans != null)
+            {
+                foreach(var span in spans)
+                {
+                    span.Remove();
+                }
+            }
+
+            // empty texts - replace with single newline
+            var empties = document.DocumentNode.SelectNodes("//text()[normalize-space(.) = '']");
+            if (empties != null)
+            {
+                foreach (var empty in empties)
+                {
+                    empty.InnerHtml = Environment.NewLine;
+                }
+            }
         }
 
         private static void ClearStyling(HtmlNode node)
