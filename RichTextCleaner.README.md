@@ -4,14 +4,15 @@ Rich Text Cleaner
 Purpose
 -------
 
-Remove all styling from text that is copied from a webpage, while preserving the HTML element structure.
+Remove all styling from text that is copied from a webpage, while preserving the HTML element structure. This helps getting clean text into a content management system.
 
 Installation
 ------------
 
 It is a Windows desktop application.
 Unpack the RichTextCleaner.zip file, which is protected by the highly secure password "wk" (lowercase, no quotes).
-Run the .msi to install the application. It doesn't place an shortcut on the desktop, you'll need to find the application in the start-menu (search for "RichTextCleaner").
+Run the .msi to install the application. It doesn't place an shortcut on the desktop, you'll need to find the application in the start-menu (search for "Rich Text Cleaner").
+*Warning* This application isn't known, so Windows and Symantec consider this a dangerous application. Both have ways to "install anyway". 
 
 Usage
 -----
@@ -22,7 +23,10 @@ Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the 
 
 * remove all "style" and "class" attributes, 
 * remove any "script", "noscript" and "iframe" elements
+* change "font" elements into "span"s.
 * and change "b" elements into "strong" and "i" into "em".
+
+Optionally you can also remove the "strong" and "em" elements (=replace by "span").
 
 This also copies the cleaned text onto the clipboard, so you can use (Ctrl-)V in a rich-text editor to paste it.
 

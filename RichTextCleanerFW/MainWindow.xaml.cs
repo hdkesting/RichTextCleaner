@@ -24,6 +24,7 @@ namespace RichTextCleanerFW
             else
             {
                 this.TextContent.Text = text;
+                this.StatusLabel.Text = "Copied text from clipboard";
             }
         }
 
@@ -31,11 +32,11 @@ namespace RichTextCleanerFW
         {
             string html = this.TextContent.Text;
 
-            html = TextCleaner.ClearStylingFromHtml(html);
-
+            html = TextCleaner.ClearStylingFromHtml(html, ClearStyleMarkup.IsChecked.GetValueOrDefault());
+            html = html.Replace("</p>", "</p>" + System.Environment.NewLine);
             ClipboardHelper.CopyToClipboard(html, html);
             this.TextContent.Text = html;
-            MessageBox.Show("The cleaned html is on the clipboard, use Ctrl-V to paste");
+            this.StatusLabel.Text = "The cleaned html is on the clipboard, use Ctrl-V to paste";
         }
 
         private void PlainTextAndCopy(object sender, RoutedEventArgs e)
@@ -46,7 +47,7 @@ namespace RichTextCleanerFW
 
             ClipboardHelper.CopyPlainTextToClipboard(text);
             this.TextContent.Text = text;
-            MessageBox.Show("The plain text is on the clipboard, use Ctrl-V to paste");
+            StatusLabel.Text = "The plain text is on the clipboard, use Ctrl-V to paste";
         }
 
         private void Grid_KeyDown(object sender, KeyEventArgs e)

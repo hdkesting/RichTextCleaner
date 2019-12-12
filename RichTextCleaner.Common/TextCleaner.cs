@@ -9,13 +9,19 @@ namespace RichTextCleaner.Common
 {
     public static class TextCleaner
     {
-        public static string ClearStylingFromHtml(string html)
+        /// <summary>
+        /// Clears the styling from the HTML.
+        /// </summary>
+        /// <param name="html">The HTML to clean.</param>
+        /// <param name="clearStyleMarkup">if set to <c>true</c> remove all bold and italic tags.</param>
+        /// <returns></returns>
+        public static string ClearStylingFromHtml(string html, bool clearStyleMarkup)
         {
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
             RemoveNonCMSElements(doc);
             ClearStyling(doc.DocumentNode);
-            TranslateNodes(doc);
+            TranslateNodes(doc, clearStyleMarkup);
             RemoveEmptySpans(doc);
 
             using (var sw = new StringWriter())
@@ -106,10 +112,21 @@ namespace RichTextCleaner.Common
             }
         }
 
-        private static void TranslateNodes(HtmlDocument document)
+        private static void TranslateNodes(HtmlDocument document, bool clearStyleMarkup)
         {
+            // normalize "b" and "i" to "strong" and "em"
             Replace(document.DocumentNode, "b", "strong");
             Replace(document.DocumentNode, "i", "em");
+
+            // remove any "font" tag
+            Replace(document.DocumentNode, "font", "span");
+
+            if (clearStyleMarkup)
+            {
+                // remove all "stong" and "em" tags (which includes the recently renamed "b" and "i")
+                Replace(document.DocumentNode, "strong", "span");
+                Replace(document.DocumentNode, "em", "span");
+            }
 
             void Replace(HtmlNode node, string oldtag, string newtag)
             {

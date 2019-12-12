@@ -10,25 +10,34 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Column="1">
             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top"  
                 ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"
                 x:Name="TextContent">
                 <Run FontWeight="Bold">Cleaning up HTML fragments.</Run><LineBreak/><LineBreak/>
                 <Run>Select and copy (a part of) an HTML page.</Run><LineBreak/>
-                <Run>Click the "Paste" button below to insert the HTML source, or press Ctrl-V.</Run><LineBreak/><LineBreak/>
-                <Run>Click the "Clear styling" button (or Ctrl-C) to remove all "class" and "style" attributes. This also copies the new text onto the clipboard.</Run><LineBreak/>
-                <Run>Paste into a Rich Text editor.</Run><LineBreak/><LineBreak/>
+                <Run>Click the "Paste" button (left) to insert the HTML source, or press Ctrl-V.</Run><LineBreak/><LineBreak/>
+
+                <Run>Click the "Clear styling" button (or Ctrl-C) to remove all "class" and "style" attributes.</Run><LineBreak/>
+                <Run>This also copies the new text onto the clipboard so you can paste it into a Rich Text editor.</Run><LineBreak/>
+                <Run>When "remove b and i" is checked, also these tags (plus "em" and "strong") are removed.</Run><LineBreak/><LineBreak/>
+                
                 <Run>OR use the "text only" button to get just the text, without any HTML</Run>
             </TextBlock>
         </ScrollViewer>
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Margin="2" Click="CopyFromClipboard" ToolTip="Ctrl-V">Paste (HTML) from clipboard</Button>
-            <Button Margin="2" Click="ClearStylingAndCopy" ToolTip="Ctrl-C">Clear styling and copy HTML to clipboard</Button>
-            <Button Margin="2" Click="PlainTextAndCopy">Get text only and copy TEXT to clipboard</Button>
-            <Label>© Hans Kesting 2019</Label>
+        <StackPanel Orientation="Vertical" Grid.Column="0">
+            <Button Margin="2,10" Click="CopyFromClipboard" ToolTip="Ctrl-V">Paste (HTML)</Button>
+            <Button Margin="2,10,2,2" Click="ClearStylingAndCopy" ToolTip="Ctrl-C">Clear styling</Button>
+            <CheckBox Margin="2,2,2,10" x:Name="ClearStyleMarkup" IsChecked="True">Remove &lt;b&gt; and &lt;i&gt;</CheckBox>
+            <Button Margin="2,10" Click="PlainTextAndCopy">Get text only</Button>
+            <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="0,10,0,10" Foreground="Gray">Just started</TextBlock>
         </StackPanel>
+        <Label Grid.Row="1" Grid.Column="0" FontSize="9" Foreground="Gray">© Hans Kesting 2019</Label>
     </Grid>
 </Window>

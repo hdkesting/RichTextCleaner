@@ -94,12 +94,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0362D3AFE22E372B19AE164604823A5A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -139,6 +133,12 @@
         "OwnerKey" = "8:_FF82FE1A77DBDA81B5E65BF5133208F5"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_0362D3AFE22E372B19AE164604823A5A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -157,6 +157,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -210,7 +226,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.6.1"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.7.2"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=671728"
                 }
@@ -522,15 +538,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:RichTextCleanerSetup"
-        "ProductCode" = "8:{43A5E031-96DA-496A-9AAA-58D2D87294A3}"
-        "PackageCode" = "8:{1AA666A4-4A4C-4F32-A13B-508228CDC5FB}"
+        "ProductCode" = "8:{A98FCC15-3512-4A37-8C9A-D7E5D5C16324}"
+        "PackageCode" = "8:{6BC0CB93-A4E5-4BCF-8654-36F351159F14}"
         "UpgradeCode" = "8:{73DD7A0B-33AC-45B1-BC02-B1E06FAF3EF3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.1.0"
         "Manufacturer" = "8:Hans Kesting"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
