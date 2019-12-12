@@ -10,9 +10,14 @@ Installation
 ------------
 
 It is a Windows desktop application.
-Unpack the RichTextCleaner.zip file, which is protected by the highly secure password "wk" (lowercase, no quotes).
-Run the .msi to install the application. It doesn't place an shortcut on the desktop, you'll need to find the application in the start-menu (search for "Rich Text Cleaner").
+Unpack the RichTextCleanerSetup.zip file, which is protected by the highly secure password "wk" (lowercase, no quotes).
+Run the .msi to install the application. 
 *Warning* This application isn't known, so Windows and Symantec consider this a dangerous application. Both have ways to "install anyway". 
+
+Startup
+-------
+
+The installer doesn't place an shortcut on the desktop, you'll need to find the application in the start-menu (search for "RichTextCleaner").
 
 Usage
 -----
