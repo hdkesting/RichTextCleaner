@@ -23,6 +23,7 @@ namespace RichTextCleaner.Common
             ClearStyling(doc.DocumentNode);
             TranslateNodes(doc, clearStyleMarkup);
             RemoveEmptySpans(doc);
+            RemoveSurroundingTags(doc, "span");
 
             using (var sw = new StringWriter())
             {
@@ -30,18 +31,37 @@ namespace RichTextCleaner.Common
                 html = sw.ToString();
             }
 
+            html = html.Replace("</p>", "</p>" + System.Environment.NewLine);
+
             return html;
+        }
+
+        private static void RemoveSurroundingTags(HtmlDocument document, string tag)
+        {
+            var spans = document.DocumentNode.SelectNodes("//" + tag);
+            if (spans != null)
+            {
+                foreach (var span in spans.ToList())
+                {
+                    // insert the original contents to replace the span
+                    var content = HtmlNode.CreateNode(span.InnerHtml);
+                    span.ParentNode.ReplaceChild(content, span);
+                }
+            }
+
         }
 
         private static void RemoveEmptySpans(HtmlDocument document)
         {
             // empty span nodes - remove
-            var spans = document.DocumentNode.SelectNodes(".//span[normalize-space(.) = '']");
+            var spans = document.DocumentNode.SelectNodes("//span[normalize-space(.) = '']");
             if (spans != null)
             {
-                foreach(var span in spans)
+                foreach (var span in spans)
                 {
-                    span.Remove();
+                    // insert a text-space to replace the span
+                    var space = HtmlNode.CreateNode(" ");
+                    span.ParentNode.ReplaceChild(space, span);
                 }
             }
 
@@ -124,8 +144,8 @@ namespace RichTextCleaner.Common
             if (clearStyleMarkup)
             {
                 // remove all "stong" and "em" tags (which includes the recently renamed "b" and "i")
-                Replace(document.DocumentNode, "strong", "span");
-                Replace(document.DocumentNode, "em", "span");
+                RemoveSurroundingTags(document, "strong");
+                RemoveSurroundingTags(document, "em");
             }
 
             void Replace(HtmlNode node, string oldtag, string newtag)

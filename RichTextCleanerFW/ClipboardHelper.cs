@@ -125,9 +125,8 @@ EndSelection:<<<<<<<<4";
 
         public static void CopyPlainTextToClipboard(string plainText)
         {
-            var dataObject = new DataObject();
-            dataObject.SetData(DataFormats.Text, plainText);
-            dataObject.SetData(DataFormats.UnicodeText, plainText);
+            string html = "<p>" + plainText.Replace(Environment.NewLine, "<br>" + Environment.NewLine) + "</p>";
+            var dataObject = CreateDataObject(html, plainText);
             Clipboard.SetDataObject(dataObject, true);
         }
 

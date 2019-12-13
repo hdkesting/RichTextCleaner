@@ -1,4 +1,6 @@
 ﻿using RichTextCleaner.Common;
+using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -14,7 +16,7 @@ namespace RichTextCleanerFW
             InitializeComponent();
         }
 
-        private void CopyFromClipboard(object sender, RoutedEventArgs e)
+        private async void CopyFromClipboard(object sender, RoutedEventArgs e)
         {
             var text = ClipboardHelper.GetTextFromClipboard();
             if (text is null)
@@ -24,22 +26,21 @@ namespace RichTextCleanerFW
             else
             {
                 this.TextContent.Text = text;
-                this.StatusLabel.Text = "Copied text from clipboard";
+                await this.SetStatus("Copied text from clipboard.");
             }
         }
 
-        private void ClearStylingAndCopy(object sender, RoutedEventArgs e)
+        private async void ClearStylingAndCopy(object sender, RoutedEventArgs e)
         {
             string html = this.TextContent.Text;
 
             html = TextCleaner.ClearStylingFromHtml(html, ClearStyleMarkup.IsChecked.GetValueOrDefault());
-            html = html.Replace("</p>", "</p>" + System.Environment.NewLine);
             ClipboardHelper.CopyToClipboard(html, html);
             this.TextContent.Text = html;
-            this.StatusLabel.Text = "The cleaned html is on the clipboard, use Ctrl-V to paste";
+            await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.");
         }
 
-        private void PlainTextAndCopy(object sender, RoutedEventArgs e)
+        private async void PlainTextAndCopy(object sender, RoutedEventArgs e)
         {
             string html = this.TextContent.Text;
 
@@ -47,7 +48,22 @@ namespace RichTextCleanerFW
 
             ClipboardHelper.CopyPlainTextToClipboard(text);
             this.TextContent.Text = text;
-            StatusLabel.Text = "The plain text is on the clipboard, use Ctrl-V to paste";
+            await this.SetStatus("The plain TEXT is on the clipboard, use Ctrl-V to paste.");
+        }
+
+        private async Task SetStatus(string message)
+        {
+            StatusLabel.Text = "";
+            await Task.Delay(200);
+
+            StatusLabel.Text = message;
+            var fg = StatusLabel.Foreground;
+            var bg = StatusLabel.Background;
+            StatusLabel.Foreground = System.Windows.Media.Brushes.Black;
+            StatusLabel.Background = System.Windows.Media.Brushes.LightYellow;
+            await Task.Delay(500);
+            StatusLabel.Foreground = fg;
+            StatusLabel.Background = bg;
         }
 
         private void Grid_KeyDown(object sender, KeyEventArgs e)
