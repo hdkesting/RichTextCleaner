@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_03EBDD78D1EBF8CB102DD05F4342F361"
+        "OwnerKey" = "8:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_422602B3894177FFE436E45DBEF1C496"
         "OwnerKey" = "8:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
         "MsmSig" = "8:_UNDEFINED"
@@ -34,7 +40,7 @@
         "Entry"
         {
         "MsmKey" = "8:_422602B3894177FFE436E45DBEF1C496"
-        "OwnerKey" = "8:_9DBE950EDFBDCA70DA5071A99C5ECF75"
+        "OwnerKey" = "8:_03EBDD78D1EBF8CB102DD05F4342F361"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -45,12 +51,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9DBE950EDFBDCA70DA5071A99C5ECF75"
-        "OwnerKey" = "8:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B13F35B29AA3D83C61C0E7DAA8691D28"
         "OwnerKey" = "8:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
         "MsmSig" = "8:_UNDEFINED"
@@ -58,7 +58,7 @@
         "Entry"
         {
         "MsmKey" = "8:_B13F35B29AA3D83C61C0E7DAA8691D28"
-        "OwnerKey" = "8:_9DBE950EDFBDCA70DA5071A99C5ECF75"
+        "OwnerKey" = "8:_03EBDD78D1EBF8CB102DD05F4342F361"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -100,31 +100,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0362D3AFE22E372B19AE164604823A5A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FF82FE1A77DBDA81B5E65BF5133208F5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_02B4FC3D90AF83134A56585432E1A47C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C2728BB09075F152E3D796DDE8BD2142"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_422602B3894177FFE436E45DBEF1C496"
+        "OwnerKey" = "8:_B13F35B29AA3D83C61C0E7DAA8691D28"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -136,7 +112,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B13F35B29AA3D83C61C0E7DAA8691D28"
+        "OwnerKey" = "8:_422602B3894177FFE436E45DBEF1C496"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C2728BB09075F152E3D796DDE8BD2142"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_02B4FC3D90AF83134A56585432E1A47C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FF82FE1A77DBDA81B5E65BF5133208F5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_0362D3AFE22E372B19AE164604823A5A"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -296,6 +296,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_03EBDD78D1EBF8CB102DD05F4342F361"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:RichTextCleaner.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_03EBDD78D1EBF8CB102DD05F4342F361"
+                    {
+                    "Name" = "8:RichTextCleaner.Common.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:RichTextCleaner.Common.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_DE7C719213DA417D9564750B81AFAC40"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_422602B3894177FFE436E45DBEF1C496"
             {
             "AssemblyRegister" = "3:1"
@@ -303,6 +334,11 @@
             "AssemblyAsmDisplayName" = "8:netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51"
                 "ScatterAssemblies"
                 {
+                    "_422602B3894177FFE436E45DBEF1C496"
+                    {
+                    "Name" = "8:netstandard.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:netstandard.dll"
             "TargetName" = "8:"
@@ -329,34 +365,13 @@
             "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
                 "ScatterAssemblies"
                 {
+                    "_87E9B6AE5B3093608947AE90BBA5E63A"
+                    {
+                    "Name" = "8:System.Net.Http.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:System.Net.Http.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_DE7C719213DA417D9564750B81AFAC40"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9DBE950EDFBDCA70DA5071A99C5ECF75"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:RichTextCleaner.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:RichTextCleaner.Common.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DE7C719213DA417D9564750B81AFAC40"
@@ -381,6 +396,11 @@
             "AssemblyAsmDisplayName" = "8:HtmlAgilityPack, Version=1.11.16.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_B13F35B29AA3D83C61C0E7DAA8691D28"
+                    {
+                    "Name" = "8:HtmlAgilityPack.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:HtmlAgilityPack.dll"
             "TargetName" = "8:"
@@ -518,15 +538,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Rich Text Cleaner"
-        "ProductCode" = "8:{24BBCE7D-F21F-42EC-81AD-3845DC7951AD}"
-        "PackageCode" = "8:{FA613927-E48E-40F9-9187-BD10C1E86573}"
+        "ProductCode" = "8:{B28D6A75-06C2-4CBD-9ECD-6AC7234AC392}"
+        "PackageCode" = "8:{E90239B6-5CF5-49F6-9B7A-DD53BE6C4F90}"
         "UpgradeCode" = "8:{73DD7A0B-33AC-45B1-BC02-B1E06FAF3EF3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.2.0"
+        "ProductVersion" = "8:1.2.1"
         "Manufacturer" = "8:Hans Kesting"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

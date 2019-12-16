@@ -14,6 +14,15 @@ namespace RichTextCleanerFW
         public MainWindow()
         {
             InitializeComponent();
+
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            {
+                VersionLabel.Content = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            }
+            else
+            {
+                VersionLabel.Content = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
         }
 
         private async void CopyFromClipboard(object sender, RoutedEventArgs e)

@@ -18,7 +18,7 @@ namespace RichTextCleaner.Common
         public static string ClearStylingFromHtml(string html, bool clearStyleMarkup)
         {
             var doc = new HtmlDocument();
-            doc.LoadHtml(html);
+            doc.LoadHtml(html.Replace("&nbsp;", " "));
             RemoveNonCMSElements(doc);
             ClearStyling(doc.DocumentNode);
             TranslateNodes(doc, clearStyleMarkup);
@@ -55,6 +55,18 @@ namespace RichTextCleaner.Common
         {
             // empty span nodes - remove
             var spans = document.DocumentNode.SelectNodes("//span[normalize-space(.) = '']");
+            if (spans != null)
+            {
+                foreach (var span in spans)
+                {
+                    // insert a text-space to replace the span
+                    var space = HtmlNode.CreateNode(" ");
+                    span.ParentNode.ReplaceChild(space, span);
+                }
+            }
+
+            // and empty paragraphs
+            spans = document.DocumentNode.SelectNodes("//p[normalize-space(.) = '']");
             if (spans != null)
             {
                 foreach (var span in spans)
