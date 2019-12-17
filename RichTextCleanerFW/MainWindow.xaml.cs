@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace RichTextCleanerFW
 {
@@ -11,6 +12,9 @@ namespace RichTextCleanerFW
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly Brush StatusForeground;
+        private readonly Brush StatusBackground;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -23,6 +27,10 @@ namespace RichTextCleanerFW
             {
                 VersionLabel.Content = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
+
+            StatusForeground = StatusLabel.Foreground;
+            StatusBackground = StatusLabel.Background;
+
         }
 
         private async void CopyFromClipboard(object sender, RoutedEventArgs e)
@@ -66,13 +74,11 @@ namespace RichTextCleanerFW
             await Task.Delay(200);
 
             StatusLabel.Text = message;
-            var fg = StatusLabel.Foreground;
-            var bg = StatusLabel.Background;
-            StatusLabel.Foreground = System.Windows.Media.Brushes.Black;
-            StatusLabel.Background = System.Windows.Media.Brushes.LightYellow;
+            StatusLabel.Foreground = Brushes.Black;
+            StatusLabel.Background = Brushes.LightYellow;
             await Task.Delay(500);
-            StatusLabel.Foreground = fg;
-            StatusLabel.Background = bg;
+            StatusLabel.Foreground = StatusForeground;
+            StatusLabel.Background = StatusBackground;
         }
 
         private void Grid_KeyDown(object sender, KeyEventArgs e)

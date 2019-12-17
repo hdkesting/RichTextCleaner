@@ -158,6 +158,7 @@ namespace RichTextCleaner.Common
                 // remove all "stong" and "em" tags (which includes the recently renamed "b" and "i")
                 RemoveSurroundingTags(document, "strong");
                 RemoveSurroundingTags(document, "em");
+                RemoveSurroundingTags(document, "u");
             }
 
             void Replace(HtmlNode node, string oldtag, string newtag)
