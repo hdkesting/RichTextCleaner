@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RichTextCleanerFW"
         mc:Ignorable="d"
         Title="Rich Text Cleaner" Height="450" Width="800"
+        Icon="Custom-Icon-Design-Mono-General-2-Document.ico"
         KeyDown="Grid_KeyDown">
     <Grid>
         <Grid.RowDefinitions>
@@ -26,7 +26,7 @@
 
                 <Run>Click the "Clear styling" button (or Ctrl-C) to remove all "class" and "style" attributes.</Run><LineBreak/>
                 <Run>This also copies the new text onto the clipboard so you can paste it into a Rich Text editor.</Run><LineBreak/>
-                <Run>When "remove b and i" is checked, also these tags (plus "em" and "strong") are removed.</Run><LineBreak/><LineBreak/>
+                <Run>When "remove style tags" is checked, also the "b", "strong", "i", "em" and "u" tags are removed, keeping the text inside them.</Run><LineBreak/><LineBreak/>
                 
                 <Run>OR use the "text only" button to get just the text, without any HTML</Run>
             </TextBlock>
@@ -34,7 +34,7 @@
         <StackPanel Orientation="Vertical" Grid.Column="0">
             <Button Margin="2,10" Click="CopyFromClipboard" ToolTip="Ctrl-V">Paste (HTML)</Button>
             <Button Margin="2,10,2,2" Click="ClearStylingAndCopy" ToolTip="Ctrl-C">Clear styling</Button>
-            <CheckBox Margin="2,2,2,10" x:Name="ClearStyleMarkup" IsChecked="True">Remove &lt;b&gt; and &lt;i&gt;</CheckBox>
+            <CheckBox Margin="2,2,2,10" x:Name="ClearStyleMarkup" IsChecked="True">Remove style tags</CheckBox>
             <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="Ctrl-T">Get text only</Button>
             <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="0,10,0,10" Foreground="Gray">Just started</TextBlock>
         </StackPanel>
