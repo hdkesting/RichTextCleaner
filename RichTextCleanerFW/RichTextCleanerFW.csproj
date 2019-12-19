@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Custom-Icon-Design-Mono-General-2-Document.ico</ApplicationIcon>
+    <ApplicationIcon>Icojam-Blue-Bits-Document-check.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack, Version=1.11.16.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
@@ -111,6 +111,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Custom-Icon-Design-Mono-General-2-Document.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icojam-Blue-Bits-Document-check.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

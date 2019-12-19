@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Rich Text Cleaner" Height="450" Width="800"
-        Icon="Custom-Icon-Design-Mono-General-2-Document.ico"
+        Icon="Icojam-Blue-Bits-Document-check.ico"
         KeyDown="Grid_KeyDown">
     <Grid>
         <Grid.RowDefinitions>
@@ -17,8 +17,9 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <ScrollViewer Grid.Column="1">
-            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top"  
-                ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top"
+                    TextWrapping="WrapWithOverflow"
+                ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"
                 x:Name="TextContent">
                 <Run FontWeight="Bold">Cleaning up HTML fragments.</Run><LineBreak/><LineBreak/>
                 <Run>Select and copy (a part of) an HTML page.</Run><LineBreak/>
