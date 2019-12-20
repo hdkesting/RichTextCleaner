@@ -45,19 +45,45 @@ namespace RichTextCleaner.Common
                 {
                     // insert the original contents to replace the span
                     var content = span.ChildNodes;
-                    var parent = span.ParentNode;
-                    var latest = content.First();
-                    parent.ReplaceChild(latest, span);
-
-                    if (content.Count > 1)
+                    if (!ContentIsEmptyText(content))
                     {
-                        foreach (var child in content.Skip(1))
+                        var parent = span.ParentNode;
+                        var latest = content.First();
+                        parent.ReplaceChild(latest, span);
+
+                        if (content.Count > 1)
                         {
-                            parent.InsertAfter(child, latest);
-                            latest = child;
+                            foreach (var child in content.Skip(1))
+                            {
+                                parent.InsertAfter(child, latest);
+                                latest = child;
+                            }
                         }
                     }
+                    else
+                    {
+                        // empty node - can be removed completely
+                        span.Remove();
+                    }
                 }
+            }
+
+            bool ContentIsEmptyText(HtmlNodeCollection nodes)
+            {
+                if (nodes == null || nodes.Count == 0)
+                {
+                    // empty node, can be removed completely
+                    return true;
+                }
+
+                if (nodes.Count > 1)
+                {
+                    // more than one node, keep all
+                    return false;
+                }
+
+                // an &nbsp; is also seen as whitespace
+                return nodes[0].NodeType == HtmlNodeType.Text && String.IsNullOrWhiteSpace(nodes[0].InnerText);
             }
         }
 

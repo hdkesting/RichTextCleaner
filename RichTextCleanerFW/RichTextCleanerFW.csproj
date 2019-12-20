@@ -110,9 +110,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Custom-Icon-Design-Mono-General-2-Document.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icojam-Blue-Bits-Document-check.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
