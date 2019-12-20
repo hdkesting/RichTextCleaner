@@ -41,14 +41,24 @@ namespace RichTextCleaner.Common
             var spans = document.DocumentNode.SelectNodes("//" + tag);
             if (spans != null)
             {
-                foreach (var span in spans.ToList())
+                foreach (var span in spans)
                 {
                     // insert the original contents to replace the span
-                    var content = HtmlNode.CreateNode(span.InnerHtml);
-                    span.ParentNode.ReplaceChild(content, span);
+                    var content = span.ChildNodes;
+                    var parent = span.ParentNode;
+                    var latest = content.First();
+                    parent.ReplaceChild(latest, span);
+
+                    if (content.Count > 1)
+                    {
+                        foreach (var child in content.Skip(1))
+                        {
+                            parent.InsertAfter(child, latest);
+                            latest = child;
+                        }
+                    }
                 }
             }
-
         }
 
         private static void RemoveEmptySpans(HtmlDocument document)
@@ -127,7 +137,7 @@ namespace RichTextCleaner.Common
 
         private static void RemoveNonCMSElements(HtmlDocument document)
         {
-            RemoveNodes(document.DocumentNode, ".//iframe");
+            // RemoveNodes(document.DocumentNode, ".//iframe"); // keep iframe - may contain video
             RemoveNodes(document.DocumentNode, ".//noscript");
             RemoveNodes(document.DocumentNode, ".//script");
 
