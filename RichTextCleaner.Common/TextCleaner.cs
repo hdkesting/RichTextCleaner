@@ -24,6 +24,7 @@ namespace RichTextCleaner.Common
             TranslateNodes(doc, clearStyleMarkup);
             RemoveEmptySpans(doc);
             RemoveSurroundingTags(doc, "span");
+            ClearTableCellParagraphs(doc);
 
             using (var sw = new StringWriter())
             {
@@ -36,6 +37,36 @@ namespace RichTextCleaner.Common
             return html;
         }
 
+        /// <summary>
+        /// If a TD contains a single P element, then remove that P (keeping other markup)
+        /// </summary>
+        /// <param name="document"></param>
+        private static void ClearTableCellParagraphs(HtmlDocument document)
+        {
+            var cells = document.DocumentNode.SelectNodes("//td");
+            if (cells != null)
+            {
+                foreach (var cell in cells)
+                {
+                    // remove empty texts from TD
+                    foreach (var child in cell.ChildNodes.ToList())
+                    {
+                        if (child.NodeType == HtmlNodeType.Text && String.IsNullOrWhiteSpace(child.InnerText))
+                        {
+                            child.Remove();
+                        }
+                    }
+
+                    // now a single P is really the only node
+                    if (cell.ChildNodes.Count == 1 && cell.ChildNodes[0].Name == "p")
+                    {
+                        var para = cell.ChildNodes[0];
+                        RemoveSurroundingTags(para);
+                    }
+                }
+            }
+        }
+
         private static void RemoveSurroundingTags(HtmlDocument document, string tag)
         {
             var spans = document.DocumentNode.SelectNodes("//" + tag);
@@ -43,29 +74,34 @@ namespace RichTextCleaner.Common
             {
                 foreach (var span in spans)
                 {
-                    // insert the original contents to replace the span
-                    var content = span.ChildNodes;
-                    if (!ContentIsEmptyText(content))
-                    {
-                        var parent = span.ParentNode;
-                        var latest = content.First();
-                        parent.ReplaceChild(latest, span);
+                    RemoveSurroundingTags(span);
+                }
+            }
+        }
 
-                        if (content.Count > 1)
-                        {
-                            foreach (var child in content.Skip(1))
-                            {
-                                parent.InsertAfter(child, latest);
-                                latest = child;
-                            }
-                        }
-                    }
-                    else
+        private static void RemoveSurroundingTags(HtmlNode node)
+        {
+            // insert the original contents to replace the node
+            var content = node.ChildNodes;
+            if (!ContentIsEmptyText(content))
+            {
+                var parent = node.ParentNode;
+                var latest = content.First();
+                parent.ReplaceChild(latest, node);
+
+                if (content.Count > 1)
+                {
+                    foreach (var child in content.Skip(1))
                     {
-                        // empty node - can be removed completely
-                        span.Remove();
+                        parent.InsertAfter(child, latest);
+                        latest = child;
                     }
                 }
+            }
+            else
+            {
+                // empty node - can be removed completely
+                node.Remove();
             }
 
             bool ContentIsEmptyText(HtmlNodeCollection nodes)

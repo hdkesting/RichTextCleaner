@@ -22,7 +22,7 @@ The installer doesn't place an shortcut on the desktop, you'll need to find the 
 Usage
 -----
 
-Copy text from a webpage (select the fragment you want and hit Ctrl-C), then use the "Paste" button to import it into this application. You can also use (Ctrl-)V.
+Copy text from a webpage (select the fragment you want and hit Ctrl-C), then use the "Paste" button to import it into this application. You can also use (Ctrl-)V to paste. It is also possible to copy/paste HTML source (for instance copied from the HTML tab of the rich-text editor).
 
 Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the HTML fragment:
 
@@ -31,9 +31,9 @@ Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the 
 * change "font" elements into "span"s.
 * and change "b" elements into "strong" and "i" into "em".
 
-Optionally you can also remove the "strong" and "em" elements (=replace by "span").
+Optionally you can also remove the "strong", "em" and "u" elements.
 
-This also copies the cleaned text onto the clipboard, so you can use (Ctrl-)V in a rich-text editor to paste it.
+This also copies the cleaned text onto the clipboard, so you can use Ctrl-V in a rich-text editor to paste it.
 
 The "Get text only" button (hotkey: (Ctrl-)T) removes all HTML elements, leaving only the plain text (with some attempt at sane formatting). Here also this text is placed on the clipboard.
 
