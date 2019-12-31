@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_03EBDD78D1EBF8CB102DD05F4342F361"
+        "OwnerKey" = "8:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_1F65F49F46BD403E90EEEC1E7FF2BC74"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -40,7 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_422602B3894177FFE436E45DBEF1C496"
-        "OwnerKey" = "8:_9DBE950EDFBDCA70DA5071A99C5ECF75"
+        "OwnerKey" = "8:_03EBDD78D1EBF8CB102DD05F4342F361"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,12 +57,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9DBE950EDFBDCA70DA5071A99C5ECF75"
-        "OwnerKey" = "8:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B13F35B29AA3D83C61C0E7DAA8691D28"
         "OwnerKey" = "8:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
         "MsmSig" = "8:_UNDEFINED"
@@ -64,7 +64,7 @@
         "Entry"
         {
         "MsmKey" = "8:_B13F35B29AA3D83C61C0E7DAA8691D28"
-        "OwnerKey" = "8:_9DBE950EDFBDCA70DA5071A99C5ECF75"
+        "OwnerKey" = "8:_03EBDD78D1EBF8CB102DD05F4342F361"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -302,6 +302,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_03EBDD78D1EBF8CB102DD05F4342F361"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:RichTextCleaner.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_03EBDD78D1EBF8CB102DD05F4342F361"
+                    {
+                    "Name" = "8:RichTextCleaner.Common.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:RichTextCleaner.Common.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_DE7C719213DA417D9564750B81AFAC40"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1F65F49F46BD403E90EEEC1E7FF2BC74"
             {
             "SourcePath" = "8:..\\RichTextCleanerFW\\Icojam-Blue-Bits-Document-check.ico"
@@ -367,37 +398,6 @@
                     }
                 }
             "SourcePath" = "8:System.Net.Http.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_DE7C719213DA417D9564750B81AFAC40"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9DBE950EDFBDCA70DA5071A99C5ECF75"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:RichTextCleaner.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_9DBE950EDFBDCA70DA5071A99C5ECF75"
-                    {
-                    "Name" = "8:RichTextCleaner.Common.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:RichTextCleaner.Common.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DE7C719213DA417D9564750B81AFAC40"
@@ -564,15 +564,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Rich Text Cleaner"
-        "ProductCode" = "8:{CB755344-DCDC-42A8-8965-4A59F7A6E44B}"
-        "PackageCode" = "8:{D694E1B3-8643-4929-8803-704AAD4EF5DC}"
+        "ProductCode" = "8:{6CF5AEDC-B837-4F13-8B03-93EA5620BA58}"
+        "PackageCode" = "8:{CD192675-3D8C-4F34-A980-8E5E9F5F7629}"
         "UpgradeCode" = "8:{73DD7A0B-33AC-45B1-BC02-B1E06FAF3EF3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.4.0"
+        "ProductVersion" = "8:1.5.0"
         "Manufacturer" = "8:Hans Kesting"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

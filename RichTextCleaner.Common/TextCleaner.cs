@@ -25,6 +25,7 @@ namespace RichTextCleaner.Common
             RemoveEmptySpans(doc);
             RemoveSurroundingTags(doc, "span");
             ClearTableCellParagraphs(doc);
+            RemoveAnchors(doc);
 
             using (var sw = new StringWriter())
             {
@@ -35,6 +36,27 @@ namespace RichTextCleaner.Common
             html = html.Replace("</p>", "</p>" + System.Environment.NewLine);
 
             return html;
+        }
+
+        private static void RemoveAnchors(HtmlDocument document)
+        {
+            var anchors = document.DocumentNode.SelectNodes("//a[@name]");
+            if (anchors != null)
+            {
+                foreach (var anchor in anchors)
+                {
+                    if (anchor.GetAttributeValue("href", null) != null)
+                    {
+                        // both "name" and "href" attributes, so just remove the "name"
+                        anchor.Attributes.Remove("name");
+                    }
+                    else
+                    {
+                        // just "<a name>", remove from around contents
+                        RemoveSurroundingTags(anchor);
+                    }
+                }
+            }
         }
 
         /// <summary>
