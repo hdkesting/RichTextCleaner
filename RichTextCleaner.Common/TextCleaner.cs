@@ -22,8 +22,8 @@ namespace RichTextCleaner.Common
             RemoveNonCMSElements(doc);
             ClearStyling(doc.DocumentNode);
             TranslateNodes(doc, clearStyleMarkup);
-            RemoveEmptySpans(doc);
             RemoveSurroundingTags(doc, "span");
+            RemoveEmptySpans(doc);
             ClearTableCellParagraphs(doc);
             RemoveAnchors(doc);
 
@@ -105,8 +105,36 @@ namespace RichTextCleaner.Common
         {
             // insert the original contents to replace the node
             var content = node.ChildNodes;
-            if (!ContentIsEmptyText(content))
+            if (content == null || content.Count == 0)
             {
+                // completely empty - remove
+                node.Remove();
+            }
+            else if (ContentIsEmptyText(content))
+            {
+                // space-only node - can be replaced by a space
+                if (node.PreviousSibling != null && node.PreviousSibling.NodeType == HtmlNodeType.Text)
+                {
+                    // add space to previous text node
+                    node.PreviousSibling.InnerHtml += " ";
+                    node.Remove();
+                }
+                else if (node.NextSibling != null && node.NextSibling.NodeType == HtmlNodeType.Text)
+                {
+                    // add space to next text node
+                    node.NextSibling.InnerHtml = " " + node.NextSibling.InnerHtml;
+                    node.Remove();
+                }
+                else
+                {
+                    // no surrounding text nodes, just replace with a space.
+                    var space = HtmlNode.CreateNode(" ");
+                    node.ParentNode.ReplaceChild(space, node);
+                }
+            }
+            else
+            {
+                // non-empty node - replace with all contents
                 var parent = node.ParentNode;
                 var latest = content.First();
                 parent.ReplaceChild(latest, node);
@@ -119,11 +147,6 @@ namespace RichTextCleaner.Common
                         latest = child;
                     }
                 }
-            }
-            else
-            {
-                // empty node - can be removed completely
-                node.Remove();
             }
 
             bool ContentIsEmptyText(HtmlNodeCollection nodes)
