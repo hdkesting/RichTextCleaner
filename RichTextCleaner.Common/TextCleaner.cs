@@ -113,13 +113,13 @@ namespace RichTextCleaner.Common
             else if (ContentIsEmptyText(content))
             {
                 // space-only node - can be replaced by a space
-                if (node.PreviousSibling != null && node.PreviousSibling.NodeType == HtmlNodeType.Text)
+                if (node.PreviousSibling?.NodeType == HtmlNodeType.Text)
                 {
                     // add space to previous text node
                     node.PreviousSibling.InnerHtml += " ";
                     node.Remove();
                 }
-                else if (node.NextSibling != null && node.NextSibling.NodeType == HtmlNodeType.Text)
+                else if (node.NextSibling?.NodeType == HtmlNodeType.Text)
                 {
                     // add space to next text node
                     node.NextSibling.InnerHtml = " " + node.NextSibling.InnerHtml;
