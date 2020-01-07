@@ -1,5 +1,4 @@
 ﻿using RichTextCleaner.Common;
-using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -68,6 +67,13 @@ namespace RichTextCleanerFW
             await this.SetStatus("The plain TEXT is on the clipboard, use Ctrl-V to paste.");
         }
 
+        private async Task CopySourceAsText()
+        {
+            string html = this.TextContent.Text;
+            ClipboardHelper.CopyPlainTextToClipboard(html);
+            await this.SetStatus("The HTML source is on the clipboard as Text, use Ctrl-V to paste.");
+        }
+
         private async Task SetStatus(string message)
         {
             StatusLabel.Text = "";
@@ -81,7 +87,7 @@ namespace RichTextCleanerFW
             StatusLabel.Background = StatusBackground;
         }
 
-        private void Grid_KeyDown(object sender, KeyEventArgs e)
+        private async void Grid_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
@@ -99,6 +105,10 @@ namespace RichTextCleanerFW
                 // "Ctrl-T"- copy text
                 case System.Windows.Input.Key.T:
                     this.PlainTextAndCopy(this, new RoutedEventArgs());
+                    break;
+
+                case Key.H:
+                    await this.CopySourceAsText();
                     break;
             }
         }

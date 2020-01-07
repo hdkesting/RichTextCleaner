@@ -194,13 +194,13 @@ namespace RichTextCleaner.Common
                 }
             }
 
-            // empty texts - replace with single newline
+            // empty texts - replace with single space
             var empties = document.DocumentNode.SelectNodes("//text()[normalize-space(.) = '']");
             if (empties != null)
             {
                 foreach (var empty in empties)
                 {
-                    empty.InnerHtml = Environment.NewLine;
+                    empty.InnerHtml = " ";
                 }
             }
         }
