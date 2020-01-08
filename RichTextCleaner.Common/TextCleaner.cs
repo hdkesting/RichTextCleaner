@@ -26,6 +26,7 @@ namespace RichTextCleaner.Common
             RemoveEmptySpans(doc);
             ClearTableCellParagraphs(doc);
             RemoveAnchors(doc);
+            TrimParagraphs(doc);
 
             using (var sw = new StringWriter())
             {
@@ -38,6 +39,36 @@ namespace RichTextCleaner.Common
             return html;
         }
 
+        /// <summary>
+        /// Remove any whitespace from start and end of paragraphs.
+        /// </summary>
+        /// <param name="document"></param>
+        private static void TrimParagraphs(HtmlDocument document)
+        {
+            var paras = document.DocumentNode.SelectNodes("//p");
+            foreach (var para in paras ?? Enumerable.Empty<HtmlNode>())
+            {
+                if (para.ChildNodes != null && para.ChildNodes.Count > 0)
+                {
+                    var child = para.ChildNodes.First();
+                    if (child.NodeType == HtmlNodeType.Text)
+                    {
+                        child.InnerHtml = child.InnerHtml.TrimStart();
+                    }
+
+                    child = para.ChildNodes.Last(); // may be the same as first
+                    if (child.NodeType == HtmlNodeType.Text)
+                    {
+                        child.InnerHtml = child.InnerHtml.TrimEnd();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove any &lt;a name=..&gt; elements.
+        /// </summary>
+        /// <param name="document"></param>
         private static void RemoveAnchors(HtmlDocument document)
         {
             var anchors = document.DocumentNode.SelectNodes("//a[@name]");
@@ -89,6 +120,11 @@ namespace RichTextCleaner.Common
             }
         }
 
+        /// <summary>
+        /// Remove specific tags while keeping their contents.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="tag"></param>
         private static void RemoveSurroundingTags(HtmlDocument document, string tag)
         {
             var spans = document.DocumentNode.SelectNodes("//" + tag);
@@ -101,6 +137,10 @@ namespace RichTextCleaner.Common
             }
         }
 
+        /// <summary>
+        /// Remove the element while keeping all contents.
+        /// </summary>
+        /// <param name="node"></param>
         private static void RemoveSurroundingTags(HtmlNode node)
         {
             // insert the original contents to replace the node
@@ -159,15 +199,19 @@ namespace RichTextCleaner.Common
 
                 if (nodes.Count > 1)
                 {
-                    // more than one node, keep all
+                    // more than one node (assume not all are #text), keep all
                     return false;
                 }
 
-                // an &nbsp; is also seen as whitespace
+                // an &nbsp; was already replaced by a space
                 return nodes[0].NodeType == HtmlNodeType.Text && String.IsNullOrWhiteSpace(nodes[0].InnerText);
             }
         }
 
+        /// <summary>
+        /// Replace empty SPAN and P elements by a space 
+        /// </summary>
+        /// <param name="document"></param>
         private static void RemoveEmptySpans(HtmlDocument document)
         {
             // empty span nodes - remove
@@ -205,6 +249,10 @@ namespace RichTextCleaner.Common
             }
         }
 
+        /// <summary>
+        /// Remove all style and class attributes.
+        /// </summary>
+        /// <param name="node"></param>
         private static void ClearStyling(HtmlNode node)
         {
             if (node != null)
@@ -242,6 +290,10 @@ namespace RichTextCleaner.Common
             }
         }
 
+        /// <summary>
+        /// Remove elements that don't belong in a CMS text.
+        /// </summary>
+        /// <param name="document"></param>
         private static void RemoveNonCMSElements(HtmlDocument document)
         {
             // RemoveNodes(document.DocumentNode, ".//iframe"); // keep iframe - may contain video
@@ -261,6 +313,11 @@ namespace RichTextCleaner.Common
             }
         }
 
+        /// <summary>
+        /// Replace styling nodes with modern versions, optionally remove them completely.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="clearStyleMarkup">When true, remove the style markup completely.</param>
         private static void TranslateNodes(HtmlDocument document, bool clearStyleMarkup)
         {
             // normalize "b" and "i" to "strong" and "em"

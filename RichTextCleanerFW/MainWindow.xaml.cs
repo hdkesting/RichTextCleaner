@@ -34,6 +34,11 @@ namespace RichTextCleanerFW
 
         private async void CopyFromClipboard(object sender, RoutedEventArgs e)
         {
+            await CopyFromClipboard();
+        }
+
+        private async Task CopyFromClipboard()
+        {
             var text = ClipboardHelper.GetTextFromClipboard();
             if (text is null)
             {
@@ -48,6 +53,11 @@ namespace RichTextCleanerFW
 
         private async void ClearStylingAndCopy(object sender, RoutedEventArgs e)
         {
+            await ClearStylingAndCopy();
+        }
+
+        private async Task ClearStylingAndCopy()
+        {
             string html = this.TextContent.Text;
 
             html = TextCleaner.ClearStylingFromHtml(html, ClearStyleMarkup.IsChecked.GetValueOrDefault());
@@ -57,6 +67,11 @@ namespace RichTextCleanerFW
         }
 
         private async void PlainTextAndCopy(object sender, RoutedEventArgs e)
+        {
+            await PlainTextAndCopy();
+        }
+
+        private async Task PlainTextAndCopy()
         {
             string html = this.TextContent.Text;
 
@@ -92,19 +107,19 @@ namespace RichTextCleanerFW
             switch (e.Key)
             {
                 // "Ctrl-V" - paste
-                case System.Windows.Input.Key.V:
+                case Key.V:
                     // ignored (don't know how): check for Ctrl
-                    this.CopyFromClipboard(this, new RoutedEventArgs());
+                    await this.CopyFromClipboard();
                     break;
 
                 // "Ctrl-C" - copy
-                case System.Windows.Input.Key.C:
-                    this.ClearStylingAndCopy(this, new RoutedEventArgs());
+                case Key.C:
+                    await this.ClearStylingAndCopy();
                     break;
 
                 // "Ctrl-T"- copy text
-                case System.Windows.Input.Key.T:
-                    this.PlainTextAndCopy(this, new RoutedEventArgs());
+                case Key.T:
+                    await this.PlainTextAndCopy();
                     break;
 
                 case Key.H:
