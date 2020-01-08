@@ -17,6 +17,11 @@ namespace RichTextCleaner.Common
         /// <returns></returns>
         public static string ClearStylingFromHtml(string html, bool clearStyleMarkup)
         {
+            if (html is null)
+            {
+                throw new ArgumentNullException(nameof(html));
+            }
+
             var doc = new HtmlDocument();
             doc.LoadHtml(html.Replace("&nbsp;", " "));
             RemoveNonCMSElements(doc);

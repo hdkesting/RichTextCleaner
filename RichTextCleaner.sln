@@ -5,11 +5,16 @@ VisualStudioVersion = 16.0.29403.142
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RichTextCleaner", "RichTextCleaner\RichTextCleaner.csproj", "{E1D54537-9CA5-483D-8281-76FB61AF43B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RichTextCleaner.Common", "RichTextCleaner.Common\RichTextCleaner.Common.csproj", "{3CEB0F31-E2C7-48E2-866A-B4A9C0F3AF3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RichTextCleaner.Common", "RichTextCleaner.Common\RichTextCleaner.Common.csproj", "{3CEB0F31-E2C7-48E2-866A-B4A9C0F3AF3D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RichTextCleanerFW", "RichTextCleanerFW\RichTextCleanerFW.csproj", "{4C185AEC-138E-43EF-9A44-8FB3850A2B51}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RichTextCleanerSetup", "RichTextCleanerSetup\RichTextCleanerSetup.vdproj", "{9EF0522B-46A2-48B3-996D-4FA783410AD2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ABAAAAC5-10DA-41DF-A104-682308D85E96}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

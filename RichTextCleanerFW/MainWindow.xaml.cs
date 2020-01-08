@@ -34,7 +34,7 @@ namespace RichTextCleanerFW
 
         private async void CopyFromClipboard(object sender, RoutedEventArgs e)
         {
-            await CopyFromClipboard();
+            await this.CopyFromClipboard().ConfigureAwait(false);
         }
 
         private async Task CopyFromClipboard()
@@ -47,13 +47,13 @@ namespace RichTextCleanerFW
             else
             {
                 this.TextContent.Text = text;
-                await this.SetStatus("Copied text from clipboard.");
+                await this.SetStatus("Copied text from clipboard.").ConfigureAwait(false);
             }
         }
 
         private async void ClearStylingAndCopy(object sender, RoutedEventArgs e)
         {
-            await ClearStylingAndCopy();
+            await this.ClearStylingAndCopy().ConfigureAwait(false);
         }
 
         private async Task ClearStylingAndCopy()
@@ -63,12 +63,12 @@ namespace RichTextCleanerFW
             html = TextCleaner.ClearStylingFromHtml(html, ClearStyleMarkup.IsChecked.GetValueOrDefault());
             ClipboardHelper.CopyToClipboard(html, html);
             this.TextContent.Text = html;
-            await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.");
+            await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
         }
 
         private async void PlainTextAndCopy(object sender, RoutedEventArgs e)
         {
-            await PlainTextAndCopy();
+            await this.PlainTextAndCopy().ConfigureAwait(false);
         }
 
         private async Task PlainTextAndCopy()
@@ -79,25 +79,26 @@ namespace RichTextCleanerFW
 
             ClipboardHelper.CopyPlainTextToClipboard(text);
             this.TextContent.Text = text;
-            await this.SetStatus("The plain TEXT is on the clipboard, use Ctrl-V to paste.");
+            await this.SetStatus("The plain TEXT is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
         }
 
         private async Task CopySourceAsText()
         {
             string html = this.TextContent.Text;
             ClipboardHelper.CopyPlainTextToClipboard(html);
-            await this.SetStatus("The HTML source is on the clipboard as Text, use Ctrl-V to paste.");
+            await this.SetStatus("The HTML source is on the clipboard as Text, use Ctrl-V to paste.").ConfigureAwait(false);
         }
 
         private async Task SetStatus(string message)
         {
             StatusLabel.Text = "";
-            await Task.Delay(200);
+            await Task.Delay(200).ConfigureAwait(true); // we need to stay on the UI thread
 
             StatusLabel.Text = message;
             StatusLabel.Foreground = Brushes.Black;
             StatusLabel.Background = Brushes.LightYellow;
-            await Task.Delay(500);
+            await Task.Delay(500).ConfigureAwait(true);
+
             StatusLabel.Foreground = StatusForeground;
             StatusLabel.Background = StatusBackground;
         }
@@ -109,21 +110,21 @@ namespace RichTextCleanerFW
                 // "Ctrl-V" - paste
                 case Key.V:
                     // ignored (don't know how): check for Ctrl
-                    await this.CopyFromClipboard();
+                    await this.CopyFromClipboard().ConfigureAwait(false);
                     break;
 
                 // "Ctrl-C" - copy
                 case Key.C:
-                    await this.ClearStylingAndCopy();
+                    await this.ClearStylingAndCopy().ConfigureAwait(false);
                     break;
 
                 // "Ctrl-T"- copy text
                 case Key.T:
-                    await this.PlainTextAndCopy();
+                    await this.PlainTextAndCopy().ConfigureAwait(false);
                     break;
 
                 case Key.H:
-                    await this.CopySourceAsText();
+                    await this.CopySourceAsText().ConfigureAwait(false);
                     break;
             }
         }
