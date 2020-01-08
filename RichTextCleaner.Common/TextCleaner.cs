@@ -39,7 +39,11 @@ namespace RichTextCleaner.Common
                 html = sw.ToString();
             }
 
-            html = html.Replace("</p>", "</p>" + System.Environment.NewLine);
+            html = html
+                .Replace("</p>", "</p>" + Environment.NewLine)
+                .Replace("</li>", "</li>" + Environment.NewLine)
+                .Replace("<ul>", "<ul>" + Environment.NewLine)
+                .Replace("</ul>", "</ul>" + Environment.NewLine);
 
             return html;
         }

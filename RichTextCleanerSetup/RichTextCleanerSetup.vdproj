@@ -422,11 +422,6 @@
             "AssemblyAsmDisplayName" = "8:HtmlAgilityPack, Version=1.11.16.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_B13F35B29AA3D83C61C0E7DAA8691D28"
-                    {
-                    "Name" = "8:HtmlAgilityPack.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:HtmlAgilityPack.dll"
             "TargetName" = "8:"
@@ -564,15 +559,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Rich Text Cleaner"
-        "ProductCode" = "8:{308A134B-EFBB-4F30-A692-FE7C951386A4}"
-        "PackageCode" = "8:{D0E871AD-FB95-4712-B95B-CB106A0DCC81}"
+        "ProductCode" = "8:{7FCFD238-C853-44A5-B72E-F1DC3FFD00E1}"
+        "PackageCode" = "8:{12134C71-88AB-4D71-AE02-4365B38620AB}"
         "UpgradeCode" = "8:{73DD7A0B-33AC-45B1-BC02-B1E06FAF3EF3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.5.4"
+        "ProductVersion" = "8:1.5.5"
         "Manufacturer" = "8:Hans Kesting"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
