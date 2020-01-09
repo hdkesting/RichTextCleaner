@@ -24,6 +24,7 @@ namespace RichTextCleaner.Common
 
             var doc = new HtmlDocument();
             doc.LoadHtml(html.Replace("&nbsp;", " "));
+
             RemoveNonCMSElements(doc);
             ClearStyling(doc.DocumentNode);
             TranslateNodes(doc, clearStyleMarkup);
@@ -54,22 +55,19 @@ namespace RichTextCleaner.Common
         /// <param name="document"></param>
         private static void TrimParagraphs(HtmlDocument document)
         {
-            var paras = document.DocumentNode.SelectNodes("//p");
-            foreach (var para in paras ?? Enumerable.Empty<HtmlNode>())
+            var paras = document.DocumentNode.SelectNodes("//p") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var para in paras.Where(p => p.ChildNodes?.Count > 0))
             {
-                if (para.ChildNodes != null && para.ChildNodes.Count > 0)
+                var child = para.ChildNodes.First();
+                if (child.NodeType == HtmlNodeType.Text)
                 {
-                    var child = para.ChildNodes.First();
-                    if (child.NodeType == HtmlNodeType.Text)
-                    {
-                        child.InnerHtml = child.InnerHtml.TrimStart();
-                    }
+                    child.InnerHtml = child.InnerHtml.TrimStart();
+                }
 
-                    child = para.ChildNodes.Last(); // may be the same as first
-                    if (child.NodeType == HtmlNodeType.Text)
-                    {
-                        child.InnerHtml = child.InnerHtml.TrimEnd();
-                    }
+                child = para.ChildNodes.Last(); // may be the same as first
+                if (child.NodeType == HtmlNodeType.Text)
+                {
+                    child.InnerHtml = child.InnerHtml.TrimEnd();
                 }
             }
         }
@@ -244,16 +242,6 @@ namespace RichTextCleaner.Common
                     // insert a text-space to replace the span
                     var space = HtmlNode.CreateNode(" ");
                     span.ParentNode.ReplaceChild(space, span);
-                }
-            }
-
-            // empty texts - replace with single space
-            var empties = document.DocumentNode.SelectNodes("//text()[normalize-space(.) = '']");
-            if (empties != null)
-            {
-                foreach (var empty in empties)
-                {
-                    empty.InnerHtml = " ";
                 }
             }
         }
