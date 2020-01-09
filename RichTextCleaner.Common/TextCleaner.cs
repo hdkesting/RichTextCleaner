@@ -30,7 +30,7 @@ namespace RichTextCleaner.Common
             TranslateNodes(doc, clearStyleMarkup);
             RemoveSurroundingTags(doc, "span");
             RemoveEmptySpans(doc);
-            ClearTableCellParagraphs(doc);
+            ClearParagraphsInBlocks(doc);
             RemoveAnchors(doc);
             TrimParagraphs(doc);
 
@@ -92,28 +92,34 @@ namespace RichTextCleaner.Common
         }
 
         /// <summary>
-        /// If a TD contains a single P element, then remove that P (keeping other markup)
+        /// If a TD or LI contains a single P element, then remove that P (keeping other markup)
         /// </summary>
         /// <param name="document"></param>
-        private static void ClearTableCellParagraphs(HtmlDocument document)
+        private static void ClearParagraphsInBlocks(HtmlDocument doc)
         {
-            var cells = document.DocumentNode.SelectNodes("//td") ?? Enumerable.Empty<HtmlNode>();
-            foreach (var cell in cells)
-            {
-                // remove empty text nodes from TD (presumably around the P node)
-                foreach (var child in cell.ChildNodes.ToList())
-                {
-                    if (child.NodeType == HtmlNodeType.Text && String.IsNullOrWhiteSpace(child.InnerText))
-                    {
-                        child.Remove();
-                    }
-                }
+            ClearParagraphs(doc, "td");
+            ClearParagraphs(doc, "li");
 
-                // now a single P is really the only node
-                if (cell.ChildNodes.Count == 1 && cell.ChildNodes[0].Name.Equals("p", StringComparison.OrdinalIgnoreCase))
+            void ClearParagraphs(HtmlDocument document, string tag)
+            {
+                var cells = document.DocumentNode.SelectNodes("//" + tag) ?? Enumerable.Empty<HtmlNode>();
+                foreach (var cell in cells)
                 {
-                    var para = cell.ChildNodes[0];
-                    RemoveSurroundingTags(para);
+                    // remove empty text nodes from TD (presumably around the P node)
+                    foreach (var child in cell.ChildNodes.ToList())
+                    {
+                        if (child.NodeType == HtmlNodeType.Text && String.IsNullOrWhiteSpace(child.InnerText))
+                        {
+                            child.Remove();
+                        }
+                    }
+
+                    // now a single P is really the only node
+                    if (cell.ChildNodes.Count == 1 && cell.ChildNodes[0].Name.Equals("p", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var para = cell.ChildNodes[0];
+                        RemoveSurroundingTags(para);
+                    }
                 }
             }
         }
