@@ -41,10 +41,7 @@ namespace RichTextCleaner.Common
             }
 
             html = html
-                .Replace("</p>", "</p>" + Environment.NewLine)
-                .Replace("</li>", "</li>" + Environment.NewLine)
-                .Replace("<ul>", "<ul>" + Environment.NewLine)
-                .Replace("</ul>", "</ul>" + Environment.NewLine);
+                .Replace("</p>", "</p>" + Environment.NewLine);
 
             return html;
         }
@@ -78,21 +75,18 @@ namespace RichTextCleaner.Common
         /// <param name="document"></param>
         private static void RemoveAnchors(HtmlDocument document)
         {
-            var anchors = document.DocumentNode.SelectNodes("//a[@name]");
-            if (anchors != null)
+            var anchors = document.DocumentNode.SelectNodes("//a[@name]") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var anchor in anchors)
             {
-                foreach (var anchor in anchors)
+                if (anchor.GetAttributeValue("href", null) != null)
                 {
-                    if (anchor.GetAttributeValue("href", null) != null)
-                    {
-                        // both "name" and "href" attributes, so just remove the "name"
-                        anchor.Attributes.Remove("name");
-                    }
-                    else
-                    {
-                        // just "<a name>", remove from around contents
-                        RemoveSurroundingTags(anchor);
-                    }
+                    // both "name" and "href" attributes, so just remove the "name"
+                    anchor.Attributes.Remove("name");
+                }
+                else
+                {
+                    // just "<a name>", remove from around contents
+                    RemoveSurroundingTags(anchor);
                 }
             }
         }
@@ -103,26 +97,23 @@ namespace RichTextCleaner.Common
         /// <param name="document"></param>
         private static void ClearTableCellParagraphs(HtmlDocument document)
         {
-            var cells = document.DocumentNode.SelectNodes("//td");
-            if (cells != null)
+            var cells = document.DocumentNode.SelectNodes("//td") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var cell in cells)
             {
-                foreach (var cell in cells)
+                // remove empty text nodes from TD (presumably around the P node)
+                foreach (var child in cell.ChildNodes.ToList())
                 {
-                    // remove empty texts from TD
-                    foreach (var child in cell.ChildNodes.ToList())
+                    if (child.NodeType == HtmlNodeType.Text && String.IsNullOrWhiteSpace(child.InnerText))
                     {
-                        if (child.NodeType == HtmlNodeType.Text && String.IsNullOrWhiteSpace(child.InnerText))
-                        {
-                            child.Remove();
-                        }
+                        child.Remove();
                     }
+                }
 
-                    // now a single P is really the only node
-                    if (cell.ChildNodes.Count == 1 && cell.ChildNodes[0].Name == "p")
-                    {
-                        var para = cell.ChildNodes[0];
-                        RemoveSurroundingTags(para);
-                    }
+                // now a single P is really the only node
+                if (cell.ChildNodes.Count == 1 && cell.ChildNodes[0].Name.Equals("p", StringComparison.OrdinalIgnoreCase))
+                {
+                    var para = cell.ChildNodes[0];
+                    RemoveSurroundingTags(para);
                 }
             }
         }
@@ -134,13 +125,10 @@ namespace RichTextCleaner.Common
         /// <param name="tag"></param>
         private static void RemoveSurroundingTags(HtmlDocument document, string tag)
         {
-            var spans = document.DocumentNode.SelectNodes("//" + tag);
-            if (spans != null)
+            var spans = document.DocumentNode.SelectNodes("//" + tag) ?? Enumerable.Empty<HtmlNode>();
+            foreach (var span in spans)
             {
-                foreach (var span in spans)
-                {
-                    RemoveSurroundingTags(span);
-                }
+                RemoveSurroundingTags(span);
             }
         }
 
@@ -222,27 +210,21 @@ namespace RichTextCleaner.Common
         private static void RemoveEmptySpans(HtmlDocument document)
         {
             // empty span nodes - remove
-            var spans = document.DocumentNode.SelectNodes("//span[normalize-space(.) = '']");
-            if (spans != null)
+            var spans = document.DocumentNode.SelectNodes("//span[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var span in spans)
             {
-                foreach (var span in spans)
-                {
-                    // insert a text-space to replace the span
-                    var space = HtmlNode.CreateNode(" ");
-                    span.ParentNode.ReplaceChild(space, span);
-                }
+                // insert a text-space to replace the span
+                var space = HtmlNode.CreateNode(" ");
+                span.ParentNode.ReplaceChild(space, span);
             }
 
             // and empty paragraphs
-            spans = document.DocumentNode.SelectNodes("//p[normalize-space(.) = '']");
-            if (spans != null)
+            spans = document.DocumentNode.SelectNodes("//p[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var span in spans)
             {
-                foreach (var span in spans)
-                {
-                    // insert a text-space to replace the span
-                    var space = HtmlNode.CreateNode(" ");
-                    span.ParentNode.ReplaceChild(space, span);
-                }
+                // insert a text-space to replace the span
+                var space = HtmlNode.CreateNode(" ");
+                span.ParentNode.ReplaceChild(space, span);
             }
         }
 
@@ -299,13 +281,10 @@ namespace RichTextCleaner.Common
 
             void RemoveNodes(HtmlNode node, string xpath)
             {
-                var toremove = node.SelectNodes(xpath);
-                if (toremove != null)
+                var toremove = node.SelectNodes(xpath) ?? Enumerable.Empty<HtmlNode>();
+                foreach (var child in toremove)
                 {
-                    foreach (var child in toremove)
-                    {
-                        child.Remove();
-                    }
+                    child.Remove();
                 }
             }
         }
@@ -452,6 +431,5 @@ namespace RichTextCleaner.Common
                 }
             }
         }
-
     }
 }
