@@ -46,7 +46,7 @@ namespace RichTextCleaner.Common
             return doc;
         }
 
-        internal static string GetHtmlSource(HtmlDocument document)
+        internal static string GetHtmlSource(HtmlDocument document, bool cleanup = true)
         {
             string html;
             using (var sw = new StringWriter())
@@ -55,8 +55,11 @@ namespace RichTextCleaner.Common
                 html = sw.ToString();
             }
 
-            html = html
-                .Replace("</p>", "</p>" + Environment.NewLine);
+            if (cleanup)
+            {
+                html = html
+                    .Replace("</p>", "</p>" + Environment.NewLine);
+            }
 
             return html;
         }
@@ -253,7 +256,7 @@ namespace RichTextCleaner.Common
         /// Remove all style and class attributes.
         /// </summary>
         /// <param name="node"></param>
-        private static void ClearStyling(HtmlNode node)
+        internal static void ClearStyling(HtmlNode node)
         {
             if (node != null)
             {
@@ -273,6 +276,15 @@ namespace RichTextCleaner.Common
                         {
                             node.Attributes.Remove("class");
                         }
+
+                        foreach (var name in node.Attributes
+                            .Where(a => a.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase))
+                            .Select(a => a.Name)
+                            .ToList())
+                        {
+                            node.Attributes.Remove(name);
+                        }
+
                         ProcessChildren(node);
                         break;
                 }
@@ -294,7 +306,7 @@ namespace RichTextCleaner.Common
         /// Remove elements that don't belong in a CMS text.
         /// </summary>
         /// <param name="document"></param>
-        private static void RemoveNonCMSElements(HtmlDocument document)
+        internal static void RemoveNonCMSElements(HtmlDocument document)
         {
             // RemoveNodes(document.DocumentNode, ".//iframe"); // keep iframe - may contain video
             RemoveNodes(document.DocumentNode, ".//noscript");

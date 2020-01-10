@@ -9,14 +9,71 @@ namespace RichTextCleaner.Test
     public class TestTextCleaner
     {
         [TestMethod]
+        public void RemoveNonCMSElements_ShouldRemoveScript()
+        {
+            var doc = TextCleaner.CreateHtmlDocument(@"
+<body>
+    <script>alert('boo')</script>
+    <p>Text</p>
+</body>");
+            TextCleaner.RemoveNonCMSElements(doc);
+            var html = TextCleaner.GetHtmlSource(doc);
+            Assert.IsFalse(html.Contains("<script>"));
+        }
+
+        [TestMethod]
+        public void RemoveNonCMSElements_ShouldRemoveNoscript()
+        {
+            var doc = TextCleaner.CreateHtmlDocument(@"
+<body>
+    <script>alert('boo')</script>
+    <noscript>please enable script</noscript>
+    <p>Text</p>
+</body>");
+            TextCleaner.RemoveNonCMSElements(doc);
+            var html = TextCleaner.GetHtmlSource(doc);
+            Assert.IsFalse(html.Contains("<script>"));
+            Assert.IsFalse(html.Contains("<noscript>"));
+        }
+
+        [TestMethod]
+        public void RemoveNonCMSElements_ShouldNotRemoveIframe()
+        {
+            var doc = TextCleaner.CreateHtmlDocument(@"
+<body>
+    <iframe>some video content</iframe>
+    <p>Text</p>
+</body>");
+            TextCleaner.RemoveNonCMSElements(doc);
+            var html = TextCleaner.GetHtmlSource(doc);
+            Assert.IsTrue(html.Contains("<iframe>"));
+        }
+
+        [TestMethod]
+        public void ClearStyling_ShouldRemoveAttributes()
+        {
+            var doc = TextCleaner.CreateHtmlDocument(@"
+<p class=""something"">Text 1</p>
+<p style=""background-color: black"">Text <span class=""super"">2</span></p>
+<p onclick=""clickhandler"">Text 3</p>");
+            TextCleaner.ClearStyling(doc.DocumentNode);
+
+            var html = TextCleaner.GetHtmlSource(doc, false);
+            Assert.AreEqual(@"
+<p>Text 1</p>
+<p>Text <span>2</span></p>
+<p>Text 3</p>", html);
+
+        }
+
+        [TestMethod]
         public void CleanParagraph_ShouldStayClean()
         {
             var doc = TextCleaner.CreateHtmlDocument("<p>Some paragraph</p>");
             TextCleaner.TrimParagraphs(doc);
-            var html = TextCleaner.GetHtmlSource(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
 
-            // NB "</p>" gets an added NewLine
-            Assert.AreEqual("<p>Some paragraph</p>\r\n", html);
+            Assert.AreEqual("<p>Some paragraph</p>", html);
         }
 
         [TestMethod]
@@ -25,9 +82,9 @@ namespace RichTextCleaner.Test
             var doc = TextCleaner.CreateHtmlDocument(@"<p> Some paragraph
 </p>");
             TextCleaner.TrimParagraphs(doc);
-            var html = TextCleaner.GetHtmlSource(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
 
-            Assert.AreEqual("<p>Some paragraph</p>\r\n", html);
+            Assert.AreEqual("<p>Some paragraph</p>", html);
         }
 
         [TestMethod]
