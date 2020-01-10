@@ -29,18 +29,26 @@ Copy text from a webpage (select the fragment you want and hit Ctrl-C), then use
 
 Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the HTML fragment:
 
-* replace all "`&nbsp;`" with a plain space - this does destroy attempts at layout-by-spaces that would need replacing anyway;
-* remove all "`<script>`" and "`<noscript>`" elements including contents. iframes (that may contain videos) are left intact;
-* remove all "style" and "class" attributes;
-* replace "`<b>`" elements with "`<strong>`" and "`<i>`" with "`<em>`";
-* remove "`<font>`" and "`<span>`" elements while keeping their contents;
-* (when checked) remove all "`<strong>`", "`<em>`" and "`<u>`" elements, keeping their contents;
-* replace any "`<span>`" and "`<p>`" elements that contain no text (but may contain whitespace) with a single space;
-* remove any "`<a name>`" elements, keeping any contents. If there is also an "href" attribute, only the "name" is removed.
+* Replace all "`&nbsp;`" with a plain space - this does destroy attempts at layout-by-spaces that would need replacing anyway;
+* Remove all "`<script>`" and "`<noscript>`" elements including contents. iframes (that may contain videos) are left intact;
+* Remove all "style" and "class" attributes;
+* Replace "`<b>`" elements with "`<strong>`" and "`<i>`" with "`<em>`";
+* Remove "`<font>`" and "`<span>`" elements while keeping their contents;
+* (When checked) remove all "`<strong>`", "`<em>`" and "`<u>`" elements, keeping their contents;
+* Replace any "`<span>`" and "`<p>`" elements that contain no text (but may contain whitespace) with a single space;
+* Remove any "`<a name>`" elements, keeping any contents. If there is also an "href" attribute, only the "name" is removed;
+* If a "`<td>`" or "`<li>`" contains just a single "`<p>`", then remove that p-element, keeping its contents.
 
 This also copies the cleaned text onto the clipboard, so you can use Ctrl-V in a rich-text editor to paste it, either in the rich-text tab or the html-source tab.
 
 The "Get text only" button (hotkey: (Ctrl-)T) removes all HTML elements, leaving only the plain text (with some attempt at sane formatting). Here also this text is placed on the clipboard.
+
+Background info
+---------------
+
+When you copy formatted text from a webpage (such as a plain webpage or the Design tab of a Rich Text Editor), then the browser is in charge of putting HTML on the clipboard. It will add styling that is usually found in a CSS file.
+
+When HTML source is copied from the HTML tab of a Rich Text Editor, then the browser considers it plain text and doesn't add extra styling. This application still treats this as HTML source and correctly handles this.
 
 Source
 ------

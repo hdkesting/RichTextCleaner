@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("RichTextCleaner.Test")]
+
 namespace RichTextCleaner.Common
 {
     public static class TextCleaner
@@ -22,8 +24,7 @@ namespace RichTextCleaner.Common
                 throw new ArgumentNullException(nameof(html));
             }
 
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html.Replace("&nbsp;", " "));
+            var doc = CreateHtmlDocument(html);
 
             RemoveNonCMSElements(doc);
             ClearStyling(doc.DocumentNode);
@@ -34,9 +35,23 @@ namespace RichTextCleaner.Common
             RemoveAnchors(doc);
             TrimParagraphs(doc);
 
+            return GetHtmlSource(doc);
+        }
+
+        internal static HtmlDocument CreateHtmlDocument(string html)
+        {
+            var doc = new HtmlDocument();
+            doc.LoadHtml((html ?? String.Empty).Replace("&nbsp;", " "));
+
+            return doc;
+        }
+
+        internal static string GetHtmlSource(HtmlDocument document)
+        {
+            string html;
             using (var sw = new StringWriter())
             {
-                doc.Save(sw);
+                document.Save(sw);
                 html = sw.ToString();
             }
 
@@ -50,7 +65,7 @@ namespace RichTextCleaner.Common
         /// Remove any whitespace from start and end of paragraphs.
         /// </summary>
         /// <param name="document"></param>
-        private static void TrimParagraphs(HtmlDocument document)
+        internal static void TrimParagraphs(HtmlDocument document)
         {
             var paras = document.DocumentNode.SelectNodes("//p") ?? Enumerable.Empty<HtmlNode>();
             foreach (var para in paras.Where(p => p.ChildNodes?.Count > 0))
@@ -347,10 +362,10 @@ namespace RichTextCleaner.Common
                 throw new ArgumentNullException(nameof(html));
             }
 
-            StringBuilder sb = new StringBuilder(html.Length);
+            var sb = new StringBuilder(html.Length);
 
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html);
+            var doc = CreateHtmlDocument(html);
+
             ConvertToPlainText(sb, doc.DocumentNode);
 
             string text = CleanupText(sb.ToString());
