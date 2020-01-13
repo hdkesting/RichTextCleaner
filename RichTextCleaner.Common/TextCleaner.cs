@@ -17,7 +17,7 @@ namespace RichTextCleaner.Common
         /// <param name="html">The HTML to clean.</param>
         /// <param name="clearStyleMarkup">if set to <c>true</c> remove all bold and italic tags.</param>
         /// <returns></returns>
-        public static string ClearStylingFromHtml(string html, bool clearStyleMarkup)
+        public static string ClearStylingFromHtml(string html, bool clearStyleMarkup, bool addBlankLinkTarget)
         {
             if (html is null)
             {
@@ -34,6 +34,10 @@ namespace RichTextCleaner.Common
             ClearParagraphsInBlocks(doc);
             RemoveAnchors(doc);
             CombineAndCleanLinks(doc);
+            if (addBlankLinkTarget)
+            {
+                AddBlankLinkTargets(doc);
+            }
             TrimParagraphs(doc);
 
             return GetHtmlSource(doc);
@@ -194,6 +198,19 @@ namespace RichTextCleaner.Common
                             }
                         }
                     }
+                }
+            }
+        }
+
+        private static void AddBlankLinkTargets(HtmlDocument document)
+        {
+            var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
+
+            foreach (var link in links)
+            {
+                if (link.Attributes["target"] == null)
+                {
+                    link.Attributes.Add("target", "_blank");
                 }
             }
         }

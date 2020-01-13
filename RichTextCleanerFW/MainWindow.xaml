@@ -36,6 +36,7 @@
             <Button Margin="2,10" Click="CopyFromClipboard" ToolTip="or press (Ctrl-)V">Paste (HTML)</Button>
             <Button Margin="2,10,2,2" Click="ClearStylingAndCopy" ToolTip="or press (Ctrl-)C">Clear styling</Button>
             <CheckBox Margin="2,2,2,10" x:Name="ClearStyleMarkup" IsChecked="True" ToolTip="remove &lt;i>, &lt;b> and &lt;u>">Remove style tags</CheckBox>
+            <CheckBox Margin="2,2,2,10" x:Name="AddBlankTarget" IsChecked="True" ToolTip="set link target to new window">Add target=blank</CheckBox>
             <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="or press (Ctrl-)T">Get text only</Button>
             <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="0,10,0,10" Foreground="Gray">Ready for pasting</TextBlock>
         </StackPanel>
