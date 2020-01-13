@@ -98,7 +98,15 @@ namespace RichTextCleaner.Test
             Assert.AreEqual("<span> Some paragraph </span>", html);
         }
 
+        [TestMethod]
+        public void TabIndex_ShouldBeRemoved()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<p> follow <a tabindex=\"0\" href=\"https://twitter.com/wkhealth\">@WKHealth</a> or <a tabindex=\"0\" href=\"https://twitter.com/Wolters_Kluwer\">@Wolters_Kluwer</a> on Twitter</p>");
+            TextCleaner.RemoveAnchors(doc);
+            var html = TextCleaner.GetHtmlSource(doc);
 
+            Assert.IsFalse(html.Contains("tabindex"));
+        }
     }
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 }

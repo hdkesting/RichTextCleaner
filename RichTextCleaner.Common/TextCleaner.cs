@@ -91,7 +91,7 @@ namespace RichTextCleaner.Common
         /// Remove any &lt;a name=..&gt; elements.
         /// </summary>
         /// <param name="document"></param>
-        private static void RemoveAnchors(HtmlDocument document)
+        internal static void RemoveAnchors(HtmlDocument document)
         {
             var anchors = document.DocumentNode.SelectNodes("//a[@name]") ?? Enumerable.Empty<HtmlNode>();
             foreach (var anchor in anchors)
@@ -106,6 +106,12 @@ namespace RichTextCleaner.Common
                     // just "<a name>", remove from around contents
                     RemoveSurroundingTags(anchor);
                 }
+            }
+
+            anchors = document.DocumentNode.SelectNodes("//a[@tabindex]") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var anchor in anchors)
+            {
+                anchor.Attributes.Remove("tabindex");
             }
         }
 
