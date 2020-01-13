@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("RichTextCleaner.Test")]
+
 namespace RichTextCleaner.Common
 {
     public static class TextCleaner
@@ -22,8 +24,7 @@ namespace RichTextCleaner.Common
                 throw new ArgumentNullException(nameof(html));
             }
 
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html.Replace("&nbsp;", " "));
+            var doc = CreateHtmlDocument(html);
 
             RemoveNonCMSElements(doc);
             ClearStyling(doc.DocumentNode);
@@ -34,14 +35,31 @@ namespace RichTextCleaner.Common
             RemoveAnchors(doc);
             TrimParagraphs(doc);
 
+            return GetHtmlSource(doc);
+        }
+
+        internal static HtmlDocument CreateHtmlDocument(string html)
+        {
+            var doc = new HtmlDocument();
+            doc.LoadHtml((html ?? String.Empty).Replace("&nbsp;", " "));
+
+            return doc;
+        }
+
+        internal static string GetHtmlSource(HtmlDocument document, bool cleanup = true)
+        {
+            string html;
             using (var sw = new StringWriter())
             {
-                doc.Save(sw);
+                document.Save(sw);
                 html = sw.ToString();
             }
 
-            html = html
-                .Replace("</p>", "</p>" + Environment.NewLine);
+            if (cleanup)
+            {
+                html = html
+                    .Replace("</p>", "</p>" + Environment.NewLine);
+            }
 
             return html;
         }
@@ -50,7 +68,7 @@ namespace RichTextCleaner.Common
         /// Remove any whitespace from start and end of paragraphs.
         /// </summary>
         /// <param name="document"></param>
-        private static void TrimParagraphs(HtmlDocument document)
+        internal static void TrimParagraphs(HtmlDocument document)
         {
             var paras = document.DocumentNode.SelectNodes("//p") ?? Enumerable.Empty<HtmlNode>();
             foreach (var para in paras.Where(p => p.ChildNodes?.Count > 0))
@@ -238,7 +256,7 @@ namespace RichTextCleaner.Common
         /// Remove all style and class attributes.
         /// </summary>
         /// <param name="node"></param>
-        private static void ClearStyling(HtmlNode node)
+        internal static void ClearStyling(HtmlNode node)
         {
             if (node != null)
             {
@@ -258,6 +276,15 @@ namespace RichTextCleaner.Common
                         {
                             node.Attributes.Remove("class");
                         }
+
+                        foreach (var name in node.Attributes
+                            .Where(a => a.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase))
+                            .Select(a => a.Name)
+                            .ToList())
+                        {
+                            node.Attributes.Remove(name);
+                        }
+
                         ProcessChildren(node);
                         break;
                 }
@@ -279,7 +306,7 @@ namespace RichTextCleaner.Common
         /// Remove elements that don't belong in a CMS text.
         /// </summary>
         /// <param name="document"></param>
-        private static void RemoveNonCMSElements(HtmlDocument document)
+        internal static void RemoveNonCMSElements(HtmlDocument document)
         {
             // RemoveNodes(document.DocumentNode, ".//iframe"); // keep iframe - may contain video
             RemoveNodes(document.DocumentNode, ".//noscript");
@@ -347,10 +374,10 @@ namespace RichTextCleaner.Common
                 throw new ArgumentNullException(nameof(html));
             }
 
-            StringBuilder sb = new StringBuilder(html.Length);
+            var sb = new StringBuilder(html.Length);
 
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html);
+            var doc = CreateHtmlDocument(html);
+
             ConvertToPlainText(sb, doc.DocumentNode);
 
             string text = CleanupText(sb.ToString());
