@@ -33,6 +33,7 @@ namespace RichTextCleaner.Common
             RemoveEmptySpans(doc);
             ClearParagraphsInBlocks(doc);
             RemoveAnchors(doc);
+            CombineAndCleanLinks(doc);
             TrimParagraphs(doc);
 
             return GetHtmlSource(doc);
@@ -112,6 +113,88 @@ namespace RichTextCleaner.Common
             foreach (var anchor in anchors)
             {
                 anchor.Attributes.Remove("tabindex");
+            }
+        }
+
+        internal static void CombineAndCleanLinks(HtmlDocument document)
+        {
+            var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
+
+            foreach (var link in links.Skip(1))
+            {
+                var previousSibling = link.PreviousSibling;
+                if (previousSibling?.NodeType == HtmlNodeType.Element 
+                    && previousSibling.Name == "a" 
+                    && previousSibling.GetAttributeValue("href", String.Empty) == link.GetAttributeValue("href", string.Empty))
+                {
+                    // this link points to the same destination as its immediate predecessor. Join contents to that, clearing this (to be removed next)
+                    foreach (var child in link.ChildNodes ?? Enumerable.Empty<HtmlNode>())
+                    {
+                        previousSibling.ChildNodes.Append(child); // this *copies* the node
+                    }
+
+                    link.Remove();
+                }
+            }
+
+            // remove empty links
+            links = document.DocumentNode.SelectNodes("//a[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var link in links)
+            {
+                RemoveSurroundingTags(link);
+            }
+
+            // move leading and trailing spaces and commas/periods outside of link
+            links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var link in links.Where(l => l.ChildNodes?.Count > 0))
+            {
+                var firstchild = link.ChildNodes[0];
+                if (firstchild.NodeType == HtmlNodeType.Text)
+                {
+                    var match = Regex.Match(firstchild.InnerHtml, "^[ .,]+", RegexOptions.None);
+                    if (match.Success)
+                    {
+                        var txt = match.Value;
+                        var prev = link.PreviousSibling;
+                        if (prev != null)
+                        {
+                            firstchild.InnerHtml = firstchild.InnerHtml.Substring(txt.Length);
+                            if (prev.NodeType == HtmlNodeType.Text)
+                            {
+#pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
+                                prev.InnerHtml = prev.InnerHtml + txt;
+#pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
+                            }
+                            else
+                            {
+                                link.InsertBefore(HtmlNode.CreateNode(txt), link);
+                            }
+                        }
+                    }
+                }
+
+                var lastchild = link.ChildNodes.Last();
+                if (lastchild.NodeType == HtmlNodeType.Text)
+                {
+                    var match = Regex.Match(lastchild.InnerHtml, "[ .,]+$", RegexOptions.None);
+                    if (match.Success)
+                    {
+                        var txt = match.Value;
+                        var next = link.NextSibling;
+                        if (next != null)
+                        {
+                            lastchild.InnerHtml = lastchild.InnerHtml.Substring(0, lastchild.InnerHtml.Length - txt.Length);
+                            if (next.NodeType == HtmlNodeType.Text)
+                            {
+                                next.InnerHtml = txt + next.InnerHtml;
+                            }
+                            else
+                            {
+                                link.InsertAfter(HtmlNode.CreateNode(txt), link);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -370,7 +453,6 @@ namespace RichTextCleaner.Common
                     }
                 }
             }
-
         }
 
         public static string HtmlToPlainText(string html)

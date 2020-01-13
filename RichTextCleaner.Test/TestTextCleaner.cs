@@ -93,7 +93,7 @@ namespace RichTextCleaner.Test
         {
             var doc = TextCleaner.CreateHtmlDocument("<span> Some paragraph </span>");
             TextCleaner.TrimParagraphs(doc);
-            var html = TextCleaner.GetHtmlSource(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
 
             Assert.AreEqual("<span> Some paragraph </span>", html);
         }
@@ -103,10 +103,61 @@ namespace RichTextCleaner.Test
         {
             var doc = TextCleaner.CreateHtmlDocument("<p> follow <a tabindex=\"0\" href=\"https://twitter.com/wkhealth\">@WKHealth</a> or <a tabindex=\"0\" href=\"https://twitter.com/Wolters_Kluwer\">@Wolters_Kluwer</a> on Twitter</p>");
             TextCleaner.RemoveAnchors(doc);
-            var html = TextCleaner.GetHtmlSource(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
 
             Assert.IsFalse(html.Contains("tabindex"));
         }
+
+        [TestMethod]
+        public void ConsecutiveLinks_ShouldCombine()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<p><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\"><sup>&reg;</sup></a></p>");
+            TextCleaner.CombineAndCleanLinks(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<p><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper<sup>&reg;</sup></a></p>", html);
+        }
+
+        [TestMethod]
+        public void NonConsecutiveLinks_ShouldNotCombine()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<a href=\"nu.nl\">.</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\"><sup>&reg;</sup></a>");
+            TextCleaner.CombineAndCleanLinks(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<a href=\"nu.nl\">.</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper<sup>&reg;</sup></a>", html);
+        }
+
+        [TestMethod]
+        public void LinkAroundSpace_ShouldBeRemoved()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<span><a href=\"www.example.com\"> </a></span>");
+            TextCleaner.CombineAndCleanLinks(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<span> </span>", html);
+        }
+
+        [TestMethod]
+        public void LinkWithLeadingSpaces_ShouldBeCleaned()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<span>bla<a href=\"www.example.com\">, bla</a></span>");
+            TextCleaner.CombineAndCleanLinks(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<span>bla, <a href=\"www.example.com\">bla</a></span>", html);
+        }
+
+        [TestMethod]
+        public void LinkWithTrailingSpaces_ShouldBeCleaned()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<span>bla<a href=\"www.example.com\"> bla, </a>bla</span>");
+            TextCleaner.CombineAndCleanLinks(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<span>bla <a href=\"www.example.com\">bla</a>, bla</span>", html);
+        }
+
     }
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 }
