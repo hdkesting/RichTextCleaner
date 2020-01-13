@@ -34,6 +34,7 @@ namespace RichTextCleaner.Test
             var html = TextCleaner.GetHtmlSource(doc);
             Assert.IsFalse(html.Contains("<script>"));
             Assert.IsFalse(html.Contains("<noscript>"));
+            Assert.IsTrue(html.Contains("<p>Text</p>"));
         }
 
         [TestMethod]
