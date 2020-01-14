@@ -20,7 +20,7 @@ namespace RichTextCleanerFW
 
             if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
             {
-                VersionLabel.Content = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+                VersionLabel.Content = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(3);
             }
             else
             {
@@ -29,6 +29,19 @@ namespace RichTextCleanerFW
 
             StatusForeground = StatusLabel.Foreground;
             StatusBackground = StatusLabel.Background;
+
+            // set Assembly Version in the Package tab of the properties of project RichTextCleaner.Common
+            var libVersion = typeof(TextCleaner).Assembly.GetName().Version;
+
+            // set Assembly Version in AssemblyInfo.cs in this project (below Properties)
+            var appVersion = this.GetType().Assembly.GetName().Version;
+
+            if (libVersion != appVersion)
+            {
+                MessageBox.Show("The installation didn't succeed properly. Please run the installer to remove the current installation and then install again.",
+                    "Installation error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Environment.Exit(1);
+            }
 
         }
 
