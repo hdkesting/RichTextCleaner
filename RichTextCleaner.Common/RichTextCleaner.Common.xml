@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RichTextCleaner.Common</name>
+    </assembly>
+    <members>
+        <member name="T:RichTextCleaner.Common.TextCleaner">
+            <summary>
+            The cleaner module.
+            </summary>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Clears the styling from the HTML.
+            </summary>
+            <param name="html">The HTML to clean.</param>
+            <param name="clearBoldMarkup">if set to <c>true</c>, clear bold markup.</param>
+            <param name="clearItalicMarkup">if set to <c>true</c>, clear italic markup.</param>
+            <param name="clearUnderlineMarkup">if set to <c>true</c>, clear underline markup.</param>
+            <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">html</exception>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.TrimParagraphs(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            Remove any whitespace from start and end of paragraphs.
+            </summary>
+            <param name="document"></param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.RemoveAnchors(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            Remove any &lt;a name=..&gt; elements.
+            </summary>
+            <param name="document"></param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.AddBlankLinkTargets(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            Add "target=_blank" to http links.
+            </summary>
+            <param name="document"></param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.ClearParagraphsInBlocks(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            If a TD or LI contains a single P element, then remove that P (keeping other markup)
+            </summary>
+            <param name="doc">The HtmlDocument.</param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.RemoveSurroundingTags(HtmlAgilityPack.HtmlDocument,System.String)">
+            <summary>
+            Remove specific tags while keeping their contents.
+            </summary>
+            <param name="document"></param>
+            <param name="tag"></param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.RemoveSurroundingTags(HtmlAgilityPack.HtmlNode)">
+            <summary>
+            Remove the element while keeping all contents.
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.RemoveEmptySpans(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            Replace empty SPAN and P elements by a space 
+            </summary>
+            <param name="document"></param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStyling(HtmlAgilityPack.HtmlNode)">
+            <summary>
+            Remove all style and class attributes.
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.RemoveNonCMSElements(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            Remove elements that don't belong in a CMS text.
+            </summary>
+            <param name="document"></param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.TranslateNodes(HtmlAgilityPack.HtmlDocument,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Replace styling nodes with modern versions, optionally remove them completely.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="clearBoldMarkup">if set to <c>true</c>, remove b and strong elements.</param>
+            <param name="clearItalicMarkup">if set to <c>true</c>, remove i and em elements.</param>
+            <param name="clearUnderlineMarkup">if set to <c>true</c>, remove u elements.</param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.HtmlToPlainText(System.String)">
+            <summary>
+            Convert the html text to plain text.
+            </summary>
+            <param name="html"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

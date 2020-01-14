@@ -73,7 +73,12 @@ namespace RichTextCleanerFW
         {
             string html = this.TextContent.Text;
 
-            html = TextCleaner.ClearStylingFromHtml(html, ClearStyleMarkup.IsChecked.GetValueOrDefault(), AddBlankTarget.IsChecked.GetValueOrDefault());
+            html = TextCleaner.ClearStylingFromHtml(
+                html, 
+                ClearBoldMarkup.IsChecked.GetValueOrDefault(),
+                ClearItalicMarkup.IsChecked.GetValueOrDefault(),
+                ClearUnderlineMarkup.IsChecked.GetValueOrDefault(),
+                AddBlankTarget.IsChecked.GetValueOrDefault());
             ClipboardHelper.CopyToClipboard(html, html);
             this.TextContent.Text = html;
             await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);

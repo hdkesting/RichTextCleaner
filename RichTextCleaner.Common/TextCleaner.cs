@@ -9,15 +9,27 @@ using System.Text.RegularExpressions;
 
 namespace RichTextCleaner.Common
 {
+    /// <summary>
+    /// The cleaner module.
+    /// </summary>
     public static class TextCleaner
     {
         /// <summary>
         /// Clears the styling from the HTML.
         /// </summary>
         /// <param name="html">The HTML to clean.</param>
-        /// <param name="clearStyleMarkup">if set to <c>true</c> remove all bold and italic tags.</param>
+        /// <param name="clearBoldMarkup">if set to <c>true</c>, clear bold markup.</param>
+        /// <param name="clearItalicMarkup">if set to <c>true</c>, clear italic markup.</param>
+        /// <param name="clearUnderlineMarkup">if set to <c>true</c>, clear underline markup.</param>
+        /// <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
         /// <returns></returns>
-        public static string ClearStylingFromHtml(string html, bool clearStyleMarkup, bool addBlankLinkTarget)
+        /// <exception cref="ArgumentNullException">html</exception>
+        public static string ClearStylingFromHtml(
+            string html,
+            bool clearBoldMarkup,
+            bool clearItalicMarkup,
+            bool clearUnderlineMarkup,
+            bool addBlankLinkTarget)
         {
             if (html is null)
             {
@@ -28,7 +40,7 @@ namespace RichTextCleaner.Common
 
             RemoveNonCMSElements(doc);
             ClearStyling(doc.DocumentNode);
-            TranslateNodes(doc, clearStyleMarkup);
+            TranslateNodes(doc, clearBoldMarkup, clearItalicMarkup, clearUnderlineMarkup);
             RemoveSurroundingTags(doc, "span");
             RemoveEmptySpans(doc);
             ClearParagraphsInBlocks(doc);
@@ -221,7 +233,7 @@ namespace RichTextCleaner.Common
         /// <summary>
         /// If a TD or LI contains a single P element, then remove that P (keeping other markup)
         /// </summary>
-        /// <param name="document"></param>
+        /// <param name="doc">The HtmlDocument.</param>
         private static void ClearParagraphsInBlocks(HtmlDocument doc)
         {
             ClearParagraphs(doc, "td");
@@ -434,9 +446,11 @@ namespace RichTextCleaner.Common
         /// <summary>
         /// Replace styling nodes with modern versions, optionally remove them completely.
         /// </summary>
-        /// <param name="document"></param>
-        /// <param name="clearStyleMarkup">When true, remove the style markup completely.</param>
-        private static void TranslateNodes(HtmlDocument document, bool clearStyleMarkup)
+        /// <param name="document">The document.</param>
+        /// <param name="clearBoldMarkup">if set to <c>true</c>, remove b and strong elements.</param>
+        /// <param name="clearItalicMarkup">if set to <c>true</c>, remove i and em elements.</param>
+        /// <param name="clearUnderlineMarkup">if set to <c>true</c>, remove u elements.</param>
+        private static void TranslateNodes(HtmlDocument document, bool clearBoldMarkup, bool clearItalicMarkup, bool clearUnderlineMarkup)
         {
             // normalize "b" and "i" to "strong" and "em"
             Replace(document.DocumentNode, "b", "strong");
@@ -445,11 +459,20 @@ namespace RichTextCleaner.Common
             // remove any "font" tag
             Replace(document.DocumentNode, "font", "span");
 
-            if (clearStyleMarkup)
+            if (clearBoldMarkup)
             {
-                // remove all "stong" and "em" tags (which includes the recently renamed "b" and "i")
+                // remove all "strong" tags (which includes the recently renamed "b")
                 RemoveSurroundingTags(document, "strong");
+            }
+
+            if (clearItalicMarkup)
+            {
+                // remove all "em" tags (which includes the recently renamed "i")
                 RemoveSurroundingTags(document, "em");
+            }
+
+            if (clearUnderlineMarkup)
+            {
                 RemoveSurroundingTags(document, "u");
             }
 
@@ -475,6 +498,11 @@ namespace RichTextCleaner.Common
             }
         }
 
+        /// <summary>
+        /// Convert the html text to plain text.
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns></returns>
         public static string HtmlToPlainText(string html)
         {
             if (html is null)
