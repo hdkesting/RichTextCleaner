@@ -121,11 +121,11 @@ namespace RichTextCleaner.Test
         [TestMethod]
         public void NonConsecutiveLinks_ShouldNotCombine()
         {
-            var doc = TextCleaner.CreateHtmlDocument("<a href=\"nu.nl\">.</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\"><sup>&reg;</sup></a>");
+            var doc = TextCleaner.CreateHtmlDocument("<a href=\"nu.nl\">x</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\"><sup>&reg;</sup></a>");
             TextCleaner.CombineAndCleanLinks(doc);
             var html = TextCleaner.GetHtmlSource(doc, false);
 
-            Assert.AreEqual("<a href=\"nu.nl\">.</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper<sup>&reg;</sup></a>", html);
+            Assert.AreEqual("<a href=\"nu.nl\">x</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper<sup>&reg;</sup></a>", html);
         }
 
         [TestMethod]
@@ -156,6 +156,36 @@ namespace RichTextCleaner.Test
             var html = TextCleaner.GetHtmlSource(doc, false);
 
             Assert.AreEqual("<span>bla <a href=\"www.example.com\">bla</a>, bla</span>", html);
+        }
+
+        [TestMethod]
+        public void LinksToRemote_ShouldGetTarget()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<a href=\"https://www.example.com\">link</a>");
+            TextCleaner.AddBlankLinkTargets(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<a href=\"https://www.example.com\" target=\"_blank\">link</a>", html);
+        }
+
+        [TestMethod]
+        public void LinksToRemoteWithTarget_ShouldNotChangeTarget()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<a href=\"https://www.example.com\" target=\"_self\">link</a>");
+            TextCleaner.AddBlankLinkTargets(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<a href=\"https://www.example.com\" target=\"_self\">link</a>", html);
+        }
+
+        [TestMethod]
+        public void LinksToLocal_ShouldNotGetTarget()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<a href=\"/default.html\">link</a>");
+            TextCleaner.AddBlankLinkTargets(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<a href=\"/default.html\">link</a>", html);
         }
 
     }

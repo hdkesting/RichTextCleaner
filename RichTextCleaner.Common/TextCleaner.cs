@@ -132,12 +132,11 @@ namespace RichTextCleaner.Common
                     && previousSibling.GetAttributeValue("href", String.Empty) == link.GetAttributeValue("href", string.Empty))
                 {
                     // this link points to the same destination as its immediate predecessor. Join contents to that, clearing this (to be removed next)
-                    foreach (var child in link.ChildNodes ?? Enumerable.Empty<HtmlNode>())
+                    foreach (var child in (link.ChildNodes ?? Enumerable.Empty<HtmlNode>()).ToList())
                     {
+                        link.ChildNodes.Remove(child);
                         previousSibling.ChildNodes.Append(child); // this *copies* the node
                     }
-
-                    link.Remove();
                 }
             }
 
@@ -171,7 +170,7 @@ namespace RichTextCleaner.Common
                             }
                             else
                             {
-                                link.InsertBefore(HtmlNode.CreateNode(txt), link);
+                                document.DocumentNode.InsertBefore(HtmlNode.CreateNode(txt), link);
                             }
                         }
                     }
@@ -194,7 +193,7 @@ namespace RichTextCleaner.Common
                             }
                             else
                             {
-                                link.InsertAfter(HtmlNode.CreateNode(txt), link);
+                                document.DocumentNode.InsertAfter(HtmlNode.CreateNode(txt), link);
                             }
                         }
                     }
@@ -202,11 +201,15 @@ namespace RichTextCleaner.Common
             }
         }
 
-        private static void AddBlankLinkTargets(HtmlDocument document)
+        /// <summary>
+        /// Add "target=_blank" to http links.
+        /// </summary>
+        /// <param name="document"></param>
+        internal static void AddBlankLinkTargets(HtmlDocument document)
         {
             var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
 
-            foreach (var link in links)
+            foreach (var link in links.Where(l => l.GetAttributeValue("href", string.Empty).StartsWith("http", StringComparison.Ordinal)))
             {
                 if (link.Attributes["target"] == null)
                 {
