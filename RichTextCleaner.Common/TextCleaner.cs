@@ -237,19 +237,16 @@ namespace RichTextCleaner.Common
                     {
                         var txt = match.Value;
                         var prev = link.PreviousSibling;
-                        if (prev != null)
+                        firstchild.InnerHtml = firstchild.InnerHtml.Substring(txt.Length);
+                        if (prev?.NodeType == HtmlNodeType.Text)
                         {
-                            firstchild.InnerHtml = firstchild.InnerHtml.Substring(txt.Length);
-                            if (prev.NodeType == HtmlNodeType.Text)
-                            {
 #pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
-                                prev.InnerHtml = prev.InnerHtml + txt;
+                            prev.InnerHtml = prev.InnerHtml + txt;
 #pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
-                            }
-                            else
-                            {
-                                document.DocumentNode.InsertBefore(HtmlNode.CreateNode(txt), link);
-                            }
+                        }
+                        else
+                        {
+                            document.DocumentNode.InsertBefore(HtmlNode.CreateNode(txt), link);
                         }
                     }
                 }
@@ -262,17 +259,14 @@ namespace RichTextCleaner.Common
                     {
                         var txt = match.Value;
                         var next = link.NextSibling;
-                        if (next != null)
+                        lastchild.InnerHtml = lastchild.InnerHtml.Substring(0, lastchild.InnerHtml.Length - txt.Length);
+                        if (next?.NodeType == HtmlNodeType.Text)
                         {
-                            lastchild.InnerHtml = lastchild.InnerHtml.Substring(0, lastchild.InnerHtml.Length - txt.Length);
-                            if (next.NodeType == HtmlNodeType.Text)
-                            {
-                                next.InnerHtml = txt + next.InnerHtml;
-                            }
-                            else
-                            {
-                                document.DocumentNode.InsertAfter(HtmlNode.CreateNode(txt), link);
-                            }
+                            next.InnerHtml = txt + next.InnerHtml;
+                        }
+                        else
+                        {
+                            document.DocumentNode.InsertAfter(HtmlNode.CreateNode(txt), link);
                         }
                     }
                 }

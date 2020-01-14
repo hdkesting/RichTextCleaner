@@ -117,11 +117,12 @@ Some paragraph<br/>
         [TestMethod]
         public void NoParagraph_ShouldStaySame()
         {
-            var doc = TextCleaner.CreateHtmlDocument("<span> Some paragraph </span>");
+            var source = "<span> Some paragraph </span>";
+            var doc = TextCleaner.CreateHtmlDocument(source);
             TextCleaner.TrimParagraphs(doc);
             var html = TextCleaner.GetHtmlSource(doc, false);
 
-            Assert.AreEqual("<span> Some paragraph </span>", html);
+            Assert.AreEqual(source, html);
         }
 
         [TestMethod]
