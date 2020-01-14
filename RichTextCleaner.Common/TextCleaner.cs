@@ -90,17 +90,68 @@ namespace RichTextCleaner.Common
             var paras = document.DocumentNode.SelectNodes("//p") ?? Enumerable.Empty<HtmlNode>();
             foreach (var para in paras.Where(p => p.ChildNodes?.Count > 0))
             {
-                var child = para.ChildNodes.First();
-                if (child.NodeType == HtmlNodeType.Text)
+                bool trimmed;
+                do
                 {
-                    child.InnerHtml = child.InnerHtml.TrimStart();
+                    var child = para.ChildNodes.First();
+                    trimmed = false;
+                    if (child.NodeType == HtmlNodeType.Text)
+                    {
+                        if (string.IsNullOrWhiteSpace(child.InnerHtml))
+                        {
+                            child.Remove();
+                            trimmed = true;
+                        }
+                        else
+                        {
+                            // remove any leading whitespace
+                            var htmlTrim = child.InnerHtml.TrimStart();
+                            if (htmlTrim != child.InnerHtml)
+                            {
+                                child.InnerHtml = htmlTrim;
+                                trimmed = true;
+                            }
+                        }
+                    }
+                    else if (child.NodeType == HtmlNodeType.Element && child.Name == "br")
+                    {
+                        // remove an initial <br>
+                        child.Remove();
+                        trimmed = true;
+                    }
                 }
+                while (trimmed);
 
-                child = para.ChildNodes.Last(); // may be the same as first
-                if (child.NodeType == HtmlNodeType.Text)
+                do
                 {
-                    child.InnerHtml = child.InnerHtml.TrimEnd();
+                    var child = para.ChildNodes.Last(); // may be the same as first
+                    trimmed = false;
+                    if (child.NodeType == HtmlNodeType.Text)
+                    {
+                        if (string.IsNullOrWhiteSpace(child.InnerHtml))
+                        {
+                            child.Remove();
+                            trimmed = true;
+                        }
+                        else
+                        {
+                            // remove any trailing whitespace
+                            var htmlTrim = child.InnerHtml.TrimEnd();
+                            if (htmlTrim != child.InnerHtml)
+                            {
+                                child.InnerHtml = htmlTrim;
+                                trimmed = true;
+                            }
+                        }
+                    }
+                    else if (child.NodeType == HtmlNodeType.Element && child.Name == "br")
+                    {
+                        // remove an final <br>
+                        child.Remove();
+                        trimmed = true;
+                    }
                 }
+                while (trimmed);
             }
         }
 
@@ -132,16 +183,23 @@ namespace RichTextCleaner.Common
             }
         }
 
-        internal static void CombineAndCleanLinks(HtmlDocument document)
+        private static void CombineAndCleanLinks(HtmlDocument document)
+        {
+            CombineLinks(document);
+            RemoveEmptyLinks(document);
+            RemoveLeadingAndTrailingSpacesFromLinks(document);
+        }
+
+        internal static void CombineLinks(HtmlDocument document)
         {
             var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
 
             foreach (var link in links.Skip(1))
             {
                 var previousSibling = link.PreviousSibling;
-                if (previousSibling?.NodeType == HtmlNodeType.Element 
-                    && previousSibling.Name == "a" 
-                    && previousSibling.GetAttributeValue("href", String.Empty) == link.GetAttributeValue("href", string.Empty))
+                if (previousSibling?.NodeType == HtmlNodeType.Element
+                    && previousSibling.Name == "a"
+                    && previousSibling.GetAttributeValue("href", string.Empty) == link.GetAttributeValue("href", string.Empty))
                 {
                     // this link points to the same destination as its immediate predecessor. Join contents to that, clearing this (to be removed next)
                     foreach (var child in (link.ChildNodes ?? Enumerable.Empty<HtmlNode>()).ToList())
@@ -149,18 +207,26 @@ namespace RichTextCleaner.Common
                         link.ChildNodes.Remove(child);
                         previousSibling.ChildNodes.Append(child); // this *copies* the node
                     }
+
+                    link.Remove();
                 }
             }
+        }
 
+        internal static void RemoveEmptyLinks(HtmlDocument document)
+        {
             // remove empty links
-            links = document.DocumentNode.SelectNodes("//a[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
-            foreach (var link in links)
+            var links = document.DocumentNode.SelectNodes("//a[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var link in links.ToList())
             {
                 RemoveSurroundingTags(link);
             }
+        }
 
+        internal static void RemoveLeadingAndTrailingSpacesFromLinks(HtmlDocument document)
+        {
             // move leading and trailing spaces and commas/periods outside of link
-            links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
+            var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
             foreach (var link in links.Where(l => l.ChildNodes?.Count > 0))
             {
                 var firstchild = link.ChildNodes[0];

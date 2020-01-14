@@ -89,6 +89,32 @@ namespace RichTextCleaner.Test
         }
 
         [TestMethod]
+        public void ParagraphWithLeadingBreaks_ShouldBeClean()
+        {
+            var doc = TextCleaner.CreateHtmlDocument(@"<p><br/>
+<br/>
+Some paragraph
+</p>");
+            TextCleaner.TrimParagraphs(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<p>Some paragraph</p>", html);
+        }
+
+        [TestMethod]
+        public void ParagraphWithTrailingBreaks_ShouldBeClean()
+        {
+            var doc = TextCleaner.CreateHtmlDocument(@"<p>
+Some paragraph<br/>
+<br/>
+</p>");
+            TextCleaner.TrimParagraphs(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<p>Some paragraph</p>", html);
+        }
+
+        [TestMethod]
         public void NoParagraph_ShouldStaySame()
         {
             var doc = TextCleaner.CreateHtmlDocument("<span> Some paragraph </span>");
@@ -112,7 +138,7 @@ namespace RichTextCleaner.Test
         public void ConsecutiveLinks_ShouldCombine()
         {
             var doc = TextCleaner.CreateHtmlDocument("<p><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\"><sup>&reg;</sup></a></p>");
-            TextCleaner.CombineAndCleanLinks(doc);
+            TextCleaner.CombineLinks(doc);
             var html = TextCleaner.GetHtmlSource(doc, false);
 
             Assert.AreEqual("<p><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper<sup>&reg;</sup></a></p>", html);
@@ -122,17 +148,27 @@ namespace RichTextCleaner.Test
         public void NonConsecutiveLinks_ShouldNotCombine()
         {
             var doc = TextCleaner.CreateHtmlDocument("<a href=\"nu.nl\">x</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\"><sup>&reg;</sup></a>");
-            TextCleaner.CombineAndCleanLinks(doc);
+            TextCleaner.CombineLinks(doc);
             var html = TextCleaner.GetHtmlSource(doc, false);
 
             Assert.AreEqual("<a href=\"nu.nl\">x</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper<sup>&reg;</sup></a>", html);
         }
 
         [TestMethod]
+        public void MultipleLinks_ShouldCombine()
+        {
+            var doc = TextCleaner.CreateHtmlDocument("<a href=\"a.yy\">a</a><a href=\"a.yy\">b</a><a href=\"a.yy\">c</a><a href=\"a.yy\">d</a><a href=\"b.yy\">e</a>");
+            TextCleaner.CombineLinks(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<a href=\"a.yy\">abcd</a><a href=\"b.yy\">e</a>", html);
+        }
+
+        [TestMethod]
         public void LinkAroundSpace_ShouldBeRemoved()
         {
             var doc = TextCleaner.CreateHtmlDocument("<span><a href=\"www.example.com\"> </a></span>");
-            TextCleaner.CombineAndCleanLinks(doc);
+            TextCleaner.RemoveEmptyLinks(doc);
             var html = TextCleaner.GetHtmlSource(doc, false);
 
             Assert.AreEqual("<span> </span>", html);
@@ -142,7 +178,7 @@ namespace RichTextCleaner.Test
         public void LinkWithLeadingSpaces_ShouldBeCleaned()
         {
             var doc = TextCleaner.CreateHtmlDocument("<span>bla<a href=\"www.example.com\">, bla</a></span>");
-            TextCleaner.CombineAndCleanLinks(doc);
+            TextCleaner.RemoveLeadingAndTrailingSpacesFromLinks(doc);
             var html = TextCleaner.GetHtmlSource(doc, false);
 
             Assert.AreEqual("<span>bla, <a href=\"www.example.com\">bla</a></span>", html);
@@ -152,7 +188,7 @@ namespace RichTextCleaner.Test
         public void LinkWithTrailingSpaces_ShouldBeCleaned()
         {
             var doc = TextCleaner.CreateHtmlDocument("<span>bla<a href=\"www.example.com\"> bla, </a>bla</span>");
-            TextCleaner.CombineAndCleanLinks(doc);
+            TextCleaner.RemoveLeadingAndTrailingSpacesFromLinks(doc);
             var html = TextCleaner.GetHtmlSource(doc, false);
 
             Assert.AreEqual("<span>bla <a href=\"www.example.com\">bla</a>, bla</span>", html);
