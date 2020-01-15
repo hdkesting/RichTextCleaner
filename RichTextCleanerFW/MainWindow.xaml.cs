@@ -1,5 +1,6 @@
 ﻿using RichTextCleaner.Common;
 using RichTextCleanerFW.Logging;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -56,15 +57,25 @@ namespace RichTextCleanerFW
 
         private async Task CopyFromClipboard()
         {
-            var text = ClipboardHelper.GetTextFromClipboard();
-            if (text is null)
+            try
             {
-                MessageBox.Show("Couldn't read text from clipboard");
+                var text = ClipboardHelper.GetTextFromClipboard();
+                if (text is null)
+                {
+                    Logger.Log(LogLevel.Error, nameof(CopyFromClipboard), "Couldn't read text from clipboard");
+                    MessageBox.Show("Couldn't read text from clipboard");
+                }
+                else
+                {
+                    this.TextContent.Text = text;
+                    Logger.Log(LogLevel.Debug, nameof(CopyFromClipboard), "Copied text from cliboard");
+                    await this.SetStatus("Copied text from clipboard.").ConfigureAwait(false);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                this.TextContent.Text = text;
-                await this.SetStatus("Copied text from clipboard.").ConfigureAwait(false);
+                Logger.Log(LogLevel.Error, nameof(CopyFromClipboard), "Error reading clipboard", ex);
+                MessageBox.Show("There was an error reading from the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -77,14 +88,36 @@ namespace RichTextCleanerFW
         {
             string html = this.TextContent.Text;
 
-            html = TextCleaner.ClearStylingFromHtml(
-                html, 
-                ClearBoldMarkup.IsChecked.GetValueOrDefault(),
-                ClearItalicMarkup.IsChecked.GetValueOrDefault(),
-                ClearUnderlineMarkup.IsChecked.GetValueOrDefault(),
-                AddBlankTarget.IsChecked.GetValueOrDefault());
-            ClipboardHelper.CopyToClipboard(html, html);
-            this.TextContent.Text = html;
+            try
+            {
+                html = TextCleaner.ClearStylingFromHtml(
+                    html,
+                    ClearBoldMarkup.IsChecked.GetValueOrDefault(),
+                    ClearItalicMarkup.IsChecked.GetValueOrDefault(),
+                    ClearUnderlineMarkup.IsChecked.GetValueOrDefault(),
+                    AddBlankTarget.IsChecked.GetValueOrDefault());
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, nameof(ClearStylingAndCopy), "Error cleaning HTML:" + Environment.NewLine + html, ex);
+                MessageBox.Show("There was an error cleaning the HTML", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                ClipboardHelper.CopyToClipboard(html, html);
+                this.TextContent.Text = html;
+                Logger.Log(LogLevel.Debug, nameof(ClearStylingAndCopy), "Cleaned HTML and copied to clipboard");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, nameof(ClearStylingAndCopy), "Error writing HTML to clipboard", ex);
+                MessageBox.Show("There was an error writing the cleand HTML to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Logger.Log(LogLevel.Debug, nameof(ClearStylingAndCopy), "Copied cleaned HTML to the clipboard");
             await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
         }
 
@@ -97,9 +130,30 @@ namespace RichTextCleanerFW
         {
             string html = this.TextContent.Text;
 
-            string text = TextCleaner.HtmlToPlainText(html);
+            string text;
 
-            ClipboardHelper.CopyPlainTextToClipboard(text);
+            try
+            {
+                text = TextCleaner.HtmlToPlainText(html);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, nameof(PlainTextAndCopy), "Error cleaning HTML to text:" + Environment.NewLine + html, ex);
+                MessageBox.Show("There was an error getting text from the HTML", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                ClipboardHelper.CopyPlainTextToClipboard(text);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, nameof(PlainTextAndCopy), "Error writing TEXT to clipboard", ex);
+                MessageBox.Show("There was an error writing the TEXT to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             this.TextContent.Text = text;
             await this.SetStatus("The plain TEXT is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
         }
@@ -107,7 +161,18 @@ namespace RichTextCleanerFW
         private async Task CopySourceAsText()
         {
             string html = this.TextContent.Text;
-            ClipboardHelper.CopyPlainTextToClipboard(html);
+
+            try
+            {
+                ClipboardHelper.CopyPlainTextToClipboard(html);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, nameof(CopySourceAsText), "Error writing source TEXT to clipboard", ex);
+                MessageBox.Show("There was an error writing the source TEXT to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             await this.SetStatus("The HTML source is on the clipboard as Text, use Ctrl-V to paste.").ConfigureAwait(false);
         }
 
