@@ -121,7 +121,6 @@ namespace RichTextCleanerFW
                 return;
             }
 
-            Logger.Log(LogLevel.Debug, nameof(ClearStylingAndCopy), "Copied cleaned HTML to the clipboard");
             await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
         }
 

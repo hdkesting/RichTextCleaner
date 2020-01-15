@@ -249,7 +249,7 @@ namespace RichTextCleaner.Common
                         }
                         else
                         {
-                            document.DocumentNode.InsertBefore(HtmlNode.CreateNode(txt), link);
+                            link.ParentNode.InsertBefore(HtmlNode.CreateNode(txt), link);
                         }
                     }
                 }
@@ -269,7 +269,7 @@ namespace RichTextCleaner.Common
                         }
                         else
                         {
-                            document.DocumentNode.InsertAfter(HtmlNode.CreateNode(txt), link);
+                            link.ParentNode.InsertAfter(HtmlNode.CreateNode(txt), link);
                         }
                     }
                 }

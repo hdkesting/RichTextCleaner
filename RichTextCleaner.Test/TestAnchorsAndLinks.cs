@@ -98,6 +98,17 @@ namespace RichTextCleaner.Test
         }
 
         [TestMethod]
+        public void NestedLinkWithTrailingSpaces_ShouldBeCleaned()
+        {
+            var source = "<p style=\"\">[<a href=\"http://www.example.com/a\" style=\"\">Some example</a>] bla bla [<a href=\"http://www.example.com/b\" style=\"\">name® bla].</a></p>";
+
+            var html = DocTester.ProcessSource(source, TextCleaner.RemoveLeadingAndTrailingSpacesFromLinks);
+
+            Assert.AreEqual("<p style=\"\">[<a href=\"http://www.example.com/a\" style=\"\">Some example</a>] bla bla [<a href=\"http://www.example.com/b\" style=\"\">name® bla]</a>.</p>", html);
+
+        }
+
+        [TestMethod]
         public void LinksToRemote_ShouldGetTarget()
         {
             var source = "<a href=\"https://www.example.com\">link</a>";

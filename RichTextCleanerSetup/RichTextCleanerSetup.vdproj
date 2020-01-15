@@ -564,15 +564,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Rich Text Cleaner"
-        "ProductCode" = "8:{EBBE6D87-2D79-4868-ACF8-F097A2676AC6}"
-        "PackageCode" = "8:{34E20B81-4CA0-4C39-A1D6-DCB44419CAC6}"
+        "ProductCode" = "8:{D1F58367-9054-483E-8BD6-6A0D7EEABB36}"
+        "PackageCode" = "8:{8C862CE8-534A-4466-AED0-41E982638845}"
         "UpgradeCode" = "8:{73DD7A0B-33AC-45B1-BC02-B1E06FAF3EF3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.0.0"
+        "ProductVersion" = "8:2.0.1"
         "Manufacturer" = "8:Hans Kesting"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1100,7 +1100,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
             {
-            "SourcePath" = "8:..\\RichTextCleanerFW\\obj\\Release\\RichTextCleanerFW.exe"
+            "SourcePath" = "8:..\\RichTextCleanerFW\\obj\\Debug\\RichTextCleanerFW.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DE7C719213DA417D9564750B81AFAC40"
