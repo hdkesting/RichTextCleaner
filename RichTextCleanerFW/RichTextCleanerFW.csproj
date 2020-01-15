@@ -79,6 +79,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ClipboardHelper.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Logging\LogMessage.cs" />
+    <Compile Include="Logging\LogWriter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

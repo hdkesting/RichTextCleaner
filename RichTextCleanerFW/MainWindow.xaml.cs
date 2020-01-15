@@ -1,4 +1,5 @@
 ﻿using RichTextCleaner.Common;
+using RichTextCleanerFW.Logging;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -38,11 +39,14 @@ namespace RichTextCleanerFW
 
             if (libVersion != appVersion)
             {
+                Logger.Log(LogLevel.Error, "Startup", $"Version mismatch: app={appVersion}, lib={libVersion}.");
                 MessageBox.Show("The installation didn't succeed properly. Please run the installer to remove the current installation and then install again.",
                     "Installation error", MessageBoxButton.OK, MessageBoxImage.Error);
-                System.Environment.Exit(1);
+                Application.Current.Shutdown(1);
+                return;
             }
 
+            Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started.");
         }
 
         private async void CopyFromClipboard(object sender, RoutedEventArgs e)
