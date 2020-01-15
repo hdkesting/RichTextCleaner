@@ -194,7 +194,7 @@ namespace RichTextCleaner.Common
         {
             var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
 
-            foreach (var link in links.Skip(1))
+            foreach (var link in links.Skip(1).ToList())
             {
                 var previousSibling = link.PreviousSibling;
                 if (previousSibling?.NodeType == HtmlNodeType.Element
@@ -217,6 +217,8 @@ namespace RichTextCleaner.Common
         {
             // remove empty links
             var links = document.DocumentNode.SelectNodes("//a[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
+
+            // use .ToList() to make sure the original list cannot be modified
             foreach (var link in links.ToList())
             {
                 RemoveSurroundingTags(link);
@@ -227,7 +229,7 @@ namespace RichTextCleaner.Common
         {
             // move leading and trailing spaces and commas/periods outside of link
             var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
-            foreach (var link in links.Where(l => l.ChildNodes?.Count > 0))
+            foreach (var link in links.Where(l => l.ChildNodes?.Count > 0).ToList())
             {
                 var firstchild = link.ChildNodes[0];
                 if (firstchild.NodeType == HtmlNodeType.Text)

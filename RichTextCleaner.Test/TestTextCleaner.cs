@@ -166,6 +166,17 @@ Some paragraph<br/>
         }
 
         [TestMethod]
+        public void MultipleLinks_ShouldCombine2()
+        {
+            var source = "<a href=\"a.yy\">a</a><a href=\"a.yy\">b</a><a href=\"a.yy\">c</a><a href=\"a.yy\">d</a><a href=\"b.yy\">e</a> <a href=\"b.yy\">f</a>";
+            var doc = TextCleaner.CreateHtmlDocument(source);
+            TextCleaner.CombineLinks(doc);
+            var html = TextCleaner.GetHtmlSource(doc, false);
+
+            Assert.AreEqual("<a href=\"a.yy\">abcd</a><a href=\"b.yy\">e</a> <a href=\"b.yy\">f</a>", html);
+        }
+
+        [TestMethod]
         public void LinkAroundSpace_ShouldBeRemoved()
         {
             var doc = TextCleaner.CreateHtmlDocument("<span><a href=\"www.example.com\"> </a></span>");
