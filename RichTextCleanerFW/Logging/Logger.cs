@@ -21,6 +21,8 @@ namespace RichTextCleanerFW.Logging
         private static int emptyFlushCount;
         private static bool stoppedFlushing;
 
+        public static string LogFolder { get; private set; }
+
         /// <summary>
         /// (Re-)initializes this instance.
         /// </summary>
@@ -44,7 +46,8 @@ namespace RichTextCleanerFW.Logging
 
             logWriter?.Flush();
 
-            logWriter = new LogWriter(Path.Combine(basePath.FullName, "logs"));
+            LogFolder = Path.Combine(basePath.FullName, "logs");
+            logWriter = new LogWriter(LogFolder);
 
             Log(LogLevel.Information, Name, "App startup");
         }

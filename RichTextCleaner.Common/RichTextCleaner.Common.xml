@@ -64,6 +64,12 @@
             </summary>
             <param name="document"></param>
         </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStyling(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            Remove all style and class attributes.
+            </summary>
+            <param name="document">The document.</param>
+        </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.ClearStyling(HtmlAgilityPack.HtmlNode)">
             <summary>
             Remove all style and class attributes.

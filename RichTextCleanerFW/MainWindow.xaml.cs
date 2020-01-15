@@ -1,6 +1,7 @@
 ﻿using RichTextCleaner.Common;
 using RichTextCleanerFW.Logging;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -215,6 +216,10 @@ namespace RichTextCleanerFW
 
                 case Key.H:
                     await this.CopySourceAsText().ConfigureAwait(false);
+                    break;
+
+                case Key.L:
+                    Process.Start(Logger.LogFolder);
                     break;
             }
         }
