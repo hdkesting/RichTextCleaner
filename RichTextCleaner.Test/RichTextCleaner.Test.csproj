@@ -57,8 +57,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocTester.cs" />
     <Compile Include="TestTextCleaner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestNonCMS.cs" />
+    <Compile Include="TestTrimParagraph.cs" />
+    <Compile Include="TestAnchorsAndLinks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -22,11 +22,12 @@ namespace RichTextCleanerFW
 
             if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
             {
-                VersionLabel.Content = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(3);
+                // clickonce deploy: N/A
+                VersionLabel.Content = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
             }
             else
             {
-                VersionLabel.Content = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                VersionLabel.Content = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             }
 
             StatusForeground = StatusLabel.Foreground;
@@ -47,7 +48,9 @@ namespace RichTextCleanerFW
                 return;
             }
 
-            Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started.");
+            var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
+
+            Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmllib.Name} version {htmllib.Version}.");
         }
 
         private async void CopyFromClipboard(object sender, RoutedEventArgs e)

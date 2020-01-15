@@ -39,9 +39,10 @@ namespace RichTextCleaner.Common
             var doc = CreateHtmlDocument(html);
 
             RemoveNonCMSElements(doc);
-            ClearStyling(doc.DocumentNode);
+            ClearStyling(doc);
             TranslateNodes(doc, clearBoldMarkup, clearItalicMarkup, clearUnderlineMarkup);
             RemoveSurroundingTags(doc, "span");
+            RemoveSurroundingTags(doc, "div");
             RemoveEmptySpans(doc);
             ClearParagraphsInBlocks(doc);
             RemoveAnchors(doc);
@@ -438,8 +439,14 @@ namespace RichTextCleaner.Common
         /// <summary>
         /// Remove all style and class attributes.
         /// </summary>
+        /// <param name="document">The document.</param>
+        internal static void ClearStyling(HtmlDocument document) => ClearStyling(document?.DocumentNode);
+
+        /// <summary>
+        /// Remove all style and class attributes.
+        /// </summary>
         /// <param name="node"></param>
-        internal static void ClearStyling(HtmlNode node)
+        private static void ClearStyling(HtmlNode node)
         {
             if (node != null)
             {
