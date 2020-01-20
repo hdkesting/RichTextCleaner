@@ -99,7 +99,8 @@ namespace RichTextCleanerFW
                     ClearBoldMarkup.IsChecked.GetValueOrDefault(),
                     ClearItalicMarkup.IsChecked.GetValueOrDefault(),
                     ClearUnderlineMarkup.IsChecked.GetValueOrDefault(),
-                    AddBlankTarget.IsChecked.GetValueOrDefault());
+                    AddBlankTarget.IsChecked.GetValueOrDefault(),
+                    QuoteProcessing.NoChange);
             }
             catch (Exception ex)
             {

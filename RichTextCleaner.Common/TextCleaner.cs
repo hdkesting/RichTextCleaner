@@ -22,6 +22,7 @@ namespace RichTextCleaner.Common
         /// <param name="clearItalicMarkup">if set to <c>true</c>, clear italic markup.</param>
         /// <param name="clearUnderlineMarkup">if set to <c>true</c>, clear underline markup.</param>
         /// <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
+        /// <param name="quoteProcessing">Set how to process quotes.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">html</exception>
         public static string ClearStylingFromHtml(
@@ -29,7 +30,8 @@ namespace RichTextCleaner.Common
             bool clearBoldMarkup,
             bool clearItalicMarkup,
             bool clearUnderlineMarkup,
-            bool addBlankLinkTarget)
+            bool addBlankLinkTarget,
+            QuoteProcessing quoteProcessing)
         {
             if (html is null)
             {
@@ -52,6 +54,8 @@ namespace RichTextCleaner.Common
                 AddBlankLinkTargets(doc);
             }
             TrimParagraphs(doc);
+
+            UpdateQuotes(doc, quoteProcessing);
 
             return GetHtmlSource(doc);
         }
@@ -80,6 +84,43 @@ namespace RichTextCleaner.Common
             }
 
             return html;
+        }
+
+        internal static void UpdateQuotes(HtmlDocument document, QuoteProcessing quoteProcessing)
+        {
+            switch (quoteProcessing)
+            {
+                case QuoteProcessing.ChangeToSimpleQuotes:
+                    UpdateQuotesToSimple(document);
+                    break;
+
+                case QuoteProcessing.ChangeToSmartQuotes:
+                    UpdateQuotesToSmart(document);
+                    break;
+            }
+        }
+
+        private static void UpdateQuotesToSimple(HtmlDocument document)
+        {
+            foreach (var textNode in document.DocumentNode.SelectNodes("//text()"))
+            {
+                textNode.InnerHtml = textNode.InnerHtml
+                    .Replace("&ldquo;", "\"")
+                    .Replace("&rdquo;", "\"")
+                    .Replace("&lsquo;", "'")
+                    .Replace("&rsquo;", "'");
+            }
+        }
+
+        private static void UpdateQuotesToSmart(HtmlDocument document)
+        {
+            foreach (var textNode in document.DocumentNode.SelectNodes("//text()"))
+            {
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"""(?=\w)", "&ldquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(?<=\w)""", "&rdquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"'(?=\w)", "&lsquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(?<=\w)'", "&rsquo;", RegexOptions.None);
+            }
         }
 
         /// <summary>

@@ -4,12 +4,32 @@
         <name>RichTextCleaner.Common</name>
     </assembly>
     <members>
+        <member name="T:RichTextCleaner.Common.QuoteProcessing">
+            <summary>
+            Select how to process quotes in texts.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.QuoteProcessing.NoChange">
+            <summary>
+            Do not change any quotes.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.QuoteProcessing.ChangeToSimpleQuotes">
+            <summary>
+            Change smart quotes to simple quotes.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.QuoteProcessing.ChangeToSmartQuotes">
+            <summary>
+            Change simple quotes to smart quotes.
+            </summary>
+        </member>
         <member name="T:RichTextCleaner.Common.TextCleaner">
             <summary>
             The cleaner module.
             </summary>
         </member>
-        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,RichTextCleaner.Common.QuoteProcessing)">
             <summary>
             Clears the styling from the HTML.
             </summary>
@@ -18,6 +38,7 @@
             <param name="clearItalicMarkup">if set to <c>true</c>, clear italic markup.</param>
             <param name="clearUnderlineMarkup">if set to <c>true</c>, clear underline markup.</param>
             <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
+            <param name="quoteProcessing">Set how to process quotes.</param>
             <returns></returns>
             <exception cref="T:System.ArgumentNullException">html</exception>
         </member>

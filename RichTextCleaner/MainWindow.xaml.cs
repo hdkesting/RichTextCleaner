@@ -31,7 +31,7 @@ namespace RichTextCleaner
         {
             string html = this.TextContent.Text;
 
-            html = TextCleaner.ClearStylingFromHtml(html, true, true, true, true); // TODO get those boolsB from somewhere
+            html = TextCleaner.ClearStylingFromHtml(html, true, true, true, true, QuoteProcessing.NoChange); // TODO get those boolsB from somewhere
 
             ClipboardHelper.CopyToClipboard(html, html);
             this.TextContent.Text = html;
