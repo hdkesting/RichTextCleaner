@@ -84,6 +84,8 @@ namespace RichTextCleaner.Common
 
         internal static void UpdateQuotes(HtmlDocument document, QuoteProcessing quoteProcessing)
         {
+            UpdateLiteralQuotesToEntities(document);
+
             switch (quoteProcessing)
             {
                 case QuoteProcessing.ChangeToSimpleQuotes:
@@ -94,6 +96,19 @@ namespace RichTextCleaner.Common
                     UpdateQuotesToSmart(document);
                     break;
             }
+        }
+
+        private static void UpdateLiteralQuotesToEntities(HtmlDocument document)
+        {
+            foreach (var textNode in document.DocumentNode.SelectNodes("//text()"))
+            {
+                textNode.InnerHtml = textNode.InnerHtml
+                    .Replace("“", "&ldquo;")
+                    .Replace("”", "&rdquo;")
+                    .Replace("‘", "&lsquo;")
+                    .Replace("’", "&rsquo;");
+            }
+
         }
 
         private static void UpdateQuotesToSimple(HtmlDocument document)
@@ -110,12 +125,13 @@ namespace RichTextCleaner.Common
 
         private static void UpdateQuotesToSmart(HtmlDocument document)
         {
+            // note that quoted text may end on a comma or period.
             foreach (var textNode in document.DocumentNode.SelectNodes("//text()"))
             {
-                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"""(?=\w)", "&ldquo;", RegexOptions.None);
-                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(?<=\w)""", "&rdquo;", RegexOptions.None);
-                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"'(?=\w)", "&lsquo;", RegexOptions.None);
-                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(?<=\w)'", "&rsquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(^|(?<=\s))""", "&ldquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"""((?=\s)|$)", "&rdquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(^|(?<=\s))'", "&lsquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"'((?=\s)|$)", "&rsquo;", RegexOptions.None);
             }
         }
 

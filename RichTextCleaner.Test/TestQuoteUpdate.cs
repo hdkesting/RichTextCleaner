@@ -21,21 +21,21 @@ namespace RichTextCleaner.Test
         [TestMethod]
         public void ToSimpleQuotes_ShouldChangeSmartQuotes()
         {
-            var source = "<a target=\"_blank\">&ldquo;some remark&rdquo; said the so-called \"chief\"</a>";
+            var source = "<a target=\"_blank\">&ldquo;some remark&rdquo; said the so-called \"chief.\"</a>";
 
             var html = DocTester.ProcessSource(source, doc => TextCleaner.UpdateQuotes(doc, QuoteProcessing.ChangeToSimpleQuotes));
 
-            Assert.AreEqual("<a target=\"_blank\">\"some remark\" said the so-called \"chief\"</a>", html);
+            Assert.AreEqual("<a target=\"_blank\">\"some remark\" said the so-called \"chief.\"</a>", html);
         }
 
         [TestMethod]
         public void ToSmartQuotes_ShouldChangeSimpleQuotes()
         {
-            var source = "<a target=\"_blank\">&ldquo;some remark&rdquo; said the so-called \"chief\"</a>";
+            var source = "<a target=\"_blank\">&ldquo;some remark&rdquo; said the so-called \"chief.\"</a>";
 
             var html = DocTester.ProcessSource(source, doc => TextCleaner.UpdateQuotes(doc, QuoteProcessing.ChangeToSmartQuotes));
 
-            Assert.AreEqual("<a target=\"_blank\">&ldquo;some remark&rdquo; said the so-called &ldquo;chief&rdquo;</a>", html);
+            Assert.AreEqual("<a target=\"_blank\">&ldquo;some remark&rdquo; said the so-called &ldquo;chief.&rdquo;</a>", html);
         }
 
     }

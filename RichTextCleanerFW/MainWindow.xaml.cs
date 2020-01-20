@@ -101,7 +101,7 @@ namespace RichTextCleanerFW
                     html,
                     GetStyleSetting(),
                     AddBlankTarget.IsChecked.GetValueOrDefault(),
-                    QuoteProcessing.NoChange);
+                    GetQuoteSetting());
             }
             catch (Exception ex)
             {
@@ -145,6 +145,16 @@ namespace RichTextCleanerFW
                 }
 
                 return styles;
+            }
+
+            QuoteProcessing GetQuoteSetting() {
+                switch (QuoteProcess.SelectedIndex)
+                {
+                    case 0: return QuoteProcessing.NoChange;
+                    case 1: return QuoteProcessing.ChangeToSimpleQuotes;
+                    case 2: return QuoteProcessing.ChangeToSmartQuotes;
+                    default: return QuoteProcessing.NoChange;
+                }
             }
         }
 
