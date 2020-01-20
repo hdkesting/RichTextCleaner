@@ -18,18 +18,14 @@ namespace RichTextCleaner.Common
         /// Clears the styling from the HTML.
         /// </summary>
         /// <param name="html">The HTML to clean.</param>
-        /// <param name="clearBoldMarkup">if set to <c>true</c>, clear bold markup.</param>
-        /// <param name="clearItalicMarkup">if set to <c>true</c>, clear italic markup.</param>
-        /// <param name="clearUnderlineMarkup">if set to <c>true</c>, clear underline markup.</param>
+        /// <param name="markupToRemove">The style markup to remove.</param>
         /// <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
         /// <param name="quoteProcessing">Set how to process quotes.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">html</exception>
         public static string ClearStylingFromHtml(
             string html,
-            bool clearBoldMarkup,
-            bool clearItalicMarkup,
-            bool clearUnderlineMarkup,
+            StyleElements markupToRemove,
             bool addBlankLinkTarget,
             QuoteProcessing quoteProcessing)
         {
@@ -42,7 +38,7 @@ namespace RichTextCleaner.Common
 
             RemoveNonCMSElements(doc);
             ClearStyling(doc);
-            TranslateNodes(doc, clearBoldMarkup, clearItalicMarkup, clearUnderlineMarkup);
+            TranslateStyleNodes(doc, markupToRemove);
             RemoveSurroundingTags(doc, "span");
             RemoveSurroundingTags(doc, "div");
             RemoveEmptySpans(doc);
@@ -557,10 +553,8 @@ namespace RichTextCleaner.Common
         /// Replace styling nodes with modern versions, optionally remove them completely.
         /// </summary>
         /// <param name="document">The document.</param>
-        /// <param name="clearBoldMarkup">if set to <c>true</c>, remove b and strong elements.</param>
-        /// <param name="clearItalicMarkup">if set to <c>true</c>, remove i and em elements.</param>
-        /// <param name="clearUnderlineMarkup">if set to <c>true</c>, remove u elements.</param>
-        private static void TranslateNodes(HtmlDocument document, bool clearBoldMarkup, bool clearItalicMarkup, bool clearUnderlineMarkup)
+        /// <param name="markupToRemove">The style markup to remove.</param>
+        private static void TranslateStyleNodes(HtmlDocument document, StyleElements markupToRemove)
         {
             // normalize "b" and "i" to "strong" and "em"
             Replace(document.DocumentNode, "b", "strong");
@@ -569,19 +563,19 @@ namespace RichTextCleaner.Common
             // remove any "font" tag
             Replace(document.DocumentNode, "font", "span");
 
-            if (clearBoldMarkup)
+            if (markupToRemove.HasFlag(StyleElements.Bold))
             {
                 // remove all "strong" tags (which includes the recently renamed "b")
                 RemoveSurroundingTags(document, "strong");
             }
 
-            if (clearItalicMarkup)
+            if (markupToRemove.HasFlag(StyleElements.Italic))
             {
                 // remove all "em" tags (which includes the recently renamed "i")
                 RemoveSurroundingTags(document, "em");
             }
 
-            if (clearUnderlineMarkup)
+            if (markupToRemove.HasFlag(StyleElements.Underline))
             {
                 RemoveSurroundingTags(document, "u");
             }

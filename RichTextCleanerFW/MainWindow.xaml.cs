@@ -61,6 +61,7 @@ namespace RichTextCleanerFW
 
         private async Task CopyFromClipboard()
         {
+#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 var text = ClipboardHelper.GetTextFromClipboard();
@@ -81,6 +82,7 @@ namespace RichTextCleanerFW
                 Logger.Log(LogLevel.Error, nameof(CopyFromClipboard), "Error reading clipboard", ex);
                 MessageBox.Show("There was an error reading from the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         private async void ClearStylingAndCopy(object sender, RoutedEventArgs e)
@@ -92,13 +94,12 @@ namespace RichTextCleanerFW
         {
             string html = this.TextContent.Text;
 
+#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 html = TextCleaner.ClearStylingFromHtml(
                     html,
-                    ClearBoldMarkup.IsChecked.GetValueOrDefault(),
-                    ClearItalicMarkup.IsChecked.GetValueOrDefault(),
-                    ClearUnderlineMarkup.IsChecked.GetValueOrDefault(),
+                    GetStyleSetting(),
                     AddBlankTarget.IsChecked.GetValueOrDefault(),
                     QuoteProcessing.NoChange);
             }
@@ -121,8 +122,30 @@ namespace RichTextCleanerFW
                 MessageBox.Show("There was an error writing the cleand HTML to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
+
+            StyleElements GetStyleSetting()
+            {
+                var styles = StyleElements.None;
+                if (ClearBoldMarkup.IsChecked.GetValueOrDefault())
+                {
+                    styles |= StyleElements.Bold;
+                }
+
+                if (ClearItalicMarkup.IsChecked.GetValueOrDefault())
+                {
+                    styles |= StyleElements.Italic;
+                }
+
+                if (ClearUnderlineMarkup.IsChecked.GetValueOrDefault())
+                {
+                    styles |= StyleElements.Underline;
+                }
+
+                return styles;
+            }
         }
 
         private async void PlainTextAndCopy(object sender, RoutedEventArgs e)
@@ -136,6 +159,7 @@ namespace RichTextCleanerFW
 
             string text;
 
+#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 text = TextCleaner.HtmlToPlainText(html);
@@ -157,6 +181,7 @@ namespace RichTextCleanerFW
                 MessageBox.Show("There was an error writing the TEXT to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             this.TextContent.Text = text;
             await this.SetStatus("The plain TEXT is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
@@ -166,6 +191,7 @@ namespace RichTextCleanerFW
         {
             string html = this.TextContent.Text;
 
+#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 ClipboardHelper.CopyPlainTextToClipboard(html);
@@ -176,6 +202,7 @@ namespace RichTextCleanerFW
                 MessageBox.Show("There was an error writing the source TEXT to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             await this.SetStatus("The HTML source is on the clipboard as Text, use Ctrl-V to paste.").ConfigureAwait(false);
         }
