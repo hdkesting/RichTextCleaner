@@ -58,8 +58,18 @@ namespace RichTextCleaner.Common
 
         internal static HtmlDocument CreateHtmlDocument(string html)
         {
+            html = (html ?? string.Empty).Replace("&nbsp;", " ");
+            int oldlength, newlength;
+            do
+            {
+                oldlength = html.Length;
+                html = html.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                newlength = html.Length;
+            }
+            while (oldlength != newlength);
+
             var doc = new HtmlDocument();
-            doc.LoadHtml((html ?? String.Empty).Replace("&nbsp;", " "));
+            doc.LoadHtml(html);
 
             return doc;
         }
@@ -76,7 +86,8 @@ namespace RichTextCleaner.Common
             if (cleanup)
             {
                 html = html
-                    .Replace("</p>", "</p>" + Environment.NewLine);
+                    .Replace("</p>", "</p>" + Environment.NewLine)
+                    .Replace("</p>" + Environment.NewLine + Environment.NewLine, "</p>" + Environment.NewLine);
             }
 
             return html;
