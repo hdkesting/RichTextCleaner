@@ -92,7 +92,6 @@ namespace RichTextCleanerFW.Logging
                     stoppedFlushing = false;
                     emptyFlushCount = 0;
                     flushTimer.Change(flushTime, flushTime);
-                    Log(LogLevel.Debug, nameof(Logger), "Resumed log flushing >>>>.");
                 }
             }
         }
@@ -113,7 +112,6 @@ namespace RichTextCleanerFW.Logging
                     lock (logWriter)
                     {
                         flushTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                        Log(LogLevel.Debug, nameof(Logger), "Paused log flushing <<<<.");
                         logWriter.Flush();
 
                         stoppedFlushing = true;
