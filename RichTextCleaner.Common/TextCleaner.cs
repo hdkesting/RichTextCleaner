@@ -111,7 +111,7 @@ namespace RichTextCleaner.Common
 
         private static void UpdateLiteralQuotesToEntities(HtmlDocument document)
         {
-            foreach (var textNode in document.DocumentNode.SelectNodes("//text()"))
+            foreach (var textNode in document.DocumentNode.SelectNodes("//text()") ?? Enumerable.Empty<HtmlNode>())
             {
                 textNode.InnerHtml = textNode.InnerHtml
                     .Replace("“", "&ldquo;")
@@ -124,7 +124,7 @@ namespace RichTextCleaner.Common
 
         private static void UpdateQuotesToSimple(HtmlDocument document)
         {
-            foreach (var textNode in document.DocumentNode.SelectNodes("//text()"))
+            foreach (var textNode in document.DocumentNode.SelectNodes("//text()") ?? Enumerable.Empty<HtmlNode>())
             {
                 textNode.InnerHtml = textNode.InnerHtml
                     .Replace("&ldquo;", "\"")
@@ -137,7 +137,7 @@ namespace RichTextCleaner.Common
         private static void UpdateQuotesToSmart(HtmlDocument document)
         {
             // note that quoted text may end on a comma or period.
-            foreach (var textNode in document.DocumentNode.SelectNodes("//text()"))
+            foreach (var textNode in document.DocumentNode.SelectNodes("//text()") ?? Enumerable.Empty<HtmlNode>())
             {
                 textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(^|(?<=(\s|\()))""", "&ldquo;", RegexOptions.None);
                 textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"""((?=(\s|\)))|$)", "&rdquo;", RegexOptions.None);
