@@ -419,7 +419,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:RichTextCleaner.Common, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:RichTextCleaner.Common, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_9DBE950EDFBDCA70DA5071A99C5ECF75"
@@ -564,15 +564,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Rich Text Cleaner"
-        "ProductCode" = "8:{D1F58367-9054-483E-8BD6-6A0D7EEABB36}"
-        "PackageCode" = "8:{8C862CE8-534A-4466-AED0-41E982638845}"
+        "ProductCode" = "8:{EA7E9B45-A8D8-47FC-AF5B-C247147C176C}"
+        "PackageCode" = "8:{8F37593F-08BE-4084-BCE5-A0BD758FB26B}"
         "UpgradeCode" = "8:{73DD7A0B-33AC-45B1-BC02-B1E06FAF3EF3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.0.1"
+        "ProductVersion" = "8:2.1.0"
         "Manufacturer" = "8:Hans Kesting"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1100,7 +1100,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BA5B6DE3AE1143E0B890EB31CA4E65E7"
             {
-            "SourcePath" = "8:..\\RichTextCleanerFW\\obj\\Debug\\RichTextCleanerFW.exe"
+            "SourcePath" = "8:..\\RichTextCleanerFW\\obj\\Release\\RichTextCleanerFW.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DE7C719213DA417D9564750B81AFAC40"

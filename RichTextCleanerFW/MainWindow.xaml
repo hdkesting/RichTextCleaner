@@ -58,7 +58,7 @@
                 </TextBlock>
             </CheckBox>
             <CheckBox Margin="2,2,2,10" x:Name="AddBlankTarget" IsChecked="True" ToolTip="set link target to new window">Add target=__blank</CheckBox>
-            <ListBox x:Name="QuoteProcess">
+            <ListBox x:Name="QuoteProcess" Visibility="Collapsed">
                 <ListBoxItem IsSelected="True" ToolTip="only change literal &quot; to &amp;ldquo;">No quote change</ListBoxItem>
                 <ListBoxItem ToolTip="change &amp;ldquo;/&amp;rdquo; to &quot;">To simple quotes</ListBoxItem>
                 <ListBoxItem ToolTip="change &quot; to &amp;ldquo;/&amp;rdquo;">To smart quotes</ListBoxItem>

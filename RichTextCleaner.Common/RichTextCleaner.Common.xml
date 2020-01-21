@@ -24,19 +24,47 @@
             Change simple quotes to smart quotes.
             </summary>
         </member>
+        <member name="T:RichTextCleaner.Common.StyleElements">
+            <summary>
+            Style elements to process. Can be combined.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.StyleElements.None">
+            <summary>
+            No style elements to process.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.StyleElements.Bold">
+            <summary>
+            Process "bold" elements (&lt;b&gt; and &lt;strong&gt;)
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.StyleElements.Italic">
+            <summary>
+            Process "italic" elements (&lt;i&gt; and &lt;em&gt;)
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.StyleElements.Underline">
+            <summary>
+            Process "underline" elements (&lt;u&gt;)
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.StyleElements.All">
+            <summary>
+            Process all style elements.
+            </summary>
+        </member>
         <member name="T:RichTextCleaner.Common.TextCleaner">
             <summary>
             The cleaner module.
             </summary>
         </member>
-        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,RichTextCleaner.Common.QuoteProcessing)">
+        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,RichTextCleaner.Common.StyleElements,System.Boolean,RichTextCleaner.Common.QuoteProcessing)">
             <summary>
             Clears the styling from the HTML.
             </summary>
             <param name="html">The HTML to clean.</param>
-            <param name="clearBoldMarkup">if set to <c>true</c>, clear bold markup.</param>
-            <param name="clearItalicMarkup">if set to <c>true</c>, clear italic markup.</param>
-            <param name="clearUnderlineMarkup">if set to <c>true</c>, clear underline markup.</param>
+            <param name="markupToRemove">The style markup to remove.</param>
             <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
             <param name="quoteProcessing">Set how to process quotes.</param>
             <returns></returns>
@@ -103,14 +131,12 @@
             </summary>
             <param name="document"></param>
         </member>
-        <member name="M:RichTextCleaner.Common.TextCleaner.TranslateNodes(HtmlAgilityPack.HtmlDocument,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:RichTextCleaner.Common.TextCleaner.TranslateStyleNodes(HtmlAgilityPack.HtmlDocument,RichTextCleaner.Common.StyleElements)">
             <summary>
             Replace styling nodes with modern versions, optionally remove them completely.
             </summary>
             <param name="document">The document.</param>
-            <param name="clearBoldMarkup">if set to <c>true</c>, remove b and strong elements.</param>
-            <param name="clearItalicMarkup">if set to <c>true</c>, remove i and em elements.</param>
-            <param name="clearUnderlineMarkup">if set to <c>true</c>, remove u elements.</param>
+            <param name="markupToRemove">The style markup to remove.</param>
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.HtmlToPlainText(System.String)">
             <summary>
