@@ -38,6 +38,15 @@ namespace RichTextCleaner.Test
             Assert.AreEqual("<a target=\"_blank\">&ldquo;some remark&rdquo; said the so-called &ldquo;chief.&rdquo;</a>", html);
         }
 
+        [TestMethod]
+        public void QuotesInBrackets_ShouldBeConverted()
+        {
+            var source = "<p>Something ('me') something</p>";
+            var html = DocTester.ProcessSource(source, doc => TextCleaner.UpdateQuotes(doc, QuoteProcessing.ChangeToSmartQuotes));
+
+            Assert.AreEqual("<p>Something (&lsquo;me&rsquo;) something</p>", html);
+        }
+
     }
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 }

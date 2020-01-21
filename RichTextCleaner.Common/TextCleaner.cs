@@ -128,10 +128,10 @@ namespace RichTextCleaner.Common
             // note that quoted text may end on a comma or period.
             foreach (var textNode in document.DocumentNode.SelectNodes("//text()"))
             {
-                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(^|(?<=\s))""", "&ldquo;", RegexOptions.None);
-                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"""((?=\s)|$)", "&rdquo;", RegexOptions.None);
-                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(^|(?<=\s))'", "&lsquo;", RegexOptions.None);
-                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"'((?=\s)|$)", "&rsquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(^|(?<=(\s|\()))""", "&ldquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"""((?=(\s|\)))|$)", "&rdquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(^|(?<=(\s|\()))'", "&lsquo;", RegexOptions.None);
+                textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"'((?=(\s|\)))|$)", "&rsquo;", RegexOptions.None);
             }
         }
 
