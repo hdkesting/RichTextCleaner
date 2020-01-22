@@ -16,7 +16,7 @@
             <ColumnDefinition Width="150"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ScrollViewer Grid.Column="1">
+        <ScrollViewer Grid.Column="1" Background="#f8f8f8" Padding="2">
             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top"
                     TextWrapping="WrapWithOverflow"
                 ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"
@@ -59,6 +59,7 @@
             </CheckBox>
             <CheckBox Margin="2,2,2,10" x:Name="AddBlankTarget" IsChecked="True" ToolTip="set link target to new window">Add target=__blank</CheckBox>
             <ListBox x:Name="QuoteProcess" Visibility="Collapsed">
+                <!-- hidden: first I need a decision about what conversions are acceptable -->
                 <ListBoxItem IsSelected="True" ToolTip="only change literal &quot; to &amp;ldquo;">No quote change</ListBoxItem>
                 <ListBoxItem ToolTip="change &amp;ldquo;/&amp;rdquo; to &quot;">To simple quotes</ListBoxItem>
                 <ListBoxItem ToolTip="change &quot; to &amp;ldquo;/&amp;rdquo;">To smart quotes</ListBoxItem>
