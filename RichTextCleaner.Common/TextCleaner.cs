@@ -22,19 +22,14 @@ namespace RichTextCleaner.Common
         /// <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
         /// <param name="quoteProcessing">Set how to process quotes.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">html</exception>
         public static string ClearStylingFromHtml(
             string html,
             StyleElements markupToRemove,
             bool addBlankLinkTarget,
             QuoteProcessing quoteProcessing)
         {
-            if (html is null)
-            {
-                throw new ArgumentNullException(nameof(html));
-            }
-
-            var doc = CreateHtmlDocument(html);
+        
+            var doc = CreateHtmlDocument(html ?? string.Empty);
 
             RemoveNonCMSElements(doc);
             ClearStyling(doc);
@@ -49,6 +44,7 @@ namespace RichTextCleaner.Common
             {
                 AddBlankLinkTargets(doc);
             }
+
             TrimParagraphs(doc);
 
             UpdateQuotes(doc, quoteProcessing);
