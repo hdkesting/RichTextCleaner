@@ -3,10 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cvt="clr-namespace:RichTextCleanerFW.Converters"
         mc:Ignorable="d"
         Title="Rich Text Cleaner" Height="450" Width="800"
         Icon="Icojam-Blue-Bits-Document-check.ico"
         KeyDown="Grid_KeyDown">
+    <Window.Resources>
+        <cvt:StringToSimpleInlineConverter x:Key="StringToSimpleInline" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -17,19 +21,9 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <ScrollViewer Grid.Column="1" Background="#f8f8f8" Padding="2">
-            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top"
-                    TextWrapping="WrapWithOverflow"
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWithOverflow"
                 ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"
-                x:Name="TextContent">
-                <Run FontWeight="Bold">Cleaning up HTML fragments.</Run><LineBreak/><LineBreak/>
-                <Run>Select and copy (a part of) an HTML page, or HTML source.</Run><LineBreak/>
-                <Run>Click the "Paste" button (left) to insert the HTML source, or press Ctrl-V.</Run><LineBreak/>
-                <LineBreak/>
-                <Run>Click the "Clear styling" button (or Ctrl-C) to remove all "class" and "style" attributes and do some more cleanup.</Run><LineBreak/>
-                <Run>This also copies the new text onto the clipboard so you can paste it into a Rich Text editor.</Run><LineBreak/>
-                <Run>You can select to keep bold, italic or underline tags (keeping the text inside them) by unchecking the checkbox.</Run><LineBreak/>
-                <LineBreak/>
-                <Run>OR use the "text only" button to get just the text, without any HTML</Run>
+                Text="{Binding SourceValue, Converter={StaticResource StringToSimpleInline}, Mode=OneWay}">
             </TextBlock>
         </ScrollViewer>
         <StackPanel Orientation="Vertical" Grid.Column="0">
