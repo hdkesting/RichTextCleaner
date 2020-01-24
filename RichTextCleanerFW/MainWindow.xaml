@@ -23,7 +23,7 @@
         <ScrollViewer Grid.Column="1" Background="#f8f8f8" Padding="2">
             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWithOverflow"
                 ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"
-                Text="{Binding SourceValue, Converter={StaticResource StringToSimpleInline}, Mode=OneWay}">
+                Text="{Binding SourceValue, Mode=OneWay}">
             </TextBlock>
         </ScrollViewer>
         <StackPanel Orientation="Vertical" Grid.Column="0">

@@ -22,6 +22,7 @@ namespace RichTextCleanerFW
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
 
             if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
             {

@@ -47,5 +47,8 @@ namespace RichTextCleanerFW.Converters
                 <Run>OR use the "text only" button to get just the text, without any HTML</Run>-->
 
           */
+
+        //    Text="{Binding SourceValue, Converter={StaticResource StringToSimpleInline}, Mode=OneWay}">
+
     }
 }
