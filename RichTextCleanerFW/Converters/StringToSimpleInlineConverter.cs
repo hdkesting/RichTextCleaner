@@ -31,7 +31,38 @@ namespace RichTextCleanerFW.Converters
         private List<Inline> GetStartupMessage()
         {
             var lines = new List<Inline>();
+            var run = new Run("Cleaning up HTML fragments.");
+            run.FontWeight = System.Windows.FontWeights.Bold;
+            lines.Add(run);
+            lines.Add(new LineBreak());
+            lines.Add(new LineBreak());
 
+            run = new Run("Select and copy (a part of) an HTML page, or HTML source.");
+            lines.Add(run);
+            lines.Add(new LineBreak());
+
+            run = new Run("Click the \"Paste\" button (left) to insert the HTML source, or press Ctrl-V.");
+            lines.Add(run);
+            lines.Add(new LineBreak());
+            lines.Add(new LineBreak());
+
+            run = new Run("Click the \"Clear styling\" button (or Ctrl-C) to remove all \"class\" and \"style\" attributes and do some more cleanup.");
+            lines.Add(run);
+            lines.Add(new LineBreak());
+            lines.Add(new LineBreak());
+
+            run = new Run("This also copies the new text onto the clipboard so you can paste it into a Rich Text editor.");
+            lines.Add(run);
+            lines.Add(new LineBreak());
+
+            run = new Run("You can select to keep bold, italic and/or underline tags (keeping the text inside them) by unchecking the checkbox.");
+            lines.Add(run);
+            lines.Add(new LineBreak());
+            lines.Add(new LineBreak());
+
+            run = new Run("OR use the \"text only\" button to get just the text, without any HTML");
+            lines.Add(run);
+            lines.Add(new LineBreak());
 
             return lines;
         }

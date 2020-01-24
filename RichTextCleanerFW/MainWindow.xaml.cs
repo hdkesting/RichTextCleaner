@@ -273,6 +273,11 @@ namespace RichTextCleanerFW
                 case Key.L:
                     Process.Start(Logger.LogFolder);
                     break;
+
+                case Key.Delete:
+                case Key.Back:
+                    this.SourceValue = null;
+                    break;
             }
         }
     }

@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="ClipboardHelper.cs" />
     <Compile Include="Converters\StringToSimpleInlineConverter.cs" />
+    <Compile Include="Converters\TextBlockExtensions.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Logging\LogMessage.cs" />
