@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace RichTextCleanerFW.Converters
 {
@@ -33,19 +34,16 @@ namespace RichTextCleanerFW.Converters
                         text.Append(character);
                         state = State.Tag;
                         run = new Run();
-                        run.FontWeight = System.Windows.FontWeights.Light;
+                        run.Foreground = Brushes.Gray;
                         break;
 
                     case '>' when state == State.Tag:
                     case ';' when state == State.Entity:
-                        if (text.Length > 0)
-                        {
-                            run.Text = text.ToString();
-                            yield return run;
-                            text.Clear();
-                        }
-
                         text.Append(character);
+                        run.Text = text.ToString();
+                        yield return run;
+                        text.Clear();
+
                         state = State.Text;
                         run = new Run();
                         run.FontWeight = System.Windows.FontWeights.Normal;
@@ -62,7 +60,7 @@ namespace RichTextCleanerFW.Converters
                         text.Append(character);
                         state = State.Entity;
                         run = new Run();
-                        run.FontWeight = System.Windows.FontWeights.Bold;
+                        run.Foreground = Brushes.Blue;
                         break;
 
                     default:
