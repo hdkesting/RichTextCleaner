@@ -52,6 +52,13 @@ namespace RichTextCleanerFW
                 return;
             }
 
+            var settings = Properties.Settings.Default;
+
+            this.ClearBoldMarkup.IsChecked = settings.RemoveBold;
+            this.ClearItalicMarkup.IsChecked = settings.RemoveItalic;
+            this.ClearUnderlineMarkup.IsChecked = settings.RemoveUnderline;
+            this.AddBlankTarget.IsChecked = settings.AddTargetBlank;
+
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
             Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmllib.Name} version {htmllib.Version}.");
@@ -143,33 +150,59 @@ namespace RichTextCleanerFW
 
             StyleElements GetStyleSetting()
             {
+                // settings are stored in C:\Users\<user>\AppData\Local\Hans_Kesting\RichTextCleaner.exe...\<version>\user.config
+                var settings = Properties.Settings.Default;
                 var styles = StyleElements.None;
                 if (ClearBoldMarkup.IsChecked.GetValueOrDefault())
                 {
                     styles |= StyleElements.Bold;
+                    settings.RemoveBold = true;
+                }
+                else
+                {
+                    settings.RemoveBold = false;
                 }
 
                 if (ClearItalicMarkup.IsChecked.GetValueOrDefault())
                 {
                     styles |= StyleElements.Italic;
+                    settings.RemoveItalic = true;
+                }
+                else
+                {
+                    settings.RemoveItalic = false;
                 }
 
                 if (ClearUnderlineMarkup.IsChecked.GetValueOrDefault())
                 {
                     styles |= StyleElements.Underline;
+                    settings.RemoveUnderline = true;
                 }
+                else
+                {
+                    settings.RemoveUnderline = false;
+                }
+
+                settings.AddTargetBlank = AddBlankTarget.IsChecked.GetValueOrDefault();
+                settings.Save();
 
                 return styles;
             }
 
             QuoteProcessing GetQuoteSetting() {
+                QuoteProcessing qp;
                 switch (QuoteProcess.SelectedIndex)
                 {
-                    case 0: return QuoteProcessing.NoChange;
-                    case 1: return QuoteProcessing.ChangeToSimpleQuotes;
-                    case 2: return QuoteProcessing.ChangeToSmartQuotes;
-                    default: return QuoteProcessing.NoChange;
+                    case 0: qp = QuoteProcessing.NoChange; break;
+                    case 1: qp = QuoteProcessing.ChangeToSimpleQuotes; break;
+                    case 2: qp = QuoteProcessing.ChangeToSmartQuotes; break;
+                    default: qp = QuoteProcessing.NoChange; break;
                 }
+
+                Properties.Settings.Default.QuoteProcess = (int)qp;
+                Properties.Settings.Default.Save();
+
+                return qp;
             }
         }
 

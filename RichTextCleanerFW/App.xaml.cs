@@ -12,7 +12,7 @@ namespace RichTextCleanerFW
         {
             base.OnStartup(e);
 
-            string logdir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "RichTextCleaner");
+            string logdir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "Hans_Kesting\\RichTextCleaner");
             Logging.Logger.Initialize(new DirectoryInfo(logdir));
         }
 
