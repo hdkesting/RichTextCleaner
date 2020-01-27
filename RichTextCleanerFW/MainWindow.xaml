@@ -10,6 +10,7 @@
         KeyDown="Grid_KeyDown">
     <Window.Resources>
         <cvt:StringToSimpleInlineConverter x:Key="StringToSimpleInline" />
+        <cvt:HtmlToSyntaxHighlightConverter x:Key="SyntaxHighlighter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -23,7 +24,7 @@
         <ScrollViewer Grid.Column="1" Background="#f8f8f8" Padding="2">
             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWithOverflow"
                 ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"
-                cvt:TextBlockExtensions.BindableInlines="{Binding SourceValue, Converter={StaticResource StringToSimpleInline}, Mode=OneWay}">
+                cvt:TextBlockExtensions.BindableInlines="{Binding SourceValue, Converter={StaticResource SyntaxHighlighter}, Mode=OneWay}">
             </TextBlock>
         </ScrollViewer>
         <StackPanel Orientation="Vertical" Grid.Column="0">
