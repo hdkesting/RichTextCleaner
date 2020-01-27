@@ -71,20 +71,5 @@ namespace RichTextCleanerFW.Converters
 
             return lines;
         }
-        /*
-                        <!--<Run FontWeight="Bold">Cleaning up HTML fragments.</Run><LineBreak/><LineBreak/>
-                <Run>Select and copy (a part of) an HTML page, or HTML source.</Run><LineBreak/>
-                <Run>Click the "Paste" button (left) to insert the HTML source, or press Ctrl-V.</Run><LineBreak/>
-                <LineBreak/>
-                <Run>Click the "Clear styling" button (or Ctrl-C) to remove all "class" and "style" attributes and do some more cleanup.</Run><LineBreak/>
-                <Run>This also copies the new text onto the clipboard so you can paste it into a Rich Text editor.</Run><LineBreak/>
-                <Run>You can select to keep bold, italic or underline tags (keeping the text inside them) by unchecking the checkbox.</Run><LineBreak/>
-                <LineBreak/>
-                <Run>OR use the "text only" button to get just the text, without any HTML</Run>-->
-
-          */
-
-        //    Text="{Binding SourceValue, Converter={StaticResource StringToSimpleInline}, Mode=OneWay}">
-
     }
 }
