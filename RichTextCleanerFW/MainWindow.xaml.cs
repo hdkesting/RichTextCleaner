@@ -14,12 +14,15 @@ namespace RichTextCleanerFW
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static readonly DependencyProperty SourceValueProperty = DependencyProperty.Register(nameof(SourceValue), typeof(string), typeof(MainWindow));
+
         private readonly Brush StatusForeground;
         private readonly Brush StatusBackground;
 
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
 
             if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
             {
@@ -54,6 +57,18 @@ namespace RichTextCleanerFW
             Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmllib.Name} version {htmllib.Version}.");
         }
 
+        /// <summary>
+        /// Gets or sets the source value to be converted (or just converted).
+        /// </summary>
+        /// <value>
+        /// The source value.
+        /// </value>
+        public string SourceValue
+        {
+            get { return (string)this.GetValue(SourceValueProperty); }
+            private set { this.SetValue(SourceValueProperty, value); }
+        }
+
         private async void CopyFromClipboard(object sender, RoutedEventArgs e)
         {
             await this.CopyFromClipboard().ConfigureAwait(false);
@@ -72,7 +87,7 @@ namespace RichTextCleanerFW
                 }
                 else
                 {
-                    this.TextContent.Text = text;
+                    this.SourceValue = text;
                     Logger.Log(LogLevel.Debug, nameof(CopyFromClipboard), "Copied text from cliboard");
                     await this.SetStatus("Copied text from clipboard.").ConfigureAwait(false);
                 }
@@ -92,7 +107,7 @@ namespace RichTextCleanerFW
 
         private async Task ClearStylingAndCopy()
         {
-            string html = this.TextContent.Text;
+            string html = this.SourceValue;
 
 #pragma warning disable CA1031 // Do not catch general exception types
             try
@@ -113,7 +128,7 @@ namespace RichTextCleanerFW
             try
             {
                 ClipboardHelper.CopyToClipboard(html, html);
-                this.TextContent.Text = html;
+                this.SourceValue = html;
                 Logger.Log(LogLevel.Debug, nameof(ClearStylingAndCopy), "Cleaned HTML and copied to clipboard");
             }
             catch (Exception ex)
@@ -165,7 +180,7 @@ namespace RichTextCleanerFW
 
         private async Task PlainTextAndCopy()
         {
-            string html = this.TextContent.Text;
+            string html = this.SourceValue;
 
             string text;
 
@@ -193,13 +208,13 @@ namespace RichTextCleanerFW
             }
 #pragma warning restore CA1031 // Do not catch general exception types
 
-            this.TextContent.Text = text;
+            this.SourceValue = text;
             await this.SetStatus("The plain TEXT is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
         }
 
         private async Task CopySourceAsText()
         {
-            string html = this.TextContent.Text;
+            string html = this.SourceValue;
 
 #pragma warning disable CA1031 // Do not catch general exception types
             try
@@ -257,6 +272,11 @@ namespace RichTextCleanerFW
 
                 case Key.L:
                     Process.Start(Logger.LogFolder);
+                    break;
+
+                case Key.Delete:
+                case Key.Back:
+                    this.SourceValue = null;
                     break;
             }
         }

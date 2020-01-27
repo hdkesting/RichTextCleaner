@@ -68,7 +68,6 @@
             <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
             <param name="quoteProcessing">Set how to process quotes.</param>
             <returns></returns>
-            <exception cref="T:System.ArgumentNullException">html</exception>
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.TrimParagraphs(HtmlAgilityPack.HtmlDocument)">
             <summary>
