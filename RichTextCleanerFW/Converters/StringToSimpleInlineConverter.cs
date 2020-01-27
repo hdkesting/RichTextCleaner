@@ -18,15 +18,20 @@ namespace RichTextCleanerFW.Converters
                 return GetStartupMessage();
             }
 
-            var run = new Run();
-            run.Text = source;
-            
-            return Enumerable.Repeat((Inline)run, 1);
-            // return source;
-            // throw new NotImplementedException();
+            return SyntaxHighlightHtml(source).ToList();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+
+        protected virtual IEnumerable<Inline> SyntaxHighlightHtml(string source)
+        {
+            var run = new Run
+            {
+                Text = source
+            };
+
+            return Enumerable.Repeat((Inline)run, 1);
+        }
 
         private List<Inline> GetStartupMessage()
         {
@@ -55,7 +60,7 @@ namespace RichTextCleanerFW.Converters
             lines.Add(run);
             lines.Add(new LineBreak());
 
-            run = new Run("You can select to keep bold, italic and/or underline tags (keeping the text inside them) by unchecking the checkbox.");
+            run = new Run("You can select to remove bold, italic and/or underline tags (keeping the text inside them) by checking the checkbox.");
             lines.Add(run);
             lines.Add(new LineBreak());
             lines.Add(new LineBreak());
