@@ -58,6 +58,7 @@ namespace RichTextCleanerFW
             this.ClearItalicMarkup.IsChecked = settings.RemoveItalic;
             this.ClearUnderlineMarkup.IsChecked = settings.RemoveUnderline;
             this.AddBlankTarget.IsChecked = settings.AddTargetBlank;
+            this.ChangeToFancyQuotes.IsChecked = (QuoteProcessing)settings.QuoteProcess != QuoteProcessing.NoChange;
 
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
@@ -191,12 +192,13 @@ namespace RichTextCleanerFW
 
             QuoteProcessing GetQuoteSetting() {
                 QuoteProcessing qp;
-                switch (QuoteProcess.SelectedIndex)
+                if (this.ChangeToFancyQuotes.IsChecked.GetValueOrDefault())
                 {
-                    case 0: qp = QuoteProcessing.NoChange; break;
-                    case 1: qp = QuoteProcessing.ChangeToSimpleQuotes; break;
-                    case 2: qp = QuoteProcessing.ChangeToSmartQuotes; break;
-                    default: qp = QuoteProcessing.NoChange; break;
+                    qp = QuoteProcessing.ChangeToSmartQuotes;
+                }
+                else
+                {
+                    qp = QuoteProcessing.NoChange;
                 }
 
                 Properties.Settings.Default.QuoteProcess = (int)qp;

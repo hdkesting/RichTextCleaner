@@ -29,7 +29,9 @@
         </ScrollViewer>
         <StackPanel Orientation="Vertical" Grid.Column="0">
             <Button Margin="2,10" Click="CopyFromClipboard" ToolTip="or press (Ctrl-)V">Paste (HTML)</Button>
-            
+
+            <Separator/>
+
             <Button Margin="2,10,2,2" Click="ClearStylingAndCopy" ToolTip="or press (Ctrl-)C">Clear styling &amp; Copy</Button>
             <CheckBox Margin="2,2,2,10" x:Name="ClearBoldMarkup" IsChecked="True" ToolTip="remove &lt;b> and &lt;strong> elements">
                 <TextBlock>
@@ -53,13 +55,15 @@
                 </TextBlock>
             </CheckBox>
             <CheckBox Margin="2,2,2,10" x:Name="AddBlankTarget" IsChecked="True" ToolTip="set link target to new window">Add target=__blank</CheckBox>
-            <ListBox x:Name="QuoteProcess" Visibility="Collapsed">
-                <!-- hidden: first I need a decision about what conversions are acceptable -->
-                <ListBoxItem IsSelected="True" ToolTip="only change literal &quot; to &amp;ldquo;">No quote change</ListBoxItem>
-                <ListBoxItem ToolTip="change &amp;ldquo;/&amp;rdquo; to &quot;">To simple quotes</ListBoxItem>
-                <ListBoxItem ToolTip="change &quot; to &amp;ldquo;/&amp;rdquo;">To smart quotes</ListBoxItem>
-            </ListBox>
+
+            <CheckBox Margin="2,2,2,10" x:Name="ChangeToFancyQuotes" IsChecked="True" ToolTip="Change straight quotes to nice ones">Change to fancy quotes</CheckBox>
+
+            <Separator/>
+
             <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="or press (Ctrl-)T">Get text only</Button>
+
+            <Separator/>
+
             <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="0,10,0,10" Foreground="Gray">Ready for pasting</TextBlock>
         </StackPanel>
         <Label Grid.Row="1" Grid.Column="0" FontSize="9" Foreground="Gray">© Hans Kesting 2019-2020</Label>
