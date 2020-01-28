@@ -72,6 +72,15 @@ namespace RichTextCleanerFW.Converters
                         run.Foreground = Brushes.Brown;
                         break;
 
+                    case ' ' when state == State.Entity:
+                        // illegal situation, or maybe plain text. Just ignore the "entity" and treat as plain text
+                        state = State.Text;
+                        text.Append(character);
+                        run = new Run();
+                        run.FontWeight = FontWeights.Normal;
+
+                        break;
+
                     default:
                         // any other text, including surrogate pairs, newlines
                         text.Append(character);
