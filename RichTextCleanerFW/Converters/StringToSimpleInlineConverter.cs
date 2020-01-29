@@ -36,38 +36,34 @@ namespace RichTextCleanerFW.Converters
         private List<Inline> GetStartupMessage()
         {
             var lines = new List<Inline>();
-            var run = new Run("Cleaning up HTML fragments.");
-            run.FontWeight = System.Windows.FontWeights.Bold;
+            var run = new Run("Cleaning up HTML fragments.")
+            {
+                FontWeight = System.Windows.FontWeights.Bold
+            };
             lines.Add(run);
-            lines.Add(new LineBreak());
-            lines.Add(new LineBreak());
 
-            run = new Run("Select and copy (a part of) an HTML page, or HTML source.");
-            lines.Add(run);
-            lines.Add(new LineBreak());
+            run = new Run(@"
 
-            run = new Run("Click the \"Paste\" button (left) to insert the HTML source, or press Ctrl-V.");
+Select and copy (a part of) an HTML page, or HTML source.");
             lines.Add(run);
-            lines.Add(new LineBreak());
-            lines.Add(new LineBreak());
 
-            run = new Run("Click the \"Clear styling\" button (or Ctrl-C) to remove all \"class\" and \"style\" attributes and do some more cleanup.");
-            lines.Add(run);
-            lines.Add(new LineBreak());
-            lines.Add(new LineBreak());
+            run = new Run(@"
+Click the ""Paste"" button (left) to insert the HTML source, or press Ctrl-V.
 
-            run = new Run("This also copies the new text onto the clipboard so you can paste it into a Rich Text editor.");
-            lines.Add(run);
-            lines.Add(new LineBreak());
+Click the ""Clear styling"" button (or Ctrl-C) to remove all ""class"" and ""style"" attributes and do some more cleanup.
+This also copies the new text onto the clipboard so you can paste it into a Rich Text editor.
 
-            run = new Run("You can select to remove bold, italic and/or underline tags (keeping the text inside them) by checking the checkbox.");
-            lines.Add(run);
-            lines.Add(new LineBreak());
-            lines.Add(new LineBreak());
+You can select to remove bold, italic and/or underline tags (keeping the text inside them) by checking the checkbox.
 
-            run = new Run("OR use the \"text only\" button to get just the text, without any HTML");
+");
             lines.Add(run);
-            lines.Add(new LineBreak());
+            run = new Run("OR: ")
+            {
+                FontWeight = System.Windows.FontWeights.Bold
+            };
+            lines.Add(run);
+            run = new Run("use the \"text only\" button to get just the text, without any HTML.");
+            lines.Add(run);
 
             return lines;
         }
