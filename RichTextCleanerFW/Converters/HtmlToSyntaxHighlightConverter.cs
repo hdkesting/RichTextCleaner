@@ -23,61 +23,43 @@ namespace RichTextCleanerFW.Converters
 
             var text = new StringBuilder();
             var state = State.Text;
-            Run run = new Run();
 
             foreach (var character in source)
             {
                 switch (character)
                 {
                     case '<':
-                        if (text.Length > 0)
-                        {
-                            run.Text = text.ToString();
-                            yield return run;
-                            text.Clear();
-                        }
+                        yield return CreateRun(state, text.ToString());
 
                         // first char of new run
+                        text.Clear();
                         text.Append(character);
                         state = State.Tag;
-                        run = new Run();
-                        run.Foreground = Brushes.Gray;
                         break;
 
                     case '>' when state == State.Tag:
                     case ';' when state == State.Entity:
                         // include final char of run, which is then non-empty
                         text.Append(character);
-                        run.Text = text.ToString();
-                        yield return run;
+                        yield return CreateRun(state, text.ToString());
+                       
                         text.Clear();
-
                         state = State.Text;
-                        run = new Run();
-                        run.FontWeight = FontWeights.Normal;
                         break;
 
                     case '&' when state == State.Text:
-                        if (text.Length > 0)
-                        {
-                            run.Text = text.ToString();
-                            yield return run;
-                            text.Clear();
-                        }
+                        yield return CreateRun(state, text.ToString());
 
                         // first char of new run
+                        text.Clear();
                         text.Append(character);
                         state = State.Entity;
-                        run = new Run();
-                        run.Foreground = Brushes.Brown;
                         break;
 
                     case ' ' when state == State.Entity:
                         // illegal situation, or maybe plain text. Just ignore the "entity" and treat as plain text
                         state = State.Text;
                         text.Append(character);
-                        run = new Run();
-                        run.FontWeight = FontWeights.Normal;
 
                         break;
 
@@ -89,12 +71,35 @@ namespace RichTextCleanerFW.Converters
             }
 
             // any remaining text
-            if (text.Length > 0)
+            yield return CreateRun(state, text.ToString());
+        }
+
+        private Run CreateRun(State state, string text)
+        {
+            if (string.IsNullOrEmpty(text))
             {
-                run.Text = text.ToString();
-                yield return run;
-                text.Clear();
+                // this is filtered out later
+                return null;
             }
+
+            var run = new Run(text);
+            switch (state)
+            {
+                case State.Entity:
+                    run.Foreground = Brushes.Brown;
+                    run.FontSize -= 1.0;
+                    break;
+
+                case State.Tag:
+                    run.Foreground = Brushes.Gray;
+                    break;
+
+                default:
+                    // for Text, just stay default
+                    break;
+            }
+
+            return run;
         }
 
         private enum State

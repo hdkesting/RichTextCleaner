@@ -18,7 +18,8 @@ namespace RichTextCleanerFW.Converters
                 return GetStartupMessage();
             }
 
-            return SyntaxHighlightHtml(source).ToList();
+            // don't emit null-runs
+            return SyntaxHighlightHtml(source).OfType<Run>().ToList();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
