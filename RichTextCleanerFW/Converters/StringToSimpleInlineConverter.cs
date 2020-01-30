@@ -19,7 +19,7 @@ namespace RichTextCleanerFW.Converters
             }
 
             // don't emit null-runs
-            return SyntaxHighlightHtml(source).OfType<Run>().ToList();
+            return SyntaxHighlightHtml(source).Where(x => !(x is null)).ToList();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
@@ -45,13 +45,14 @@ namespace RichTextCleanerFW.Converters
 
             run = new Run(@"
 
-Select and copy (a part of) an HTML page, or HTML source.");
+(1) Select and copy (a part of) an HTML page, or HTML source.");
             lines.Add(run);
 
             run = new Run(@"
-Click the ""Paste"" button (left) to insert the HTML source, or press Ctrl-V.
 
-Click the ""Clear styling"" button (or Ctrl-C) to remove all ""class"" and ""style"" attributes and do some more cleanup.
+(2) Click the ""Paste"" button (left) to insert the HTML source, or press Ctrl-V.
+
+(3) Click the ""Clear styling"" button (or Ctrl-C) to remove all ""class"" and ""style"" attributes and do some more cleanup.
 This also copies the new text onto the clipboard so you can paste it into a Rich Text editor.
 
 You can select to remove bold, italic and/or underline tags (keeping the text inside them) by checking the checkbox.
@@ -63,7 +64,12 @@ You can select to remove bold, italic and/or underline tags (keeping the text in
                 FontWeight = System.Windows.FontWeights.Bold
             };
             lines.Add(run);
-            run = new Run("use the \"text only\" button to get just the text, without any HTML.");
+            run = new Run("(3) Use the \"text only\" button to get just the text, without any HTML.");
+            lines.Add(run);
+
+            run = new Run(@"
+
+(4) Paste this into the Rich Text editor (either design or html tab).");
             lines.Add(run);
 
             return lines;
