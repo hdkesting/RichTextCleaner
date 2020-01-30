@@ -70,7 +70,12 @@ namespace RichTextCleanerFW.Converters
                 }
             }
 
-            // any remaining text
+            // any remaining text, which cannot be an entity (because not closed with ;)
+            if (state == State.Entity)
+            {
+                state = State.Text;
+            }
+
             yield return CreateRun(state, text.ToString());
         }
 
