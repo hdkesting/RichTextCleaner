@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,18 @@ namespace RichTextCleaner.Common
     /// </summary>
     public static class TextCleaner
     {
+        private static readonly Dictionary<string, string> TextReplacements = new Dictionary<string, string>
+        {
+            { "&nbsp;", " " }, // replace non-breaking space with simple space
+            { "™", "&trade;" }, // replace some literal characters with html entities
+            { "®", "&reg;" },
+            { "©", "&copy;"  },
+            { "“", "&ldquo;" },
+            { "”", "&rdquo;" },
+            { "‘", "&lsquo;" },
+            { "’", "&rsquo;" },
+        };
+
         /// <summary>
         /// Clears the styling from the HTML.
         /// </summary>
@@ -54,7 +67,12 @@ namespace RichTextCleaner.Common
 
         internal static HtmlDocument CreateHtmlDocument(string html)
         {
-            html = (html ?? string.Empty).Replace("&nbsp;", " ");
+            html = (html ?? string.Empty);
+            foreach (var kv in TextReplacements)
+            {
+                html = html.Replace(kv.Key, kv.Value);
+            }
+            
             int oldlength, newlength;
             do
             {
@@ -91,8 +109,6 @@ namespace RichTextCleaner.Common
 
         internal static void UpdateQuotes(HtmlDocument document, QuoteProcessing quoteProcessing)
         {
-            UpdateLiteralQuotesToEntities(document);
-
             switch (quoteProcessing)
             {
                 case QuoteProcessing.ChangeToSimpleQuotes:
@@ -103,19 +119,6 @@ namespace RichTextCleaner.Common
                     UpdateQuotesToSmart(document);
                     break;
             }
-        }
-
-        private static void UpdateLiteralQuotesToEntities(HtmlDocument document)
-        {
-            foreach (var textNode in document.DocumentNode.SelectNodes("//text()") ?? Enumerable.Empty<HtmlNode>())
-            {
-                textNode.InnerHtml = textNode.InnerHtml
-                    .Replace("“", "&ldquo;")
-                    .Replace("”", "&rdquo;")
-                    .Replace("‘", "&lsquo;")
-                    .Replace("’", "&rsquo;");
-            }
-
         }
 
         private static void UpdateQuotesToSimple(HtmlDocument document)
