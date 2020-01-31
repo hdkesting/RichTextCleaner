@@ -4,6 +4,58 @@
         <name>RichTextCleaner.Common</name>
     </assembly>
     <members>
+        <member name="M:RichTextCleaner.Common.LinkChecker.FindLinks(System.String)">
+            <summary>
+            Finds the links in the supplied HTML source.
+            </summary>
+            <param name="html">The HTML.</param>
+            <returns></returns>
+        </member>
+        <member name="T:RichTextCleaner.Common.LinkCheckResult">
+            <summary>
+            The result of checking a particular link.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckResult.NotCheckedYet">
+            <summary>
+            The link is not checked yet.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckResult.Ok">
+            <summary>
+            The link checks out fine.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckResult.Ignored">
+            <summary>
+            The link is ignored (not an external URL) 
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckResult.Redirected">
+            <summary>
+            The link gets redirected.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckResult.NotFound">
+            <summary>
+            The link is not found (returns a 404 status).
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckResult.Error">
+            <summary>
+            The link results in an error (4xx, 5xx)
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckResult.Timeout">
+            <summary>
+            The link results in a timeout.
+            </summary>
+        </member>
+        <member name="T:RichTextCleaner.Common.LinkDescription">
+            <summary>
+            The description of a link.
+            </summary>
+        </member>
         <member name="T:RichTextCleaner.Common.QuoteProcessing">
             <summary>
             Select how to process quotes in texts.

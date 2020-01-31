@@ -2,6 +2,7 @@
 using RichTextCleanerFW.Logging;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -314,6 +315,27 @@ namespace RichTextCleanerFW
                     this.SourceValue = null;
                     break;
             }
+        }
+
+        private async void CheckLinks(object sender, RoutedEventArgs e)
+        {
+            var checker = new LinkCheckerWindow();
+
+            var links = LinkChecker.FindLinks(this.SourceValue);
+            if (!links.Any())
+            {
+                MessageBox.Show("No links found.");
+                return;
+            }
+
+            foreach (var link in links)
+            {
+                checker.Links.Add(link);
+            }
+        
+            checker.Show();
+
+            await checker.CheckAllLinks().ConfigureAwait(true);
         }
     }
 }

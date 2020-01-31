@@ -70,6 +70,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="LinkCheckerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -80,8 +84,12 @@
     </Compile>
     <Compile Include="ClipboardHelper.cs" />
     <Compile Include="Converters\HtmlToSyntaxHighlightConverter.cs" />
+    <Compile Include="Converters\LinkResultToDisplayTextConverter.cs" />
     <Compile Include="Converters\StringToSimpleInlineConverter.cs" />
     <Compile Include="Converters\TextBlockExtensions.cs" />
+    <Compile Include="LinkCheckerWindow.xaml.cs">
+      <DependentUpon>LinkCheckerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Logging\LogMessage.cs" />
