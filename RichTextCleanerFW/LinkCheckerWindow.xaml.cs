@@ -2,18 +2,9 @@
 using RichTextCleanerFW.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace RichTextCleanerFW
 {
@@ -39,22 +30,27 @@ namespace RichTextCleanerFW
 
         internal async Task CheckAllLinks()
         {
-            this.MessageLabel.Text = "Checking all links";
-            //// this.LinkList.ItemsSource = this.Links;
+            var tasks = new List<Task>();
+            
+            foreach (var lnk in this.Links)
+            {
+                await Task.Delay(250).ConfigureAwait(true);
+                tasks.Add(CheckLink(lnk));
+            }
 
-            var tasks = this.Links.Select(CheckLink).ToList();
-
-            await Task.WhenAll(tasks).ConfigureAwait(true);
+            do
+            {
+                this.MessageLabel.Text = $"Checking all links: {tasks.Count(t => !t.IsCompleted && !t.IsFaulted && !t.IsCanceled)}/{tasks.Count}";
+                await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(true);
+            }
+            while (tasks.Any(t => !t.IsCompleted && !t.IsFaulted && !t.IsCanceled));
 
             this.MessageLabel.Text = "Done checking";
         }
 
-        private readonly Random rng = new Random();
-
-        private async Task CheckLink(BindableLinkDescription arg)
+        private static async Task CheckLink(BindableLinkDescription arg)
         {
-            await Task.Delay(rng.Next(1000, 2000)).ConfigureAwait(false);
-            arg.Result = LinkCheckResult.NotFound;
+            (arg.Result, arg.LinkAfterRedirect) = await LinkChecker.CheckLink(arg.OriginalLink).ConfigureAwait(false);
         }
     }
 }

@@ -1,12 +1,7 @@
 ﻿using RichTextCleaner.Common;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace RichTextCleanerFW.Models
 {
@@ -25,7 +20,7 @@ namespace RichTextCleanerFW.Models
             this.LinkText = original.LinkText;
             this.OriginalLink = original.OriginalLink;
             this.Result = original.Result;
-            this.LinkAfterRedirect = original.LinkAfterRedirect ?? original.OriginalLink;
+            this.LinkAfterRedirect = original.LinkAfterRedirect;
         }
 
         public string LinkText { get; set; }

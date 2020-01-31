@@ -2,13 +2,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace RichTextCleaner.Common
 {
     public static class LinkChecker
     {
+        private static readonly TimeSpan HttpTimeout = TimeSpan.FromSeconds(10);
+
+        // https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=netframework-4.8
+        private static readonly HttpClient client = new HttpClient() { Timeout = HttpTimeout };
+
         /// <summary>
         /// Finds the links in the supplied HTML source.
         /// </summary>
@@ -35,6 +41,58 @@ namespace RichTextCleaner.Common
             }
 
             return result;
+        }
+
+        public static async Task<(LinkCheckResult result, string newLink)> CheckLink(string link)
+        {
+            if (string.IsNullOrWhiteSpace(link))
+            {
+                return (LinkCheckResult.Ignored, link);
+            }
+
+            if (!link.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !link.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                return (LinkCheckResult.Ignored, link);
+            }
+
+            Uri uri;
+            try
+            {
+                uri = new Uri(link);
+            }
+            catch (FormatException)
+            {
+                return (LinkCheckResult.Error, null);
+            }
+
+            try
+            {
+                var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+                if (response.IsSuccessStatusCode)
+                {
+                    if (string.Equals(response.Headers.Location?.AbsoluteUri ?? link, link, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return (LinkCheckResult.Ok, link);
+                    }
+                    else
+                    {
+                        return (LinkCheckResult.Redirected, response.Headers.Location?.AbsoluteUri);
+                    }
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return (LinkCheckResult.NotFound, null);
+                }
+                else
+                {
+                    return (LinkCheckResult.Error, null);
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return (LinkCheckResult.Timeout, null);
+            }
+
         }
     }
 }

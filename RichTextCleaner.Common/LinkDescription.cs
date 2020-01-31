@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RichTextCleaner.Common
+﻿namespace RichTextCleaner.Common
 {
     /// <summary>
     /// The description of a link.

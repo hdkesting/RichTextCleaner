@@ -307,8 +307,12 @@ namespace RichTextCleanerFW
                     await this.CopySourceAsText().ConfigureAwait(false);
                     break;
 
-                case Key.L:
+                case Key.F1:
                     Process.Start(Logger.LogFolder);
+                    break;
+
+                case Key.L:
+                    await CheckLinks().ConfigureAwait(false);
                     break;
 
                 case Key.Delete:
@@ -320,6 +324,11 @@ namespace RichTextCleanerFW
 
         private async void CheckLinks(object sender, RoutedEventArgs e)
         {
+            await CheckLinks().ConfigureAwait(true);
+        }
+
+        private async Task CheckLinks()
+        { 
             var checker = new LinkCheckerWindow();
 
             var links = LinkChecker.FindLinks(this.SourceValue);
@@ -329,11 +338,31 @@ namespace RichTextCleanerFW
                 return;
             }
 
+            checker.Links.Clear();
             checker.Links.AddRange(links.Select(l => new BindableLinkDescription(l)));
-        
+
             checker.Show();
 
-            await checker.CheckAllLinks().ConfigureAwait(true);
+            try
+            {
+                await checker.CheckAllLinks().ConfigureAwait(true);
+            }
+            catch (TaskCanceledException)
+            {
+                // timeout happened
+            }
+
+            foreach (var lnk in checker.Links)
+            {
+                if (lnk.Result == LinkCheckResult.NotCheckedYet)
+                {
+                    lnk.Result = LinkCheckResult.Timeout;
+                }
+            }
+
+            checker.ShowDialog();
+
+            this.Focus();
         }
     }
 }

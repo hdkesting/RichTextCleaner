@@ -20,7 +20,7 @@
                 <GridView>
                     <GridViewColumn Header="Text" DisplayMemberBinding="{Binding LinkText}" />
                     <GridViewColumn Header="URL" DisplayMemberBinding="{Binding OriginalLink}" Width="200"/>
-                    <GridViewColumn Header="Result" DisplayMemberBinding="{Binding Result, Converter={StaticResource ResultToDisplay}, Mode=OneWay}"/>
+                    <GridViewColumn Header="Result" DisplayMemberBinding="{Binding Result, Converter={StaticResource ResultToDisplay}, Mode=OneWay}" Width="100"/>
                     <GridViewColumn Header="New URL" DisplayMemberBinding="{Binding LinkAfterRedirect, Mode=OneWay}" Width="200"/>
                 </GridView>
             </ListView.View>
