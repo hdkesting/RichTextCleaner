@@ -1,5 +1,6 @@
 ﻿using RichTextCleaner.Common;
 using RichTextCleanerFW.Logging;
+using RichTextCleanerFW.Models;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -328,10 +329,7 @@ namespace RichTextCleanerFW
                 return;
             }
 
-            foreach (var link in links)
-            {
-                checker.Links.Add(link);
-            }
+            checker.Links.AddRange(links.Select(l => new BindableLinkDescription(l)));
         
             checker.Show();
 

@@ -11,13 +11,17 @@
         <cvt:LinkResultToDisplayTextConverter x:Key="ResultToDisplay" />
     </Window.Resources>
     <Grid>
-        <ListView x:Name="LinkList">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="LinkList" ItemsSource="{Binding Links}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Text" DisplayMemberBinding="{Binding LinkText}" />
                     <GridViewColumn Header="URL" DisplayMemberBinding="{Binding OriginalLink}" Width="200"/>
-                    <GridViewColumn Header="Result" DisplayMemberBinding="{Binding Result, Converter={StaticResource ResultToDisplay}}"/>
-                    <GridViewColumn Header="New URL" DisplayMemberBinding="{Binding LinkAfterRedirect}" Width="200"/>
+                    <GridViewColumn Header="Result" DisplayMemberBinding="{Binding Result, Converter={StaticResource ResultToDisplay}, Mode=OneWay}"/>
+                    <GridViewColumn Header="New URL" DisplayMemberBinding="{Binding LinkAfterRedirect, Mode=OneWay}" Width="200"/>
                 </GridView>
             </ListView.View>
             <ListView.ItemTemplate>
@@ -25,5 +29,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <TextBlock Grid.Row="1" x:Name="MessageLabel" Margin="10,2,2,2"/>
     </Grid>
 </Window>

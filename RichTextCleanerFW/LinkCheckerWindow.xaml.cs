@@ -1,4 +1,5 @@
 ﻿using RichTextCleaner.Common;
+using RichTextCleanerFW.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,18 +22,39 @@ namespace RichTextCleanerFW
     /// </summary>
     public partial class LinkCheckerWindow : Window
     {
+        public static readonly DependencyProperty LinksProperty = DependencyProperty.Register(nameof(Links), typeof(List<BindableLinkDescription>), typeof(LinkCheckerWindow), new PropertyMetadata(new List<BindableLinkDescription>()));
+
         public LinkCheckerWindow()
         {
             InitializeComponent();
+
+            this.DataContext = this;
         }
 
-        public ObservableCollection<LinkDescription> Links { get; } = new ObservableCollection<LinkDescription>();
-
-        internal Task CheckAllLinks()
+        public List<BindableLinkDescription> Links
         {
-            this.LinkList.ItemsSource = this.Links;
+            get { return (List<BindableLinkDescription>)this.GetValue(LinksProperty); }
+            private set { this.SetValue(LinksProperty, value); }
+        }
 
-            return Task.CompletedTask;
+        internal async Task CheckAllLinks()
+        {
+            this.MessageLabel.Text = "Checking all links";
+            //// this.LinkList.ItemsSource = this.Links;
+
+            var tasks = this.Links.Select(CheckLink).ToList();
+
+            await Task.WhenAll(tasks).ConfigureAwait(true);
+
+            this.MessageLabel.Text = "Done checking";
+        }
+
+        private readonly Random rng = new Random();
+
+        private async Task CheckLink(BindableLinkDescription arg)
+        {
+            await Task.Delay(rng.Next(1000, 2000)).ConfigureAwait(false);
+            arg.Result = LinkCheckResult.NotFound;
         }
     }
 }

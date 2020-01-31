@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace RichTextCleaner.Common
 {
@@ -23,7 +24,7 @@ namespace RichTextCleaner.Common
             foreach (var link in links)
             {
                 var lnk = new LinkDescription();
-                lnk.LinkText = link.InnerText;
+                lnk.LinkText = HttpUtility.HtmlDecode(link.InnerText);
                 lnk.OriginalLink = link.GetAttributeValue("href", string.Empty);
                 if (!lnk.OriginalLink.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
