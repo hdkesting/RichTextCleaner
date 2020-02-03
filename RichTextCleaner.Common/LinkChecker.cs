@@ -46,16 +46,16 @@ namespace RichTextCleaner.Common
             return result;
         }
 
-        public static async Task<(LinkCheckSummary result, string newLink)> CheckLink(string link)
+        public static async Task<LinkCheckResult> CheckLink(string link)
         {
             if (string.IsNullOrWhiteSpace(link))
             {
-                return (LinkCheckSummary.Ignored, link);
+                return new LinkCheckResult(LinkCheckSummary.Ignored, link);
             }
 
             if (!link.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !link.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
-                return (LinkCheckSummary.Ignored, link);
+                return new LinkCheckResult(LinkCheckSummary.Ignored, link);
             }
 
             Uri uri;
@@ -66,7 +66,7 @@ namespace RichTextCleaner.Common
             catch (FormatException)
             {
                 Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Invalid URL {link}");
-                return (LinkCheckSummary.Error, null);
+                return new LinkCheckResult(LinkCheckSummary.Error, null);
             }
 
             try
@@ -76,32 +76,33 @@ namespace RichTextCleaner.Common
                 {
                     if (string.Equals(response.Headers.Location?.AbsoluteUri ?? link, link, StringComparison.OrdinalIgnoreCase))
                     {
-                        return (LinkCheckSummary.Ok, link);
+                        return new LinkCheckResult(LinkCheckSummary.Ok, link, response.StatusCode);
                     }
                     else
                     {
-                        return (LinkCheckSummary.Redirected, response.Headers.Location?.AbsoluteUri);
+                        return new LinkCheckResult(LinkCheckSummary.Redirected, response.Headers.Location?.AbsoluteUri, response.StatusCode);
                     }
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    return (LinkCheckSummary.NotFound, null);
+                    return new LinkCheckResult(LinkCheckSummary.NotFound, null, response.StatusCode);
                 }
                 else
                 {
+                    // NB LinkedIn sometimes returns a 999 status
                     Logger.Log(LogLevel.Warning, nameof(LinkChecker), $"Status {response.StatusCode} checking {link}");
-                    return (LinkCheckSummary.Error, null);
+                    return new LinkCheckResult(LinkCheckSummary.Error, null, response.StatusCode);
                 }
             }
             catch (HttpRequestException req)
             {
                 Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Http exception checking {link}", req);
-                return (LinkCheckSummary.Timeout, null);
+                return new LinkCheckResult(LinkCheckSummary.Timeout, null);
             }
             catch (TaskCanceledException tce)
             {
                 Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Task cancelled (timeout) checking {link}", tce);
-                return (LinkCheckSummary.Timeout, null);
+                return new LinkCheckResult(LinkCheckSummary.Timeout, null);
             }
         }
     }

@@ -54,7 +54,10 @@ namespace RichTextCleanerFW
 
         private static async Task CheckLink(BindableLinkDescription arg)
         {
-            (arg.Result, arg.LinkAfterRedirect) = await LinkChecker.CheckLink(arg.OriginalLink).ConfigureAwait(false);
+            var res = await LinkChecker.CheckLink(arg.OriginalLink).ConfigureAwait(false);
+            arg.HttpStatus = (int)res.HttpStatusCode;
+            arg.LinkAfterRedirect = res.NewLink;
+            arg.Result = res.Summary;
         }
 
         private void ClickLink(object sender, RoutedEventArgs e)

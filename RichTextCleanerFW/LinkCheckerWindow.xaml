@@ -55,6 +55,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Result" DisplayMemberBinding="{Binding Result, Converter={StaticResource ResultToDisplay}, Mode=OneWay}" Width="100"/>
+                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding HttpStatus, Mode=OneWay}" Width="50" />
                     <GridViewColumn Header="New URL" DisplayMemberBinding="{Binding LinkAfterRedirect, Mode=OneWay}" Width="200"/>
                 </GridView>
             </ListView.View>

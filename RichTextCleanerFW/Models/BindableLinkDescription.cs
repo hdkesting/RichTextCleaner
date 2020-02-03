@@ -9,6 +9,7 @@ namespace RichTextCleanerFW.Models
     {
         private LinkCheckSummary result;
         private string linkAfterRedirect;
+        private int httpStatus;
 
         public BindableLinkDescription(LinkDescription original)
         {
@@ -27,7 +28,18 @@ namespace RichTextCleanerFW.Models
 
         public string OriginalLink { get; set; }
 
-        public int HttpStatus { get; set; }
+        public int HttpStatus
+        {
+            get { return this.httpStatus; }
+            set
+            {
+                if (value != this.httpStatus)
+                {
+                    this.httpStatus = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         public LinkCheckSummary Result
         {

@@ -355,6 +355,7 @@ namespace RichTextCleanerFW
 
         private async Task CheckLinks()
         {
+            checker?.Links.Clear();
             var links = LinkChecker.FindLinks(this.SourceValue);
             if (!links.Any())
             {
@@ -363,11 +364,12 @@ namespace RichTextCleanerFW
             }
 
             OpenLinkCheckerWindow();
-            checker.Links.Clear();
             foreach (var lnk in links)
             {
                 checker.Links.Add(new BindableLinkDescription(lnk));
             }
+
+            checker.Focus();
 
             try
             {
