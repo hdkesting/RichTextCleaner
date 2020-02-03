@@ -3,7 +3,7 @@
     /// <summary>
     /// The result of checking a particular link.
     /// </summary>
-    public enum LinkCheckResult
+    public enum LinkCheckSummary
     {
         /// <summary>
         /// The link is not checked yet.

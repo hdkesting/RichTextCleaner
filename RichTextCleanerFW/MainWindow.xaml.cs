@@ -316,6 +316,7 @@ namespace RichTextCleanerFW
                     break;
 
                 case Key.F1:
+                case Key.F:
                     Process.Start(Logger.LogFolder);
                     break;
 
@@ -376,14 +377,6 @@ namespace RichTextCleanerFW
             {
                 // timeout happened
             }
-
-            //foreach (var lnk in checker.Links)
-            //{
-            //    if (lnk.Result == LinkCheckResult.NotCheckedYet)
-            //    {
-            //        lnk.Result = LinkCheckResult.Timeout;
-            //    }
-            //}
         }
     }
 }

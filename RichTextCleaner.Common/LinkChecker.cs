@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using RichTextCleanerFW.Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,8 @@ namespace RichTextCleaner.Common
                 lnk.OriginalLink = link.GetAttributeValue("href", string.Empty);
                 if (!lnk.OriginalLink.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
-                    lnk.Result = LinkCheckResult.Ignored;
+                    // neither "http" nor "https"
+                    lnk.Result = LinkCheckSummary.Ignored;
                 }
 
                 result.Add(lnk);
@@ -44,16 +46,16 @@ namespace RichTextCleaner.Common
             return result;
         }
 
-        public static async Task<(LinkCheckResult result, string newLink)> CheckLink(string link)
+        public static async Task<(LinkCheckSummary result, string newLink)> CheckLink(string link)
         {
             if (string.IsNullOrWhiteSpace(link))
             {
-                return (LinkCheckResult.Ignored, link);
+                return (LinkCheckSummary.Ignored, link);
             }
 
             if (!link.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !link.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
-                return (LinkCheckResult.Ignored, link);
+                return (LinkCheckSummary.Ignored, link);
             }
 
             Uri uri;
@@ -63,7 +65,8 @@ namespace RichTextCleaner.Common
             }
             catch (FormatException)
             {
-                return (LinkCheckResult.Error, null);
+                Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Invalid URL {link}");
+                return (LinkCheckSummary.Error, null);
             }
 
             try
@@ -73,30 +76,32 @@ namespace RichTextCleaner.Common
                 {
                     if (string.Equals(response.Headers.Location?.AbsoluteUri ?? link, link, StringComparison.OrdinalIgnoreCase))
                     {
-                        return (LinkCheckResult.Ok, link);
+                        return (LinkCheckSummary.Ok, link);
                     }
                     else
                     {
-                        return (LinkCheckResult.Redirected, response.Headers.Location?.AbsoluteUri);
+                        return (LinkCheckSummary.Redirected, response.Headers.Location?.AbsoluteUri);
                     }
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    return (LinkCheckResult.NotFound, null);
+                    return (LinkCheckSummary.NotFound, null);
                 }
                 else
                 {
-                    return (LinkCheckResult.Error, null);
+                    Logger.Log(LogLevel.Warning, nameof(LinkChecker), $"Status {response.StatusCode} checking {link}");
+                    return (LinkCheckSummary.Error, null);
                 }
             }
             catch (HttpRequestException req)
             {
-
-                return (LinkCheckResult.Timeout, null);
+                Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Http exception checking {link}", req);
+                return (LinkCheckSummary.Timeout, null);
             }
-            catch (TaskCanceledException)
+            catch (TaskCanceledException tce)
             {
-                return (LinkCheckResult.Timeout, null);
+                Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Task cancelled (timeout) checking {link}", tce);
+                return (LinkCheckSummary.Timeout, null);
             }
         }
     }

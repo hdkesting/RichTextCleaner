@@ -7,7 +7,7 @@ namespace RichTextCleanerFW.Models
 {
     public class BindableLinkDescription : INotifyPropertyChanged
     {
-        private LinkCheckResult result;
+        private LinkCheckSummary result;
         private string linkAfterRedirect;
 
         public BindableLinkDescription(LinkDescription original)
@@ -27,7 +27,9 @@ namespace RichTextCleanerFW.Models
 
         public string OriginalLink { get; set; }
 
-        public LinkCheckResult Result
+        public int HttpStatus { get; set; }
+
+        public LinkCheckSummary Result
         {
             get { return this.result; }
             set

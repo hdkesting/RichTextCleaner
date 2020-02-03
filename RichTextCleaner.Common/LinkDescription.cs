@@ -9,7 +9,7 @@
 
         public string OriginalLink { get; set; }
 
-        public LinkCheckResult Result { get; set; }
+        public LinkCheckSummary Result { get; set; }
 
         public string LinkAfterRedirect { get; set; }
     }

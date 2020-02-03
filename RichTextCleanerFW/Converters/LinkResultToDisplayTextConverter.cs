@@ -9,17 +9,17 @@ namespace RichTextCleanerFW.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var res = (LinkCheckResult)value;
+            var res = (LinkCheckSummary)value;
 
             switch (res)
             {
-                case LinkCheckResult.NotCheckedYet: return "❓ Working ⋯";
-                case LinkCheckResult.Ignored: return "- Ignored";
-                case LinkCheckResult.Ok: return "✔ Ok";
-                case LinkCheckResult.NotFound: return "⛔ Not found";
-                case LinkCheckResult.Error: return "❌ Error";
-                case LinkCheckResult.Timeout: return "⏲ Timeout";
-                case LinkCheckResult.Redirected: return "🔀 Redirect";
+                case LinkCheckSummary.NotCheckedYet: return "❓ Working ⋯";
+                case LinkCheckSummary.Ignored: return "- Ignored";
+                case LinkCheckSummary.Ok: return "✔ Ok";
+                case LinkCheckSummary.NotFound: return "⛔ Not found";
+                case LinkCheckSummary.Error: return "❌ Error";
+                case LinkCheckSummary.Timeout: return "⏲ Timeout";
+                case LinkCheckSummary.Redirected: return "🔀 Redirect";
             }
 
             return res.ToString();
