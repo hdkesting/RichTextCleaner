@@ -10,10 +10,11 @@ namespace RichTextCleaner.Common
 {
     public static class LinkChecker
     {
-        private static readonly TimeSpan HttpTimeout = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan HttpTimeout = TimeSpan.FromSeconds(20);
 
         // https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=netframework-4.8
-        private static readonly HttpClient client = new HttpClient() { Timeout = HttpTimeout };
+        private static readonly HttpClientHandler clientHandler = new HttpClientHandler { AllowAutoRedirect = true };
+        private static readonly HttpClient client = new HttpClient(clientHandler) { Timeout = HttpTimeout };
 
         /// <summary>
         /// Finds the links in the supplied HTML source.
@@ -88,11 +89,15 @@ namespace RichTextCleaner.Common
                     return (LinkCheckResult.Error, null);
                 }
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException req)
+            {
+
+                return (LinkCheckResult.Timeout, null);
+            }
+            catch (TaskCanceledException)
             {
                 return (LinkCheckResult.Timeout, null);
             }
-
         }
     }
 }

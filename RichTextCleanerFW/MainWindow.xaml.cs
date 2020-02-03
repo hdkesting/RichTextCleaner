@@ -20,6 +20,7 @@ namespace RichTextCleanerFW
 
         private readonly Brush StatusForeground;
         private readonly Brush StatusBackground;
+        private LinkCheckerWindow checker;
 
         public MainWindow()
         {
@@ -65,6 +66,13 @@ namespace RichTextCleanerFW
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
             Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmllib.Name} version {htmllib.Version}.");
+
+            this.Closing += this.MainWindow_Closing;
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.checker?.Close();
         }
 
         /// <summary>
@@ -327,10 +335,25 @@ namespace RichTextCleanerFW
             await CheckLinks().ConfigureAwait(true);
         }
 
-        private async Task CheckLinks()
-        { 
-            var checker = new LinkCheckerWindow();
+        private void OpenLinkCheckerWindow()
+        {
+            if (this.checker == null)
+            {
+                this.checker = new LinkCheckerWindow();
+                this.checker.Closed += this.Checker_Closed;
+            }
 
+            this.checker.Show();
+        }
+
+        private void Checker_Closed(object sender, EventArgs e)
+        {
+            this.checker.Closed -= Checker_Closed;
+            this.checker = null;
+        }
+
+        private async Task CheckLinks()
+        {
             var links = LinkChecker.FindLinks(this.SourceValue);
             if (!links.Any())
             {
@@ -338,10 +361,12 @@ namespace RichTextCleanerFW
                 return;
             }
 
+            OpenLinkCheckerWindow();
             checker.Links.Clear();
-            checker.Links.AddRange(links.Select(l => new BindableLinkDescription(l)));
-
-            checker.Show();
+            foreach (var lnk in links)
+            {
+                checker.Links.Add(new BindableLinkDescription(lnk));
+            }
 
             try
             {
@@ -352,17 +377,13 @@ namespace RichTextCleanerFW
                 // timeout happened
             }
 
-            foreach (var lnk in checker.Links)
-            {
-                if (lnk.Result == LinkCheckResult.NotCheckedYet)
-                {
-                    lnk.Result = LinkCheckResult.Timeout;
-                }
-            }
-
-            checker.ShowDialog();
-
-            this.Focus();
+            //foreach (var lnk in checker.Links)
+            //{
+            //    if (lnk.Result == LinkCheckResult.NotCheckedYet)
+            //    {
+            //        lnk.Result = LinkCheckResult.Timeout;
+            //    }
+            //}
         }
     }
 }

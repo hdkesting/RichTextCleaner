@@ -2,9 +2,12 @@
 using RichTextCleanerFW.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace RichTextCleanerFW
 {
@@ -13,7 +16,7 @@ namespace RichTextCleanerFW
     /// </summary>
     public partial class LinkCheckerWindow : Window
     {
-        public static readonly DependencyProperty LinksProperty = DependencyProperty.Register(nameof(Links), typeof(List<BindableLinkDescription>), typeof(LinkCheckerWindow), new PropertyMetadata(new List<BindableLinkDescription>()));
+        public static readonly DependencyProperty LinksProperty = DependencyProperty.Register(nameof(Links), typeof(ObservableCollection<BindableLinkDescription>), typeof(LinkCheckerWindow), new PropertyMetadata(new ObservableCollection<BindableLinkDescription>()));
 
         public LinkCheckerWindow()
         {
@@ -22,9 +25,9 @@ namespace RichTextCleanerFW
             this.DataContext = this;
         }
 
-        public List<BindableLinkDescription> Links
+        public ObservableCollection<BindableLinkDescription> Links
         {
-            get { return (List<BindableLinkDescription>)this.GetValue(LinksProperty); }
+            get { return (ObservableCollection<BindableLinkDescription>)this.GetValue(LinksProperty); }
             private set { this.SetValue(LinksProperty, value); }
         }
 
@@ -32,6 +35,7 @@ namespace RichTextCleanerFW
         {
             var tasks = new List<Task>();
             
+            // gradually start checking all
             foreach (var lnk in this.Links)
             {
                 await Task.Delay(250).ConfigureAwait(true);
@@ -40,7 +44,7 @@ namespace RichTextCleanerFW
 
             do
             {
-                this.MessageLabel.Text = $"Checking all links: {tasks.Count(t => !t.IsCompleted && !t.IsFaulted && !t.IsCanceled)}/{tasks.Count}";
+                this.MessageLabel.Text = $"Checking all links: {tasks.Count(t => t.IsCompleted || t.IsFaulted || t.IsCanceled)}/{tasks.Count}";
                 await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(true);
             }
             while (tasks.Any(t => !t.IsCompleted && !t.IsFaulted && !t.IsCanceled));
@@ -51,6 +55,23 @@ namespace RichTextCleanerFW
         private static async Task CheckLink(BindableLinkDescription arg)
         {
             (arg.Result, arg.LinkAfterRedirect) = await LinkChecker.CheckLink(arg.OriginalLink).ConfigureAwait(false);
+        }
+
+        private void ClickLink(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+
+            if (btn == null)
+            {
+                return;
+            }
+
+            var url = btn.Content as string;
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                Process.Start(url);
+            }
         }
     }
 }

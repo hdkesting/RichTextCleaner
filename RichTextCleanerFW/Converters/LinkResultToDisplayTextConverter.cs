@@ -13,12 +13,13 @@ namespace RichTextCleanerFW.Converters
 
             switch (res)
             {
-                case LinkCheckResult.NotCheckedYet: return "❓ to do";
-                case LinkCheckResult.Ignored: return "- ignored";
+                case LinkCheckResult.NotCheckedYet: return "❓ Working ⋯";
+                case LinkCheckResult.Ignored: return "- Ignored";
                 case LinkCheckResult.Ok: return "✔ Ok";
-                case LinkCheckResult.NotFound: return "⛔ not found";
-                case LinkCheckResult.Error: return "❌ error";
-                case LinkCheckResult.Timeout: return "⏲ timeout";
+                case LinkCheckResult.NotFound: return "⛔ Not found";
+                case LinkCheckResult.Error: return "❌ Error";
+                case LinkCheckResult.Timeout: return "⏲ Timeout";
+                case LinkCheckResult.Redirected: return "🔀 Redirect";
             }
 
             return res.ToString();

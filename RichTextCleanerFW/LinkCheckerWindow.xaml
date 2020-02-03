@@ -9,6 +9,34 @@
         Title="Link Checker" Height="450" Width="800">
     <Window.Resources>
         <cvt:LinkResultToDisplayTextConverter x:Key="ResultToDisplay" />
+        <Style x:Key="LinkButton" TargetType="Button" BasedOn="{StaticResource ResourceKey={x:Type Button}}">
+            <!-- https://stackoverflow.com/questions/780426/link-button-in-wpf -->
+            <Setter Property="Width" Value="Auto"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter Content="{TemplateBinding Content}" 
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  VerticalAlignment="Center"
+                                  >
+                            <ContentPresenter.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="TextDecorations" Value="Underline" />
+                                </Style>
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="Blue" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -19,7 +47,13 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Text" DisplayMemberBinding="{Binding LinkText}" />
-                    <GridViewColumn Header="URL" DisplayMemberBinding="{Binding OriginalLink}" Width="200"/>
+                    <GridViewColumn Header="URL" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource LinkButton}" Content="{Binding OriginalLink}" Click="ClickLink"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Result" DisplayMemberBinding="{Binding Result, Converter={StaticResource ResultToDisplay}, Mode=OneWay}" Width="100"/>
                     <GridViewColumn Header="New URL" DisplayMemberBinding="{Binding LinkAfterRedirect, Mode=OneWay}" Width="200"/>
                 </GridView>
