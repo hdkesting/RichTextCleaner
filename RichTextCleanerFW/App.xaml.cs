@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using RichTextCleanerFW.Common.Logging;
+using System.IO;
 using System.Windows;
 
 namespace RichTextCleanerFW
@@ -13,14 +14,14 @@ namespace RichTextCleanerFW
             base.OnStartup(e);
 
             string logdir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "Hans_Kesting\\RichTextCleaner");
-            Logging.Logger.Initialize(new DirectoryInfo(logdir));
+            Logger.Initialize(new DirectoryInfo(logdir));
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
 
-            Logging.Logger.Shutdown();
+            Logger.Shutdown();
         }
     }
 }

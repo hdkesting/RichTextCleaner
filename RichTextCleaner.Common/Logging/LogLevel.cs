@@ -2,7 +2,7 @@
 // Copyright (c) Hans Kesting. All rights reserved.
 // </copyright>
 
-namespace RichTextCleanerFW.Logging
+namespace RichTextCleanerFW.Common.Logging
 {
     /// <summary>
     /// The level of the log message.

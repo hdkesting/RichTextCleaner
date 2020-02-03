@@ -1,5 +1,5 @@
 ﻿using RichTextCleaner.Common;
-using RichTextCleanerFW.Logging;
+using RichTextCleanerFW.Common.Logging;
 using RichTextCleanerFW.Models;
 using System;
 using System.Diagnostics;
@@ -330,11 +330,6 @@ namespace RichTextCleanerFW
             }
         }
 
-        private async void CheckLinks(object sender, RoutedEventArgs e)
-        {
-            await CheckLinks().ConfigureAwait(true);
-        }
-
         private void OpenLinkCheckerWindow()
         {
             if (this.checker == null)
@@ -350,6 +345,11 @@ namespace RichTextCleanerFW
         {
             this.checker.Closed -= Checker_Closed;
             this.checker = null;
+        }
+
+        private async void CheckLinks(object sender, RoutedEventArgs e)
+        {
+            await CheckLinks().ConfigureAwait(true);
         }
 
         private async Task CheckLinks()
