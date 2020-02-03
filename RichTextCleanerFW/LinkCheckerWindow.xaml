@@ -42,6 +42,7 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="20"/>
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <ListView x:Name="LinkList" ItemsSource="{Binding Links}">
             <ListView.View>
@@ -50,13 +51,19 @@
                     <GridViewColumn Header="URL" Width="200">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource LinkButton}" Content="{Binding OriginalLink}" Click="ClickLink"/>
+                                <Button Style="{StaticResource LinkButton}" Content="{Binding OriginalLink, Mode=OneWay}" Click="ClickLink"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Result" DisplayMemberBinding="{Binding Result, Converter={StaticResource ResultToDisplay}, Mode=OneWay}" Width="100"/>
                     <GridViewColumn Header="Status" DisplayMemberBinding="{Binding HttpStatus, Mode=OneWay}" Width="50" />
-                    <GridViewColumn Header="New URL" DisplayMemberBinding="{Binding LinkAfterRedirect, Mode=OneWay}" Width="200"/>
+                    <GridViewColumn Header="New URL" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource LinkButton}" Content="{Binding LinkAfterRedirect, Mode=OneWay}" Click="ClickLink"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
             <ListView.ItemTemplate>
@@ -66,5 +73,10 @@
         </ListView>
 
         <TextBlock Grid.Row="1" x:Name="MessageLabel" Margin="10,2,2,2"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <Button Content="Rescan list" Click="RescanList" Margin="5,2"/>
+            <Button Content="Mark invalid links" Click="UpdateSource" Margin="5,2"/>
+        </StackPanel>
     </Grid>
 </Window>

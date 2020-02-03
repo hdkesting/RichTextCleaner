@@ -50,12 +50,12 @@ namespace RichTextCleaner.Common
         {
             if (string.IsNullOrWhiteSpace(link))
             {
-                return new LinkCheckResult(LinkCheckSummary.Ignored, link);
+                return new LinkCheckResult(LinkCheckSummary.Ignored);
             }
 
             if (!link.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !link.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
-                return new LinkCheckResult(LinkCheckSummary.Ignored, link);
+                return new LinkCheckResult(LinkCheckSummary.Ignored);
             }
 
             Uri uri;
@@ -66,21 +66,28 @@ namespace RichTextCleaner.Common
             catch (FormatException)
             {
                 Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Invalid URL {link}");
-                return new LinkCheckResult(LinkCheckSummary.Error, null);
+                return new LinkCheckResult(LinkCheckSummary.Error);
             }
 
             try
             {
-                var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+                var response = await client.GetAsync(uri, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
-                    if (string.Equals(response.Headers.Location?.AbsoluteUri ?? link, link, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(response.RequestMessage.RequestUri?.AbsoluteUri ?? link, link, StringComparison.OrdinalIgnoreCase))
                     {
-                        return new LinkCheckResult(LinkCheckSummary.Ok, link, response.StatusCode);
+                        return new LinkCheckResult(LinkCheckSummary.Ok, null, response.StatusCode);
                     }
                     else
                     {
-                        return new LinkCheckResult(LinkCheckSummary.Redirected, response.Headers.Location?.AbsoluteUri, response.StatusCode);
+                        if (string.Equals(response.RequestMessage.RequestUri.PathAndQuery, uri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return new LinkCheckResult(LinkCheckSummary.SchemaChange, response.RequestMessage.RequestUri?.AbsoluteUri, response.StatusCode);
+                        }
+                        else
+                        {
+                            return new LinkCheckResult(LinkCheckSummary.Redirected, response.RequestMessage.RequestUri?.AbsoluteUri, response.StatusCode);
+                        }
                     }
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -97,12 +104,12 @@ namespace RichTextCleaner.Common
             catch (HttpRequestException req)
             {
                 Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Http exception checking {link}", req);
-                return new LinkCheckResult(LinkCheckSummary.Timeout, null);
+                return new LinkCheckResult(LinkCheckSummary.Timeout);
             }
             catch (TaskCanceledException tce)
             {
                 Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Task cancelled (timeout) checking {link}", tce);
-                return new LinkCheckResult(LinkCheckSummary.Timeout, null);
+                return new LinkCheckResult(LinkCheckSummary.Timeout);
             }
         }
     }

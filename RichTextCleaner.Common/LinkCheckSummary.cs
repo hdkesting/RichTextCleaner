@@ -16,7 +16,7 @@
         Ok,
 
         /// <summary>
-        /// The link is ignored (not an external URL) 
+        /// The link is ignored (is not a URL or not external).
         /// </summary>
         Ignored,
 
@@ -24,6 +24,11 @@
         /// The link gets redirected.
         /// </summary>
         Redirected,
+
+        /// <summary>
+        /// The schema changed (from http to https, presumably).
+        /// </summary>
+        SchemaChange,
 
         /// <summary>
         /// The link is not found (returns a 404 status).

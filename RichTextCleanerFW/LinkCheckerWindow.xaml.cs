@@ -76,5 +76,22 @@ namespace RichTextCleanerFW
                 Process.Start(url);
             }
         }
+
+        private async void RescanList(object sender, RoutedEventArgs e)
+        {
+            // reset all
+            foreach (var lnk in this.Links)
+            {
+                lnk.Result = LinkCheckSummary.NotCheckedYet;
+            }
+
+            // and rescan (maybe the server is awake now?)
+            await this.CheckAllLinks().ConfigureAwait(false);
+        }
+
+        private void UpdateSource(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace RichTextCleaner.Common
 
         public HttpStatusCode HttpStatusCode { get; private set; }
 
-        public LinkCheckResult(LinkCheckSummary summary, string link)
+        public LinkCheckResult(LinkCheckSummary summary, string link = null)
         {
             this.Summary = summary;
             this.NewLink = link;
