@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>2.2.3.0</AssemblyVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <Authors>Hans Kesting</Authors>
     <Version>1.6.0</Version>
     <Copyright>Hans Kesting 2019-2020</Copyright>
-    <FileVersion>2.2.2.0</FileVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <Company>EPAM Systems</Company>
   </PropertyGroup>
 

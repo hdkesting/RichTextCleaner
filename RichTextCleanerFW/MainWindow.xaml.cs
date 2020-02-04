@@ -1,7 +1,9 @@
 ﻿using RichTextCleaner.Common;
-using RichTextCleanerFW.Logging;
+using RichTextCleanerFW.Common.Logging;
+using RichTextCleanerFW.Models;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -18,6 +20,7 @@ namespace RichTextCleanerFW
 
         private readonly Brush StatusForeground;
         private readonly Brush StatusBackground;
+        private LinkCheckerWindow checker;
 
         public MainWindow()
         {
@@ -63,6 +66,13 @@ namespace RichTextCleanerFW
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
             Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmllib.Name} version {htmllib.Version}.");
+
+            this.Closing += this.MainWindow_Closing;
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.checker?.Close();
         }
 
         /// <summary>
@@ -305,8 +315,13 @@ namespace RichTextCleanerFW
                     await this.CopySourceAsText().ConfigureAwait(false);
                     break;
 
-                case Key.L:
+                case Key.F1:
+                case Key.F:
                     Process.Start(Logger.LogFolder);
+                    break;
+
+                case Key.L:
+                    await CheckLinks().ConfigureAwait(false);
                     break;
 
                 case Key.Delete:
@@ -314,6 +329,67 @@ namespace RichTextCleanerFW
                     this.SourceValue = null;
                     break;
             }
+        }
+
+        private void OpenLinkCheckerWindow()
+        {
+            if (this.checker == null)
+            {
+                this.checker = new LinkCheckerWindow();
+                this.checker.LinkToProcess += this.Checker_LinkToProcess;
+                this.checker.Closed += this.Checker_Closed;
+            }
+
+            this.checker.Show();
+        }
+
+        private void Checker_LinkToProcess(object sender, LinkModificationEventArgs e)
+        {
+            switch (e.Modification)
+            {
+                case LinkModification.MarkInvalid:
+                    this.SourceValue = LinkChecker.MarkInvalid(this.SourceValue, e.LinkHref);
+                    break;
+
+                case LinkModification.UpdateSchema:
+                    this.SourceValue = LinkChecker.UpdateSchema(this.SourceValue, e.LinkHref, e.NewHref);
+                    break;
+            }
+        }
+
+        private void Checker_Closed(object sender, EventArgs e)
+        {
+            this.checker.Closed -= Checker_Closed;
+            this.checker.LinkToProcess -= Checker_LinkToProcess;
+            this.checker = null;
+        }
+
+        private async void CheckLinks(object sender, RoutedEventArgs e)
+        {
+            await CheckLinks().ConfigureAwait(true);
+        }
+
+        private async Task CheckLinks()
+        {
+            checker?.Links.Clear();
+            var links = LinkChecker.FindLinks(this.SourceValue);
+            if (!links.Any())
+            {
+                MessageBox.Show("No links found.");
+                return;
+            }
+
+            OpenLinkCheckerWindow();
+            checker.Links.Clear();
+
+            foreach (var lnk in links)
+            {
+                checker.Links.Add(new BindableLinkDescription(lnk));
+            }
+
+            checker.Focus();
+
+            await checker.CheckAllLinks().ConfigureAwait(false);
         }
     }
 }

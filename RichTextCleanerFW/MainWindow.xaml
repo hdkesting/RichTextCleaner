@@ -63,6 +63,10 @@
             <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="or press (Ctrl-)T">Get text only</Button>
 
             <Separator/>
+            
+            <Button Margin="2,10" Click="CheckLinks" ToolTip="check all links in text">Check links</Button>
+
+            <Separator/>
 
             <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="0,10,0,10" Foreground="Gray">Ready for pasting</TextBlock>
         </StackPanel>

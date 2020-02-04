@@ -4,6 +4,68 @@
         <name>RichTextCleaner.Common</name>
     </assembly>
     <members>
+        <member name="M:RichTextCleaner.Common.LinkChecker.FindLinks(System.String)">
+            <summary>
+            Finds the links in the supplied HTML source.
+            </summary>
+            <param name="html">The HTML.</param>
+            <returns></returns>
+        </member>
+        <member name="T:RichTextCleaner.Common.LinkCheckSummary">
+            <summary>
+            The result of checking a particular link.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.NotCheckedYet">
+            <summary>
+            The link is not checked yet.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Ok">
+            <summary>
+            The link checks out fine.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Ignored">
+            <summary>
+            The link is ignored (is not a URL or not external).
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Redirected">
+            <summary>
+            The link gets redirected.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.SchemaChange">
+            <summary>
+            The schema changed (from http to https, presumably).
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.NotFound">
+            <summary>
+            The link is not found (returns a 404 status).
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Error">
+            <summary>
+            The link results in an error (4xx, 5xx)
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Timeout">
+            <summary>
+            The link results in a timeout.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Updated">
+            <summary>
+            The link is updated.
+            </summary>
+        </member>
+        <member name="T:RichTextCleaner.Common.LinkDescription">
+            <summary>
+            The description of a link.
+            </summary>
+        </member>
         <member name="T:RichTextCleaner.Common.QuoteProcessing">
             <summary>
             Select how to process quotes in texts.
@@ -143,6 +205,151 @@
             </summary>
             <param name="html"></param>
             <returns></returns>
+        </member>
+        <member name="T:RichTextCleanerFW.Common.Logging.Logger">
+            <summary>
+            Provides logging to file.
+            </summary>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.Logger.Initialize(System.IO.DirectoryInfo)">
+            <summary>
+            (Re-)initializes this instance.
+            </summary>
+            <param name="basePath">The base path, the "logs" folder will be below this.</param>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.Logger.Cleanup">
+            <summary>
+            Cleans up the old logs.
+            </summary>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.Logger.Shutdown">
+            <summary>
+            Shuts this instance down.
+            </summary>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.Logger.Log(RichTextCleanerFW.Common.Logging.LogLevel,System.String,System.String,System.Exception)">
+            <summary>
+            Logs the specified message.
+            </summary>
+            <param name="level">The level.</param>
+            <param name="pageName">Name of the page or class.</param>
+            <param name="message">The message.</param>
+            <param name="exception">The exception (optional).</param>
+        </member>
+        <member name="T:RichTextCleanerFW.Common.Logging.LogLevel">
+            <summary>
+            The level of the log message.
+            </summary>
+        </member>
+        <member name="F:RichTextCleanerFW.Common.Logging.LogLevel.Debug">
+            <summary>
+            A debug message.
+            </summary>
+        </member>
+        <member name="F:RichTextCleanerFW.Common.Logging.LogLevel.Information">
+            <summary>
+            An informational message.
+            </summary>
+        </member>
+        <member name="F:RichTextCleanerFW.Common.Logging.LogLevel.Warning">
+            <summary>
+            A warning.
+            </summary>
+        </member>
+        <member name="F:RichTextCleanerFW.Common.Logging.LogLevel.Error">
+            <summary>
+            An error (probably includes exception).
+            </summary>
+        </member>
+        <member name="T:RichTextCleanerFW.Common.Logging.LogMessage">
+            <summary>
+            A message to write to the log.
+            </summary>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.LogMessage.#ctor(RichTextCleanerFW.Common.Logging.LogLevel,System.String,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RichTextCleanerFW.Common.Logging.LogMessage"/> class.
+            </summary>
+            <param name="level">The level.</param>
+            <param name="pageName">Name of the page.</param>
+            <param name="message">The message to log.</param>
+            <param name="exception">The exception that occurred.</param>
+        </member>
+        <member name="P:RichTextCleanerFW.Common.Logging.LogMessage.TimeStamp">
+            <summary>
+            Gets the time stamp.
+            </summary>
+            <value>
+            The time stamp.
+            </value>
+        </member>
+        <member name="P:RichTextCleanerFW.Common.Logging.LogMessage.Level">
+            <summary>
+            Gets the level of the message.
+            </summary>
+            <value>
+            The level.
+            </value>
+        </member>
+        <member name="P:RichTextCleanerFW.Common.Logging.LogMessage.PageName">
+            <summary>
+            Gets the name of the page that originated this message.
+            </summary>
+            <value>
+            The name of the page.
+            </value>
+        </member>
+        <member name="P:RichTextCleanerFW.Common.Logging.LogMessage.Message">
+            <summary>
+            Gets the message.
+            </summary>
+            <value>
+            The message.
+            </value>
+        </member>
+        <member name="P:RichTextCleanerFW.Common.Logging.LogMessage.Exception">
+            <summary>
+            Gets the exception.
+            </summary>
+            <value>
+            The exception.
+            </value>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.LogMessage.ToString">
+            <summary>
+            Converts this <see cref="T:RichTextCleanerFW.Common.Logging.LogMessage"/> to a string.
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:RichTextCleanerFW.Common.Logging.LogWriter">
+            <summary>
+            Caches log messages and writes them to file.
+            </summary>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.LogWriter.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RichTextCleanerFW.Common.Logging.LogWriter" /> class.
+            </summary>
+            <param name="logFolder">The log folder.</param>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.LogWriter.Add(RichTextCleanerFW.Common.Logging.LogMessage)">
+            <summary>
+            Adds the specified message to the queue.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.LogWriter.Cleanup">
+            <summary>
+            Cleans up old log files.
+            </summary>
+        </member>
+        <member name="M:RichTextCleanerFW.Common.Logging.LogWriter.Flush">
+            <summary>
+            Flushes all queued messages to the file.
+            </summary>
+            <returns><c>true</c> when messages were flushed.</returns>
         </member>
     </members>
 </doc>
