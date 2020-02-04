@@ -51,7 +51,7 @@
                     <GridViewColumn Header="URL" Width="200">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource LinkButton}" Content="{Binding OriginalLink, Mode=OneWay}" Click="ClickLink"/>
+                                <Button Style="{StaticResource LinkButton}" Content="{Binding OriginalLink, Mode=OneWay}"  ToolTip="{Binding OriginalLink, Mode=OneWay}" Click="ClickLink"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -60,7 +60,7 @@
                     <GridViewColumn Header="New URL" Width="200">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource LinkButton}" Content="{Binding LinkAfterRedirect, Mode=OneWay}" Click="ClickLink"/>
+                                <Button Style="{StaticResource LinkButton}" Content="{Binding LinkAfterRedirect, Mode=OneWay}" ToolTip="{Binding LinkAfterRedirect, Mode=OneWay}" Click="ClickLink"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

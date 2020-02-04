@@ -25,6 +25,8 @@ namespace RichTextCleanerFW
             this.DataContext = this;
         }
 
+        public event EventHandler<LinkModificationEventArgs> LinkToProcess;
+
         public ObservableCollection<BindableLinkDescription> Links
         {
             get { return (ObservableCollection<BindableLinkDescription>)this.GetValue(LinksProperty); }
@@ -35,8 +37,8 @@ namespace RichTextCleanerFW
         {
             var tasks = new List<Task>();
             
-            // gradually start checking all
-            foreach (var lnk in this.Links)
+            // gradually start checking all that still need (re-)checking
+            foreach (var lnk in this.Links.Where(l => l.Result == LinkCheckSummary.NotCheckedYet))
             {
                 await Task.Delay(250).ConfigureAwait(true);
                 tasks.Add(CheckLink(lnk));
@@ -79,8 +81,8 @@ namespace RichTextCleanerFW
 
         private async void RescanList(object sender, RoutedEventArgs e)
         {
-            // reset all
-            foreach (var lnk in this.Links)
+            // reset just the timeouts
+            foreach (var lnk in this.Links.Where(l => l.Result == LinkCheckSummary.Timeout))
             {
                 lnk.Result = LinkCheckSummary.NotCheckedYet;
             }
@@ -91,7 +93,27 @@ namespace RichTextCleanerFW
 
         private void UpdateSource(object sender, RoutedEventArgs e)
         {
+            int count = 0;
+            foreach (var lnk in this.Links)
+            {
+                switch (lnk.Result)
+                {
+                    case LinkCheckSummary.NotFound:
+                    case LinkCheckSummary.Error:
+                        this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(lnk.OriginalLink, LinkModification.MarkInvalid));
+                        lnk.Result = LinkCheckSummary.Updated;
+                        count++;
+                        break;
 
+                    case LinkCheckSummary.SchemaChange:
+                        this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(lnk.OriginalLink, LinkModification.UpdateSchema, lnk.LinkAfterRedirect));
+                        lnk.Result = LinkCheckSummary.Updated;
+                        count++;
+                        break;
+                }
+            }
+
+            MessageBox.Show($"{count} link(s) updated.");
         }
     }
 }

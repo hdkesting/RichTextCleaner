@@ -74,13 +74,15 @@ namespace RichTextCleaner.Common
                 var response = await client.GetAsync(uri, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
-                    if (string.Equals(response.RequestMessage.RequestUri?.AbsoluteUri ?? link, link, StringComparison.OrdinalIgnoreCase))
+                    // ignore any added (or removed) trailing '/'
+                    if (string.Equals((response.RequestMessage.RequestUri?.AbsoluteUri ?? link).TrimEnd('/'), link.TrimEnd('/'), StringComparison.OrdinalIgnoreCase))
                     {
                         return new LinkCheckResult(LinkCheckSummary.Ok, null, response.StatusCode);
                     }
                     else
                     {
-                        if (string.Equals(response.RequestMessage.RequestUri.PathAndQuery, uri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
+                        // just an http-to-https change? (ignore the other way around)
+                        if (string.Equals(link.Replace("http://", "https://").TrimEnd('/'), response.RequestMessage.RequestUri?.AbsoluteUri.TrimEnd('/'), StringComparison.OrdinalIgnoreCase))
                         {
                             return new LinkCheckResult(LinkCheckSummary.SchemaChange, response.RequestMessage.RequestUri?.AbsoluteUri, response.StatusCode);
                         }
@@ -96,7 +98,12 @@ namespace RichTextCleaner.Common
                 }
                 else
                 {
-                    // NB LinkedIn sometimes returns a 999 status
+                    // NB LinkedIn sometimes returns a 999 status because it accepts only known browsers - just assume the link is fine anyway
+                    if (link.Contains("linkedin.com"))
+                    {
+                        return new LinkCheckResult(LinkCheckSummary.Ok);
+                    }
+
                     Logger.Log(LogLevel.Warning, nameof(LinkChecker), $"Status {response.StatusCode} checking {link}");
                     return new LinkCheckResult(LinkCheckSummary.Error, null, response.StatusCode);
                 }
@@ -111,6 +118,30 @@ namespace RichTextCleaner.Common
                 Logger.Log(LogLevel.Error, nameof(LinkChecker), $"Task cancelled (timeout) checking {link}", tce);
                 return new LinkCheckResult(LinkCheckSummary.Timeout);
             }
+        }
+
+        public static string MarkInvalid(string htmlSource, string linkHref)
+        {
+            var doc = TextCleaner.CreateHtmlDocument(htmlSource);
+
+            foreach (var node in doc.DocumentNode.SelectNodes("//a[@href='"+linkHref + "']") ?? Enumerable.Empty<HtmlNode>())
+            {
+                node.InnerHtml = "[" + node.InnerHtml + "]";
+            }
+
+            return TextCleaner.GetHtmlSource(doc);
+        }
+
+        public static string UpdateSchema(string htmlSource, string linkHref, string newHref) 
+        {
+            var doc = TextCleaner.CreateHtmlDocument(htmlSource);
+
+            foreach (var node in doc.DocumentNode.SelectNodes("//a[@href='"+linkHref + "']") ?? Enumerable.Empty<HtmlNode>())
+            {
+                node.Attributes["href"].Value = newHref;
+            }
+
+            return TextCleaner.GetHtmlSource(doc);
         }
     }
 }

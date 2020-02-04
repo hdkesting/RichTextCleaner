@@ -43,6 +43,11 @@
         /// <summary>
         /// The link results in a timeout.
         /// </summary>
-        Timeout
+        Timeout,
+
+        /// <summary>
+        /// The link is updated.
+        /// </summary>
+        Updated
     }
 }

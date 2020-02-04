@@ -21,6 +21,7 @@ namespace RichTextCleanerFW.Converters
                 case LinkCheckSummary.Timeout: return "⏲ Timeout";
                 case LinkCheckSummary.Redirected: return "🔀 Redirect";
                 case LinkCheckSummary.SchemaChange: return "🔀 Schema";
+                case LinkCheckSummary.Updated: return "✔ Updated";
             }
 
             return res.ToString();

@@ -336,15 +336,31 @@ namespace RichTextCleanerFW
             if (this.checker == null)
             {
                 this.checker = new LinkCheckerWindow();
+                this.checker.LinkToProcess += this.Checker_LinkToProcess;
                 this.checker.Closed += this.Checker_Closed;
             }
 
             this.checker.Show();
         }
 
+        private void Checker_LinkToProcess(object sender, LinkModificationEventArgs e)
+        {
+            switch (e.Modification)
+            {
+                case LinkModification.MarkInvalid:
+                    this.SourceValue = LinkChecker.MarkInvalid(this.SourceValue, e.LinkHref);
+                    break;
+
+                case LinkModification.UpdateSchema:
+                    this.SourceValue = LinkChecker.UpdateSchema(this.SourceValue, e.LinkHref, e.NewHref);
+                    break;
+            }
+        }
+
         private void Checker_Closed(object sender, EventArgs e)
         {
             this.checker.Closed -= Checker_Closed;
+            this.checker.LinkToProcess -= Checker_LinkToProcess;
             this.checker = null;
         }
 
@@ -364,6 +380,8 @@ namespace RichTextCleanerFW
             }
 
             OpenLinkCheckerWindow();
+            checker.Links.Clear();
+
             foreach (var lnk in links)
             {
                 checker.Links.Add(new BindableLinkDescription(lnk));
@@ -371,14 +389,7 @@ namespace RichTextCleanerFW
 
             checker.Focus();
 
-            try
-            {
-                await checker.CheckAllLinks().ConfigureAwait(true);
-            }
-            catch (TaskCanceledException)
-            {
-                // timeout happened
-            }
+            await checker.CheckAllLinks().ConfigureAwait(false);
         }
     }
 }
