@@ -4,12 +4,85 @@
         <name>RichTextCleaner.Common</name>
     </assembly>
     <members>
+        <member name="T:RichTextCleaner.Common.LinkChecker">
+            <summary>
+            A component that checks links for existance.
+            </summary>
+        </member>
         <member name="M:RichTextCleaner.Common.LinkChecker.FindLinks(System.String)">
             <summary>
             Finds the links in the supplied HTML source.
             </summary>
             <param name="html">The HTML.</param>
             <returns></returns>
+        </member>
+        <member name="M:RichTextCleaner.Common.LinkChecker.CheckLink(System.String)">
+            <summary>
+            Checks the link for existance and redirects.
+            </summary>
+            <param name="link">The link.</param>
+            <returns></returns>
+        </member>
+        <member name="M:RichTextCleaner.Common.LinkChecker.MarkInvalid(System.String,System.String)">
+            <summary>
+            Marks the specified invalid link with square brackets.
+            </summary>
+            <param name="htmlSource">The HTML source to update.</param>
+            <param name="linkHref">The link href to alter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:RichTextCleaner.Common.LinkChecker.UpdateHref(System.String,System.String,System.String)">
+            <summary>
+            Updates the href for simple redirects.
+            </summary>
+            <param name="htmlSource">The HTML source.</param>
+            <param name="linkHref">The link href.</param>
+            <param name="newHref">The new href.</param>
+            <returns></returns>
+        </member>
+        <member name="T:RichTextCleaner.Common.LinkCheckResult">
+            <summary>
+            The result of checking a link.
+            </summary>
+        </member>
+        <member name="P:RichTextCleaner.Common.LinkCheckResult.Summary">
+            <summary>
+            Gets the summary of the result.
+            </summary>
+            <value>
+            The summary.
+            </value>
+        </member>
+        <member name="P:RichTextCleaner.Common.LinkCheckResult.NewLink">
+            <summary>
+            Gets the link that is redirected to.
+            </summary>
+            <value>
+            The new link.
+            </value>
+        </member>
+        <member name="P:RichTextCleaner.Common.LinkCheckResult.HttpStatusCode">
+            <summary>
+            Gets the HTTP status code of the check.
+            </summary>
+            <value>
+            The HTTP status code.
+            </value>
+        </member>
+        <member name="M:RichTextCleaner.Common.LinkCheckResult.#ctor(RichTextCleaner.Common.LinkCheckSummary,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RichTextCleaner.Common.LinkCheckResult"/> class.
+            </summary>
+            <param name="summary">The summary.</param>
+            <param name="link">The link.</param>
+        </member>
+        <member name="M:RichTextCleaner.Common.LinkCheckResult.#ctor(RichTextCleaner.Common.LinkCheckSummary,System.String,System.Net.HttpStatusCode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RichTextCleaner.Common.LinkCheckResult"/> class.
+            </summary>
+            <param name="summary">The summary.</param>
+            <param name="link">The link.</param>
+            <param name="httpStatus">The HTTP status.</param>
         </member>
         <member name="T:RichTextCleaner.Common.LinkCheckSummary">
             <summary>
@@ -36,9 +109,9 @@
             The link gets redirected.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.SchemaChange">
+        <member name="F:RichTextCleaner.Common.LinkCheckSummary.SimpleChange">
             <summary>
-            The schema changed (from http to https, presumably).
+            The schema changed (only from http to https) and/or a www prefix was added or removed.
             </summary>
         </member>
         <member name="F:RichTextCleaner.Common.LinkCheckSummary.NotFound">
@@ -65,6 +138,38 @@
             <summary>
             The description of a link.
             </summary>
+        </member>
+        <member name="P:RichTextCleaner.Common.LinkDescription.LinkText">
+            <summary>
+            Gets or sets the text that is linked.
+            </summary>
+            <value>
+            The link text.
+            </value>
+        </member>
+        <member name="P:RichTextCleaner.Common.LinkDescription.OriginalLink">
+            <summary>
+            Gets or sets the original link.
+            </summary>
+            <value>
+            The original link.
+            </value>
+        </member>
+        <member name="P:RichTextCleaner.Common.LinkDescription.Result">
+            <summary>
+            Gets or sets the check result.
+            </summary>
+            <value>
+            The result.
+            </value>
+        </member>
+        <member name="P:RichTextCleaner.Common.LinkDescription.LinkAfterRedirect">
+            <summary>
+            Gets or sets the link after redirect (if any).
+            </summary>
+            <value>
+            The link after redirect.
+            </value>
         </member>
         <member name="T:RichTextCleaner.Common.QuoteProcessing">
             <summary>
@@ -210,6 +315,14 @@
             <summary>
             Provides logging to file.
             </summary>
+        </member>
+        <member name="P:RichTextCleanerFW.Common.Logging.Logger.LogFolder">
+            <summary>
+            Gets the folder that the logs are written to.
+            </summary>
+            <value>
+            The log folder.
+            </value>
         </member>
         <member name="M:RichTextCleanerFW.Common.Logging.Logger.Initialize(System.IO.DirectoryInfo)">
             <summary>

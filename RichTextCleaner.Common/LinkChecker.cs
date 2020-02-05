@@ -9,6 +9,9 @@ using System.Web;
 
 namespace RichTextCleaner.Common
 {
+    /// <summary>
+    /// A component that checks links for existance.
+    /// </summary>
     public static class LinkChecker
     {
         private static readonly TimeSpan HttpTimeout = TimeSpan.FromSeconds(20);

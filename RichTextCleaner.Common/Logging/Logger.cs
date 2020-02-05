@@ -21,6 +21,12 @@ namespace RichTextCleanerFW.Common.Logging
         private static int emptyFlushCount;
         private static bool stoppedFlushing;
 
+        /// <summary>
+        /// Gets the folder that the logs are written to.
+        /// </summary>
+        /// <value>
+        /// The log folder.
+        /// </value>
         public static string LogFolder { get; private set; }
 
         /// <summary>
