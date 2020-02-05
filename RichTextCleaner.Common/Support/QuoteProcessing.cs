@@ -1,4 +1,4 @@
-﻿namespace RichTextCleaner.Common
+﻿namespace RichTextCleaner.Common.Support
 {
     /// <summary>
     /// Select how to process quotes in texts.

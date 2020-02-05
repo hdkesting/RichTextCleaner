@@ -1,4 +1,5 @@
 ﻿using RichTextCleaner.Common;
+using RichTextCleaner.Common.Support;
 using RichTextCleanerFW.Models;
 using System;
 using System.Collections.Generic;

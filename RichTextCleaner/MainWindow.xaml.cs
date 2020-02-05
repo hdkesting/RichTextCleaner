@@ -1,4 +1,5 @@
 ﻿using RichTextCleaner.Common;
+using RichTextCleaner.Common.Support;
 using System.Windows;
 using System.Windows.Input;
 

@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using RichTextCleaner.Common.Support;
 using System;
 using System.Collections.Generic;
 using System.IO;

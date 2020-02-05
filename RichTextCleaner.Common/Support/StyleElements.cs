@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RichTextCleaner.Common
+namespace RichTextCleaner.Common.Support
 {
     /// <summary>
     /// Style elements to process. Can be combined.

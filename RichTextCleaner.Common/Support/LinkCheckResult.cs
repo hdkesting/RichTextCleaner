@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace RichTextCleaner.Common
+namespace RichTextCleaner.Common.Support
 {
     /// <summary>
     /// The result of checking a link.

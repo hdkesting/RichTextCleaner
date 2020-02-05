@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichTextCleaner.Common;
+using RichTextCleaner.Common.Support;
 
 namespace RichTextCleaner.Test
 {

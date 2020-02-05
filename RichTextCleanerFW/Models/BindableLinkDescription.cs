@@ -1,4 +1,4 @@
-﻿using RichTextCleaner.Common;
+﻿using RichTextCleaner.Common.Support;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

@@ -1,4 +1,5 @@
 ﻿using RichTextCleaner.Common;
+using RichTextCleaner.Common.Support;
 using RichTextCleanerFW.Common.Logging;
 using RichTextCleanerFW.Models;
 using System;
