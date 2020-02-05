@@ -26,9 +26,9 @@
         Redirected,
 
         /// <summary>
-        /// The schema changed (from http to https, presumably).
+        /// The schema changed (only from http to https) and/or a www prefix was added or removed.
         /// </summary>
-        SchemaChange,
+        SimpleChange,
 
         /// <summary>
         /// The link is not found (returns a 404 status).

@@ -352,7 +352,7 @@ namespace RichTextCleanerFW
                     break;
 
                 case LinkModification.UpdateSchema:
-                    this.SourceValue = LinkChecker.UpdateSchema(this.SourceValue, e.LinkHref, e.NewHref);
+                    this.SourceValue = LinkChecker.UpdateHref(this.SourceValue, e.LinkHref, e.NewHref);
                     break;
             }
         }

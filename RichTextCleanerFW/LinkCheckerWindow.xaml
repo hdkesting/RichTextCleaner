@@ -75,8 +75,8 @@
         <TextBlock Grid.Row="1" x:Name="MessageLabel" Margin="10,2,2,2"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2">
-            <Button Content="Rescan list" Click="RescanList" Margin="5,2"/>
-            <Button Content="Mark invalid links" Click="UpdateSource" Margin="5,2"/>
+            <Button Content="Rescan timeouts" ToolTip="Rescan any timeout results - maybe the server is awake now" Click="RescanList" Margin="5,2"/>
+            <Button Content="Update links in source" ToolTip="Update the source for errors and simple redirects" Click="UpdateSource" Margin="5,2"/>
         </StackPanel>
     </Grid>
 </Window>

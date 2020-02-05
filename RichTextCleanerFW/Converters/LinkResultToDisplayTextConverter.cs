@@ -20,7 +20,7 @@ namespace RichTextCleanerFW.Converters
                 case LinkCheckSummary.Error: return "❌ Error";
                 case LinkCheckSummary.Timeout: return "⏲ Timeout";
                 case LinkCheckSummary.Redirected: return "🔀 Redirect";
-                case LinkCheckSummary.SchemaChange: return "🔀 Schema";
+                case LinkCheckSummary.SimpleChange: return "🔀 Simple redirect";
                 case LinkCheckSummary.Updated: return "✔ Updated";
             }
 

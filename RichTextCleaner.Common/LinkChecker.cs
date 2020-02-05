@@ -46,6 +46,11 @@ namespace RichTextCleaner.Common
             return result;
         }
 
+        /// <summary>
+        /// Checks the link for existance and redirects.
+        /// </summary>
+        /// <param name="link">The link.</param>
+        /// <returns></returns>
         public static async Task<LinkCheckResult> CheckLink(string link)
         {
             if (string.IsNullOrWhiteSpace(link))
@@ -69,6 +74,17 @@ namespace RichTextCleaner.Common
                 return new LinkCheckResult(LinkCheckSummary.Error);
             }
 
+            if (uri.Host.Contains("linkedin.com") || uri.Host.Contains("facebook.com"))
+            {
+                // these accept only known browsers - just ignore the link (except for a http->https change)
+                if (uri.Scheme == "http")
+                {
+                    return new LinkCheckResult(LinkCheckSummary.SimpleChange, link.Replace("http:", "https:"));
+                }
+
+                return new LinkCheckResult(LinkCheckSummary.Ignored);
+            }
+
             try
             {
                 var response = await client.GetAsync(uri, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
@@ -81,10 +97,10 @@ namespace RichTextCleaner.Common
                     }
                     else
                     {
-                        // just an http-to-https change? (ignore the other way around)
-                        if (string.Equals(link.Replace("http://", "https://").TrimEnd('/'), response.RequestMessage.RequestUri?.AbsoluteUri.TrimEnd('/'), StringComparison.OrdinalIgnoreCase))
+                        // the uris are different, but is it an important difference?
+                        if (IsSimpleRedirect(uri, response.RequestMessage.RequestUri))
                         {
-                            return new LinkCheckResult(LinkCheckSummary.SchemaChange, response.RequestMessage.RequestUri?.AbsoluteUri, response.StatusCode);
+                            return new LinkCheckResult(LinkCheckSummary.SimpleChange, response.RequestMessage.RequestUri?.AbsoluteUri, response.StatusCode);
                         }
                         else
                         {
@@ -98,12 +114,6 @@ namespace RichTextCleaner.Common
                 }
                 else
                 {
-                    // NB LinkedIn sometimes returns a 999 status because it accepts only known browsers - just assume the link is fine anyway
-                    if (link.Contains("linkedin.com"))
-                    {
-                        return new LinkCheckResult(LinkCheckSummary.Ok);
-                    }
-
                     Logger.Log(LogLevel.Warning, nameof(LinkChecker), $"Status {response.StatusCode} checking {link}");
                     return new LinkCheckResult(LinkCheckSummary.Error, null, response.StatusCode);
                 }
@@ -120,6 +130,12 @@ namespace RichTextCleaner.Common
             }
         }
 
+        /// <summary>
+        /// Marks the specified invalid link with square brackets.
+        /// </summary>
+        /// <param name="htmlSource">The HTML source to update.</param>
+        /// <param name="linkHref">The link href to alter.</param>
+        /// <returns></returns>
         public static string MarkInvalid(string htmlSource, string linkHref)
         {
             var doc = TextCleaner.CreateHtmlDocument(htmlSource);
@@ -132,7 +148,14 @@ namespace RichTextCleaner.Common
             return TextCleaner.GetHtmlSource(doc);
         }
 
-        public static string UpdateSchema(string htmlSource, string linkHref, string newHref) 
+        /// <summary>
+        /// Updates the href for simple redirects.
+        /// </summary>
+        /// <param name="htmlSource">The HTML source.</param>
+        /// <param name="linkHref">The link href.</param>
+        /// <param name="newHref">The new href.</param>
+        /// <returns></returns>
+        public static string UpdateHref(string htmlSource, string linkHref, string newHref) 
         {
             var doc = TextCleaner.CreateHtmlDocument(htmlSource);
 
@@ -142,6 +165,37 @@ namespace RichTextCleaner.Common
             }
 
             return TextCleaner.GetHtmlSource(doc);
+        }
+
+        private static bool IsSimpleRedirect(Uri oldUri, Uri newUri)
+        {
+            // assumption: the uris are different (that was already checked)
+
+            if (!string.Equals(oldUri.PathAndQuery.TrimEnd('/'), newUri.PathAndQuery.TrimEnd('/'), StringComparison.Ordinal))
+            {
+                // it doesn't seem to be the same page (ignoring trailing spaces), judging by the url
+                return false;
+            }
+
+            if (oldUri.Scheme != newUri.Scheme && oldUri.Scheme != "http" && newUri.Scheme != "https")
+            {
+                // not a simple http-to-https redirect
+                return false;
+            }
+
+            if (string.Equals(oldUri.Host, newUri.Host, StringComparison.OrdinalIgnoreCase))
+            {
+                // same hostname (apart from casing, maybe)
+                return true;
+            }
+
+            if (string.Equals(oldUri.Host.Replace("www.", string.Empty), newUri.Host.Replace("www.",string.Empty), StringComparison.OrdinalIgnoreCase))
+            {
+                // same hostname (apart from a www prefix)
+                return true;
+            }
+
+            return false;
         }
     }
 }

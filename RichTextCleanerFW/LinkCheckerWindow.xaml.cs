@@ -105,7 +105,7 @@ namespace RichTextCleanerFW
                         count++;
                         break;
 
-                    case LinkCheckSummary.SchemaChange:
+                    case LinkCheckSummary.SimpleChange:
                         this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(lnk.OriginalLink, LinkModification.UpdateSchema, lnk.LinkAfterRedirect));
                         lnk.Result = LinkCheckSummary.Updated;
                         count++;
