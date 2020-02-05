@@ -32,6 +32,10 @@
 
             <Separator/>
 
+            <Button Margin="2,10" Click="CheckLinks" ToolTip="check all links in text">Check links</Button>
+
+            <Separator/>
+
             <Button Margin="2,10,2,2" Click="ClearStylingAndCopy" ToolTip="or press (Ctrl-)C">Clear styling &amp; Copy</Button>
             <CheckBox Margin="2,2,2,10" x:Name="ClearBoldMarkup" IsChecked="True" ToolTip="remove &lt;b> and &lt;strong> elements">
                 <TextBlock>
@@ -61,10 +65,6 @@
             <Separator/>
 
             <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="or press (Ctrl-)T">Get text only</Button>
-
-            <Separator/>
-            
-            <Button Margin="2,10" Click="CheckLinks" ToolTip="check all links in text">Check links</Button>
 
             <Separator/>
 
