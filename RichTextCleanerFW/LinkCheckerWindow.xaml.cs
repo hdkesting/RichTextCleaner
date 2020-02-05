@@ -114,7 +114,7 @@ namespace RichTextCleanerFW
                 }
             }
 
-            MessageBox.Show($"{count} link(s) updated.");
+            this.MessageLabel.Text = $"{count} link(s) updated.";
         }
     }
 }

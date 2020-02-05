@@ -253,6 +253,29 @@ namespace RichTextCleaner.Common
             CombineLinks(document);
             RemoveEmptyLinks(document);
             RemoveLeadingAndTrailingSpacesFromLinks(document);
+            CleanLinkContent(document);
+        }
+
+        /// <summary>
+        /// If a text in a link seems to be an URL, then remove "http(s)://" and any trailing "/".
+        /// </summary>
+        /// <param name="document">The document.</param>
+        /// <exception cref="NotImplementedException"></exception>
+        private static void CleanLinkContent(HtmlDocument document)
+        {
+            var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var link in links)
+            {
+                if (link.ChildNodes.Count == 1 && link.ChildNodes[0].NodeType == HtmlNodeType.Text)
+                {
+                    var text = link.InnerHtml;
+                    if (text.StartsWith("http", StringComparison.Ordinal))
+                    {
+                        text = Regex.Replace(text, "^https?://", string.Empty).TrimEnd('/');
+                        link.InnerHtml = text;
+                    }
+                }
+            }
         }
 
         internal static void CombineLinks(HtmlDocument document)

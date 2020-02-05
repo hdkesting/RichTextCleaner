@@ -40,12 +40,12 @@
             <param name="newHref">The new href.</param>
             <returns></returns>
         </member>
-        <member name="T:RichTextCleaner.Common.LinkCheckResult">
+        <member name="T:RichTextCleaner.Common.Support.LinkCheckResult">
             <summary>
             The result of checking a link.
             </summary>
         </member>
-        <member name="P:RichTextCleaner.Common.LinkCheckResult.Summary">
+        <member name="P:RichTextCleaner.Common.Support.LinkCheckResult.Summary">
             <summary>
             Gets the summary of the result.
             </summary>
@@ -53,7 +53,7 @@
             The summary.
             </value>
         </member>
-        <member name="P:RichTextCleaner.Common.LinkCheckResult.NewLink">
+        <member name="P:RichTextCleaner.Common.Support.LinkCheckResult.NewLink">
             <summary>
             Gets the link that is redirected to.
             </summary>
@@ -61,7 +61,7 @@
             The new link.
             </value>
         </member>
-        <member name="P:RichTextCleaner.Common.LinkCheckResult.HttpStatusCode">
+        <member name="P:RichTextCleaner.Common.Support.LinkCheckResult.HttpStatusCode">
             <summary>
             Gets the HTTP status code of the check.
             </summary>
@@ -69,77 +69,77 @@
             The HTTP status code.
             </value>
         </member>
-        <member name="M:RichTextCleaner.Common.LinkCheckResult.#ctor(RichTextCleaner.Common.LinkCheckSummary,System.String)">
+        <member name="M:RichTextCleaner.Common.Support.LinkCheckResult.#ctor(RichTextCleaner.Common.Support.LinkCheckSummary,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:RichTextCleaner.Common.LinkCheckResult"/> class.
+            Initializes a new instance of the <see cref="T:RichTextCleaner.Common.Support.LinkCheckResult"/> class.
             </summary>
             <param name="summary">The summary.</param>
             <param name="link">The link.</param>
         </member>
-        <member name="M:RichTextCleaner.Common.LinkCheckResult.#ctor(RichTextCleaner.Common.LinkCheckSummary,System.String,System.Net.HttpStatusCode)">
+        <member name="M:RichTextCleaner.Common.Support.LinkCheckResult.#ctor(RichTextCleaner.Common.Support.LinkCheckSummary,System.String,System.Net.HttpStatusCode)">
             <summary>
-            Initializes a new instance of the <see cref="T:RichTextCleaner.Common.LinkCheckResult"/> class.
+            Initializes a new instance of the <see cref="T:RichTextCleaner.Common.Support.LinkCheckResult"/> class.
             </summary>
             <param name="summary">The summary.</param>
             <param name="link">The link.</param>
             <param name="httpStatus">The HTTP status.</param>
         </member>
-        <member name="T:RichTextCleaner.Common.LinkCheckSummary">
+        <member name="T:RichTextCleaner.Common.Support.LinkCheckSummary">
             <summary>
             The result of checking a particular link.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.NotCheckedYet">
+        <member name="F:RichTextCleaner.Common.Support.LinkCheckSummary.NotCheckedYet">
             <summary>
             The link is not checked yet.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Ok">
+        <member name="F:RichTextCleaner.Common.Support.LinkCheckSummary.Ok">
             <summary>
             The link checks out fine.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Ignored">
+        <member name="F:RichTextCleaner.Common.Support.LinkCheckSummary.Ignored">
             <summary>
             The link is ignored (is not a URL or not external).
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Redirected">
+        <member name="F:RichTextCleaner.Common.Support.LinkCheckSummary.Redirected">
             <summary>
             The link gets redirected.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.SimpleChange">
+        <member name="F:RichTextCleaner.Common.Support.LinkCheckSummary.SimpleChange">
             <summary>
             The schema changed (only from http to https) and/or a www prefix was added or removed.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.NotFound">
+        <member name="F:RichTextCleaner.Common.Support.LinkCheckSummary.NotFound">
             <summary>
             The link is not found (returns a 404 status).
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Error">
+        <member name="F:RichTextCleaner.Common.Support.LinkCheckSummary.Error">
             <summary>
             The link results in an error (4xx, 5xx)
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Timeout">
+        <member name="F:RichTextCleaner.Common.Support.LinkCheckSummary.Timeout">
             <summary>
             The link results in a timeout.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.LinkCheckSummary.Updated">
+        <member name="F:RichTextCleaner.Common.Support.LinkCheckSummary.Updated">
             <summary>
             The link is updated.
             </summary>
         </member>
-        <member name="T:RichTextCleaner.Common.LinkDescription">
+        <member name="T:RichTextCleaner.Common.Support.LinkDescription">
             <summary>
             The description of a link.
             </summary>
         </member>
-        <member name="P:RichTextCleaner.Common.LinkDescription.LinkText">
+        <member name="P:RichTextCleaner.Common.Support.LinkDescription.LinkText">
             <summary>
             Gets or sets the text that is linked.
             </summary>
@@ -147,7 +147,7 @@
             The link text.
             </value>
         </member>
-        <member name="P:RichTextCleaner.Common.LinkDescription.OriginalLink">
+        <member name="P:RichTextCleaner.Common.Support.LinkDescription.OriginalLink">
             <summary>
             Gets or sets the original link.
             </summary>
@@ -155,7 +155,7 @@
             The original link.
             </value>
         </member>
-        <member name="P:RichTextCleaner.Common.LinkDescription.Result">
+        <member name="P:RichTextCleaner.Common.Support.LinkDescription.Result">
             <summary>
             Gets or sets the check result.
             </summary>
@@ -163,7 +163,7 @@
             The result.
             </value>
         </member>
-        <member name="P:RichTextCleaner.Common.LinkDescription.LinkAfterRedirect">
+        <member name="P:RichTextCleaner.Common.Support.LinkDescription.LinkAfterRedirect">
             <summary>
             Gets or sets the link after redirect (if any).
             </summary>
@@ -171,52 +171,52 @@
             The link after redirect.
             </value>
         </member>
-        <member name="T:RichTextCleaner.Common.QuoteProcessing">
+        <member name="T:RichTextCleaner.Common.Support.QuoteProcessing">
             <summary>
             Select how to process quotes in texts.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.QuoteProcessing.NoChange">
+        <member name="F:RichTextCleaner.Common.Support.QuoteProcessing.NoChange">
             <summary>
             Do not change any quotes.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.QuoteProcessing.ChangeToSimpleQuotes">
+        <member name="F:RichTextCleaner.Common.Support.QuoteProcessing.ChangeToSimpleQuotes">
             <summary>
             Change smart quotes to simple quotes.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.QuoteProcessing.ChangeToSmartQuotes">
+        <member name="F:RichTextCleaner.Common.Support.QuoteProcessing.ChangeToSmartQuotes">
             <summary>
             Change simple quotes to smart quotes.
             </summary>
         </member>
-        <member name="T:RichTextCleaner.Common.StyleElements">
+        <member name="T:RichTextCleaner.Common.Support.StyleElements">
             <summary>
             Style elements to process. Can be combined.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.StyleElements.None">
+        <member name="F:RichTextCleaner.Common.Support.StyleElements.None">
             <summary>
             No style elements to process.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.StyleElements.Bold">
+        <member name="F:RichTextCleaner.Common.Support.StyleElements.Bold">
             <summary>
             Process "bold" elements (&lt;b&gt; and &lt;strong&gt;)
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.StyleElements.Italic">
+        <member name="F:RichTextCleaner.Common.Support.StyleElements.Italic">
             <summary>
             Process "italic" elements (&lt;i&gt; and &lt;em&gt;)
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.StyleElements.Underline">
+        <member name="F:RichTextCleaner.Common.Support.StyleElements.Underline">
             <summary>
             Process "underline" elements (&lt;u&gt;)
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.StyleElements.All">
+        <member name="F:RichTextCleaner.Common.Support.StyleElements.All">
             <summary>
             Process all style elements.
             </summary>
@@ -226,7 +226,7 @@
             The cleaner module.
             </summary>
         </member>
-        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,RichTextCleaner.Common.StyleElements,System.Boolean,RichTextCleaner.Common.QuoteProcessing)">
+        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,RichTextCleaner.Common.Support.StyleElements,System.Boolean,RichTextCleaner.Common.Support.QuoteProcessing)">
             <summary>
             Clears the styling from the HTML.
             </summary>
@@ -247,6 +247,13 @@
             Remove any &lt;a name=..&gt; elements.
             </summary>
             <param name="document"></param>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.CleanLinkContent(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            If a text in a link seems to be an URL, then remove "http(s)://" and any trailing "/".
+            </summary>
+            <param name="document">The document.</param>
+            <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.AddBlankLinkTargets(HtmlAgilityPack.HtmlDocument)">
             <summary>
@@ -297,7 +304,7 @@
             </summary>
             <param name="document"></param>
         </member>
-        <member name="M:RichTextCleaner.Common.TextCleaner.TranslateStyleNodes(HtmlAgilityPack.HtmlDocument,RichTextCleaner.Common.StyleElements)">
+        <member name="M:RichTextCleaner.Common.TextCleaner.TranslateStyleNodes(HtmlAgilityPack.HtmlDocument,RichTextCleaner.Common.Support.StyleElements)">
             <summary>
             Replace styling nodes with modern versions, optionally remove them completely.
             </summary>
