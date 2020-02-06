@@ -18,6 +18,18 @@ Usage
 
 Copy text from a webpage (select the fragment you want and hit Ctrl-C), then use the "Paste" button to import it into this application. You can also use (Ctrl-)V to paste. It is also possible to copy/paste HTML source (for instance copied from the HTML tab of a rich-text editor).
 
+A "Check links" button will open a new window with all links found in the text. These are tried out and the result is noted. 
+However, there are some issues:
+
+* Some sites don't want to be queried by an app, so they might report an error that a user wouldn't see (Facebook and LinkedIn are ignored specifically because of this - the URLs are considered to be fine)
+* This app only notices the return status. So if the page says "content not found" while the status says "ok" (instead of 404, not found), this app will consider the page to be fine.
+* A redirect can be to the new location of the information, or to a generic page (because the specific content isn't available anymore). This app cannot distinguish between those and will report just the redirect. It is up to the user to make the correct decision.
+
+An "Update links in source" button in that Check Links window will update the source in a few cases:
+
+* A "simple redirect" (change from http to https, addition or removal of a leading "www." or a trailing "/") will be updated
+* An error or "not found" will be marked with [ ] around the link-text
+
 Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the HTML fragment:
 
 * Replace all "`&nbsp;`" with a plain space - this does destroy attempts at layout-by-spaces that would need replacing anyway;
@@ -32,10 +44,11 @@ Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the 
 * Consecutive `<a>` elements with the same "href" are combined into one;
 * Leading or trailing spaces, commas and periods are moved out of the linked text;
 * Links that contain just whitespace are replaced by that whitespace;
+* In linked texts that seem to be a url, a leading "http(s)://" and trailing "/" are removed from the text (the real link is kept);
 
 There are several checkboxes that influence the cleaning:
 
-* "Remove [Style] Tags" (3×) - when checked, tags like "`<strong>`", "`<em>`" and "`<u>`" are removed, keeping their contents.
+* "Remove [Style] Tags" (3x) - when checked, tags like "`<strong>`", "`<em>`" and "`<u>`" are removed, keeping their contents.
 * "Add target=_blank" - when checked, this will add an attribute "target" with value "_blank" to all links (that don't already have this attribute), where "_blank" is HTML-speak for Sitecore's "New Window". This assumes that most links need this set anyway.
 
 The cleaned text is immediately copied onto the clipboard, so you can use Ctrl-V in a rich-text editor to paste it, either in the rich-text tab or the html-source tab.

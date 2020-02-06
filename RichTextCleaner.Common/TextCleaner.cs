@@ -544,16 +544,15 @@ namespace RichTextCleaner.Common
                         break;
 
                     case HtmlNodeType.Element:
-                        if (node.Attributes.Contains("style"))
+                        foreach (string attrname in new[] { "style", "class", "tabindex" })
                         {
-                            node.Attributes.Remove("style");
+                            if (node.Attributes.Contains(attrname))
+                            {
+                                node.Attributes.Remove(attrname);
+                            }
                         }
 
-                        if (node.Attributes.Contains("class"))
-                        {
-                            node.Attributes.Remove("class");
-                        }
-
+                        // onclick, onchange, ...
                         foreach (var name in node.Attributes
                             .Where(a => a.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase))
                             .Select(a => a.Name)
