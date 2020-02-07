@@ -21,6 +21,12 @@ namespace RichTextCleaner.Common
         private static readonly HttpClientHandler clientHandler = new HttpClientHandler { AllowAutoRedirect = true };
         private static readonly HttpClient client = new HttpClient(clientHandler) { Timeout = HttpTimeout };
 
+        static LinkChecker()
+        {
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd($"Mozilla/5.0 (Windows NT 10.0; Win64; x64) RichTextCleaner/{version}");
+        }
+
         /// <summary>
         /// Finds the links in the supplied HTML source.
         /// </summary>

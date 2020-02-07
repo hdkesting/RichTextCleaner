@@ -21,13 +21,14 @@ Copy text from a webpage (select the fragment you want and hit Ctrl-C), then use
 A "Check links" button will open a new window with all links found in the text. These are tried out and the result is noted. 
 However, there are some issues:
 
-* Some sites don't want to be queried by an app, so they might report an error that a user wouldn't see (Facebook and LinkedIn are ignored specifically because of this - the URLs are considered to be fine)
-* This app only notices the return status. So if the page says "content not found" while the status says "ok" (instead of 404, not found), this app will consider the page to be fine.
+* Some sites don't want to be queried by an app, so they might report an error that a user wouldn't see (Facebook and LinkedIn are ignored specifically because of this - their URLs are considered to be fine)
+* This app only notices the return status. So if the text on the page says "content not found" while the status says "ok" (instead of 404, not found), this app will consider the page to be fine.
 * A redirect can be to the new location of the information, or to a generic page (because the specific content isn't available anymore). This app cannot distinguish between those and will report just the redirect. It is up to the user to make the correct decision.
 
-An "Update links in source" button in that Check Links window will update the source in a few cases:
+An "Update links in source" button in that Check Links window will update the source for the items that are checked in the "update" column:
 
 * A "simple redirect" (change from http to https, addition or removal of a leading "www." or a trailing "/") will be updated
+* The same for a "real" redirect (note that you must be sure it is a valid redirect)
 * An error or "not found" will be marked with [ ] around the link-text
 
 Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the HTML fragment:
