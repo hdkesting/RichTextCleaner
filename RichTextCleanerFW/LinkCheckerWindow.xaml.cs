@@ -61,6 +61,12 @@ namespace RichTextCleanerFW
             arg.HttpStatus = (int)res.HttpStatusCode;
             arg.LinkAfterRedirect = res.NewLink;
             arg.Result = res.Summary;
+            if (res.Summary == LinkCheckSummary.SimpleChange 
+                || res.Summary == LinkCheckSummary.Error 
+                || res.Summary == LinkCheckSummary.NotFound)
+            {
+                arg.SelectForUpdate = true;
+            }
         }
 
         private void ClickLink(object sender, RoutedEventArgs e)
@@ -95,7 +101,7 @@ namespace RichTextCleanerFW
         private void UpdateSource(object sender, RoutedEventArgs e)
         {
             int count = 0;
-            foreach (var lnk in this.Links)
+            foreach (var lnk in this.Links.Where(l => l.SelectForUpdate))
             {
                 switch (lnk.Result)
                 {
@@ -103,12 +109,15 @@ namespace RichTextCleanerFW
                     case LinkCheckSummary.Error:
                         this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(lnk.OriginalLink, LinkModification.MarkInvalid));
                         lnk.Result = LinkCheckSummary.Updated;
+                        lnk.SelectForUpdate = false;
                         count++;
                         break;
 
+                    case LinkCheckSummary.Redirected:
                     case LinkCheckSummary.SimpleChange:
                         this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(lnk.OriginalLink, LinkModification.UpdateSchema, lnk.LinkAfterRedirect));
                         lnk.Result = LinkCheckSummary.Updated;
+                        lnk.SelectForUpdate = false;
                         count++;
                         break;
                 }

@@ -47,11 +47,18 @@
         <ListView x:Name="LinkList" ItemsSource="{Binding Links}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Text" DisplayMemberBinding="{Binding LinkText}" />
+                    <GridViewColumn Header="Text" DisplayMemberBinding="{Binding LinkText}" Width="200"/>
                     <GridViewColumn Header="URL" Width="200">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource LinkButton}" Content="{Binding OriginalLink, Mode=OneWay}"  ToolTip="{Binding OriginalLink, Mode=OneWay}" Click="ClickLink"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Update?" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding SelectForUpdate, Mode=TwoWay}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
