@@ -28,7 +28,7 @@
             </TextBlock>
         </ScrollViewer>
         <StackPanel Orientation="Vertical" Grid.Column="0">
-            <Button Margin="2,10" Click="CopyFromClipboard" ToolTip="or press (Ctrl-)V">Paste (HTML)</Button>
+            <Button Margin="2,10" Click="CopyFromClipboard" ToolTip="Or press (Ctrl-)V">Paste (HTML)</Button>
 
             <Separator/>
 
@@ -36,35 +36,35 @@
 
             <Separator/>
 
-            <Button Margin="2,10,2,2" Click="ClearStylingAndCopy" ToolTip="or press (Ctrl-)C">Clear styling &amp; Copy</Button>
-            <CheckBox Margin="2,2,2,10" x:Name="ClearBoldMarkup" IsChecked="True" ToolTip="remove &lt;b> and &lt;strong> elements">
+            <Button Margin="2,10,2,2" Click="ClearStylingAndCopy" ToolTip="Or press (Ctrl-)C">Clear styling &amp; Copy</Button>
+            <CheckBox Margin="2,2,2,10" x:Name="ClearBoldMarkup" IsChecked="True" ToolTip="Remove &lt;b&gt; and &lt;strong&gt; elements">
                 <TextBlock>
                     <Run>Remove </Run>
                     <Run FontWeight="Bold">bold</Run>
                     <Run> tags</Run>                    
                 </TextBlock>
             </CheckBox>
-            <CheckBox Margin="2,2,2,10" x:Name="ClearItalicMarkup" IsChecked="True" ToolTip="remove &lt;i> and &lt;em> elements">
+            <CheckBox Margin="2,2,2,10" x:Name="ClearItalicMarkup" IsChecked="True" ToolTip="Remove &lt;i&gt; and &lt;em&gt; elements">
                 <TextBlock>
                     <Run>Remove </Run>
                     <Run FontStyle="Italic">italic</Run>
                     <Run> tags</Run>
                 </TextBlock>
             </CheckBox>
-            <CheckBox Margin="2,2,2,10" x:Name="ClearUnderlineMarkup" IsChecked="True" ToolTip="remove &lt;u> elements">
+            <CheckBox Margin="2,2,2,10" x:Name="ClearUnderlineMarkup" IsChecked="True" ToolTip="Remove &lt;u&gt; elements">
                 <TextBlock>
                     <Run>Remove </Run>
                     <Underline><Run>underline</Run></Underline>
                     <Run> tags</Run>
                 </TextBlock>
             </CheckBox>
-            <CheckBox Margin="2,2,2,10" x:Name="AddBlankTarget" IsChecked="True" ToolTip="set link target to new window">Add target=__blank</CheckBox>
+            <CheckBox Margin="2,2,2,10" x:Name="AddBlankTarget" IsChecked="True" ToolTip="Set link target to new window for hrefs starting with http(s)">Add target=__blank</CheckBox>
 
             <CheckBox Margin="2,2,2,10" x:Name="ChangeToFancyQuotes" IsChecked="True" ToolTip="Change straight quotes to nice ones">Change to fancy quotes</CheckBox>
 
             <Separator/>
 
-            <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="or press (Ctrl-)T">Get text only</Button>
+            <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="Or press (Ctrl-)T">Get text only</Button>
 
             <Separator/>
 
