@@ -61,11 +61,14 @@ namespace RichTextCleanerFW
             arg.HttpStatus = (int)res.HttpStatusCode;
             arg.LinkAfterRedirect = res.NewLink;
             arg.Result = res.Summary;
-            if (res.Summary == LinkCheckSummary.SimpleChange 
-                || res.Summary == LinkCheckSummary.Error 
-                || res.Summary == LinkCheckSummary.NotFound)
+            if (res.Summary == LinkCheckSummary.SimpleChange)
             {
                 arg.SelectForUpdate = true;
+            }
+            else if (res.Summary == LinkCheckSummary.Error 
+                || res.Summary == LinkCheckSummary.NotFound)
+            {
+                arg.SelectForInvalidMark = true;
             }
         }
 
@@ -101,29 +104,61 @@ namespace RichTextCleanerFW
         private void UpdateSource(object sender, RoutedEventArgs e)
         {
             int count = 0;
-            foreach (var lnk in this.Links.Where(l => l.SelectForUpdate))
+            foreach (var lnk in this.Links.Where(l => l.SelectForUpdate || l.SelectForInvalidMark))
             {
                 switch (lnk.Result)
                 {
-                    case LinkCheckSummary.NotFound:
-                    case LinkCheckSummary.Error:
-                        this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(lnk.OriginalLink, LinkModification.MarkInvalid));
-                        lnk.Result = LinkCheckSummary.Updated;
-                        lnk.SelectForUpdate = false;
-                        count++;
+                    case LinkCheckSummary.Redirected:
+                        if (lnk.SelectForInvalidMark)
+                        {
+                            UpdateError(lnk);
+                        }
+                        else if (lnk.SelectForUpdate)
+                        {
+                            UpdateUrl(lnk);
+                        }
                         break;
 
-                    case LinkCheckSummary.Redirected:
+                    case LinkCheckSummary.NotFound:
+                    case LinkCheckSummary.Error:
+                        if (lnk.SelectForInvalidMark)
+                        {
+                            UpdateError(lnk);
+                        }
+                        break;
+
                     case LinkCheckSummary.SimpleChange:
-                        this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(lnk.OriginalLink, LinkModification.UpdateSchema, lnk.LinkAfterRedirect));
-                        lnk.Result = LinkCheckSummary.Updated;
+                        if (lnk.SelectForUpdate)
+                        {
+                            UpdateUrl(lnk);
+                        }
+                        break;
+
+                    default:
+                        // for the rest, reset the checkbox but don't set status to Updated
                         lnk.SelectForUpdate = false;
-                        count++;
                         break;
                 }
+
+                lnk.SelectForInvalidMark = false;
+                lnk.SelectForUpdate = false;
             }
 
             this.MessageLabel.Text = $"{count} link(s) updated.";
+
+            void UpdateError(BindableLinkDescription link)
+            {
+                this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(link.OriginalLink, LinkModification.MarkInvalid));
+                link.Result = LinkCheckSummary.Updated;
+                count++;
+            }
+
+            void UpdateUrl(BindableLinkDescription link)
+            {
+                this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(link.OriginalLink, LinkModification.UpdateSchema, link.LinkAfterRedirect));
+                link.Result = LinkCheckSummary.Updated;
+                count++;
+            }
         }
     }
 }

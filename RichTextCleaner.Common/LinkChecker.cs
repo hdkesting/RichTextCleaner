@@ -152,7 +152,8 @@ namespace RichTextCleaner.Common
 
             foreach (var node in doc.DocumentNode.SelectNodes("//a[@href='"+linkHref + "']") ?? Enumerable.Empty<HtmlNode>())
             {
-                node.InnerHtml = "[" + node.InnerHtml + "]";
+                // don't add more than one pair of brackets, but ignore any just outside of this element
+                node.InnerHtml = "[" + node.InnerHtml.TrimStart('[').TrimEnd(']') + "]";
             }
 
             return TextCleaner.GetHtmlSource(doc);

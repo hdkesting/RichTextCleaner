@@ -11,6 +11,7 @@ namespace RichTextCleanerFW.Models
         private string linkAfterRedirect;
         private int httpStatus;
         private bool selectForUpdate;
+        private bool selectForInvalidMark;
 
         public BindableLinkDescription(LinkDescription original)
         {
@@ -32,7 +33,7 @@ namespace RichTextCleanerFW.Models
         public int HttpStatus
         {
             get { return this.httpStatus; }
-            set { SetValue(ref this.httpStatus, value); }
+            set { this.SetValue(ref this.httpStatus, value); }
         }
 
         public LinkCheckSummary Result
@@ -43,7 +44,7 @@ namespace RichTextCleanerFW.Models
                 if (value != this.result)
                 {
                     this.result = value;
-                    NotifyPropertyChanged();
+                    this.NotifyPropertyChanged();
                 }
             }
         }
@@ -51,13 +52,19 @@ namespace RichTextCleanerFW.Models
         public string LinkAfterRedirect
         {
             get { return this.linkAfterRedirect; }
-            set { SetValue(ref this.linkAfterRedirect, value); }
+            set { this.SetValue(ref this.linkAfterRedirect, value); }
         }
 
         public bool SelectForUpdate
         {
             get { return this.selectForUpdate; }
-            set { SetValue(ref this.selectForUpdate, value); }
+            set { this.SetValue(ref this.selectForUpdate, value); }
+        }
+
+        public bool SelectForInvalidMark
+        {
+            get { return this.selectForInvalidMark; }
+            set { this.SetValue(ref this.selectForInvalidMark, value); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -70,13 +77,13 @@ namespace RichTextCleanerFW.Models
                 if (newValue != null)
                 {
                     propertyValue = newValue;
-                    NotifyPropertyChanged(propname);
+                    this.NotifyPropertyChanged(propname);
                 }
             }
             else if (!propertyValue.Equals(newValue))
             {
                 propertyValue = newValue;
-                NotifyPropertyChanged(propname);
+                this.NotifyPropertyChanged(propname);
             }
         }
 
