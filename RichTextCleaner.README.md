@@ -1,35 +1,20 @@
-Rich Text Cleaner
-=================
+# Rich Text Cleaner
 
-Purpose
--------
+## Purpose
 
 Remove all styling from text that is copied from a webpage, while preserving the HTML element structure, such as paragraphs, links, lists and tables. This helps getting clean text into a content management system.
 
 Please do note that this app cannot distinguish between styling that should be removed and styling that is added on purpose. It will remove all.
 
-Startup
--------
+## Startup
 
 The installer doesn't place a shortcut on the desktop, you'll need to find the application in the start-menu (search for "RichTextCleaner").
 
-Usage
------
+## Usage
 
 Copy text from a webpage (select the fragment you want and hit Ctrl-C), then use the "Paste" button to import it into this application. You can also use (Ctrl-)V to paste. It is also possible to copy/paste HTML source (for instance copied from the HTML tab of a rich-text editor).
 
-A "Check links" button will open a new window with all links found in the text. These are tried out and the result is noted. 
-However, there are some issues:
-
-* Some sites don't want to be queried by an app, so they might report an error that a user wouldn't see (Facebook and LinkedIn are ignored specifically because of this - their URLs are considered to be fine)
-* This app only notices the return status. So if the text on the page says "content not found" while the status says "ok" (instead of 404, not found), this app will consider the page to be fine.
-* A redirect can be to the new location of the information, or to a generic page (because the specific content isn't available anymore). This app cannot distinguish between those and will report just the redirect. It is up to the user to make the correct decision.
-
-An "Update links in source" button in that Check Links window will update the source for the items that are checked in the "update" column:
-
-* A "simple redirect" (change from http to https, addition or removal of a leading "www." or a trailing "/") will be updated
-* The same for a "real" redirect (note that you must be sure it is a valid redirect)
-* An error or "not found" will be marked with [ ] around the link-text
+A "Check links" button will open a new window with all links found in the text. These are tried out and the result is noted. See below.
 
 Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the HTML fragment:
 
@@ -56,35 +41,40 @@ The cleaned text is immediately copied onto the clipboard, so you can use Ctrl-V
 
 The "Get text only" button (hotkey: (Ctrl-)T) removes all HTML elements, leaving only the plain text (with some attempt at sane formatting). Here also this text is placed on the clipboard.
 
+### Link Checker window
+
 The "Check links" button opens a new window with all links that are found in the current html source. It will check whether those links exist. There is a "mark invalid links" button that will put `[ ]` around any link that returned an error or a "not found" status. Also it will update links where the only change was to update from http to https.
 
-This link checker relies on the status returned by the remote system. This leads to some issues:
+However, there are some issues:
 
-* A page that returns an "ok" status but displays a "not found" text, is seen as "ok" (because of the status)
-* Some pages redirect to the new location of that information (great!), but some redirect to a generic page. This means that a redirected URL cannot be updated automatically.
-* Some pages do not return a response to the app within the time given, so they are marked with "timeout". The links in the original source are not marked (they may still be valid).
-* LinkedIn doesn't like apps requesting their URLs, so this app just consideres a LinkedIn URL to be valid.
+* Some sites don't want to be queried by an app, so they might report an error that a user wouldn't see (Facebook and LinkedIn are ignored specifically because of this - their URLs are considered to be fine)
+* This app only notices the return status. So if the text on the page says "content not found" while the status says "ok" (instead of 404, not found), this app will consider the page to be fine.
+* A redirect can be to the new location of the information, or to a generic page (because the specific content isn't available anymore). This app cannot distinguish between those and will report just the redirect. It is up to the user to make the correct decision.
+* A "simple redirect" (change from http to https, addition or removal of a leading "www." and/or a trailing "/") will be checkmarked for "update"
+* An error or "not found" will be checkmarked for marking
 
-Hotkeys
--------
+An "Update links in source" button in that Check Links window will update the source for the items that are checked in the "update" columns:
 
-* V (or Ctrl-V) - Paste the rich text or html source into the application
-* C (or Ctrl-C) - Clean the HTML and copy it onto the clipboard
-* T             - Strip all tags, keeping plain text (with some text-only formatting) and copy onto clipboard
-* H             - Copy the HTML source onto the clipboard as text, without any cleaning
-* L             - Open the link checker
-* F             - Open folder of log files
+* Items that are checked in the "update" column and have a new URL will have their URL updated in the source
+* Items that are checked in the "mark" column (and are not OK) will be marked with [ ] around the link text, in the source
 
-Background info
----------------
+## Hotkeys
 
-When you copy formatted text from a webpage (such as a plain webpage or the Design tab of a Rich Text Editor), then the browser is in charge of putting HTML on the clipboard. It will add styling to the html-elements you copy that is usually found in a CSS file.
+* V - (or Ctrl-V) Paste the rich text or html source into the application
+* C - (or Ctrl-C) Clean the HTML and copy it onto the clipboard
+* T - Strip all tags, keeping plain text (with some text-only formatting) and copy onto clipboard
+* H - Copy the HTML source onto the clipboard as text, without any cleaning
+* L - Open the link checker with links found in the current text
+* F - Open folder of log files
+
+## Background info
+
+When you copy formatted text from a webpage (such as a plain webpage or the Design tab of a Rich Text Editor), then the browser is in charge of putting HTML on the clipboard. It will add styling to the html-elements you copy that is found in the applicable CSS files.
 
 When HTML source is copied from the HTML tab of a Rich Text Editor, then the browser considers it plain text and doesn't add extra styling. This application still treats this as HTML source and correctly handles this.
 
-Do note that "italics" are sometimes used for emphasis (you probably want to clean this), but sometimes just to mark a title. That markup probably should not be cleaned. See also https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i#Usage_notes
+Do note that "italics" are sometimes used for emphasis (you probably want to clean this), but sometimes just to mark a title. That title-markup probably should not be cleaned. See also https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i#Usage_notes
 
-Source
-------
+## Source
 
 For anyone that is really interested, the sourcecode of this app is on GitHub: https://github.com/hdkesting/RichTextCleaner
