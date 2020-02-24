@@ -26,6 +26,8 @@ namespace RichTextCleaner.Common
             { "”", "&rdquo;" },
             { "‘", "&lsquo;" },
             { "’", "&rsquo;" },
+            { "\x2013", "&ndash;" },
+            { "\x2014", "&mdash;" },
         };
 
         /// <summary>
@@ -100,9 +102,16 @@ namespace RichTextCleaner.Common
 
             if (cleanup)
             {
+                // single line break after paragraph
                 html = html
-                    .Replace("</p>", "</p>" + Environment.NewLine)
-                    .Replace("</p>" + Environment.NewLine + Environment.NewLine, "</p>" + Environment.NewLine);
+                    .Replace("</p>", "</p>" + Environment.NewLine);
+
+                // line break before and after any header
+                html = Regex.Replace(html, "(<h[1-6]>)", Environment.NewLine + "$1");
+                html = Regex.Replace(html, "(</h[1-6]>)", "$1" + Environment.NewLine);
+
+                // remove double line breaks
+                html = html.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             }
 
             return html;
@@ -544,6 +553,12 @@ namespace RichTextCleaner.Common
                         break;
 
                     case HtmlNodeType.Element:
+                        if (node.Name == "table")
+                        {
+                            // special case: for a <table> remove all attributes
+                            node.Attributes.RemoveAll();
+                        }
+
                         foreach (string attrname in new[] { "style", "class", "tabindex" })
                         {
                             if (node.Attributes.Contains(attrname))

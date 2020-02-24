@@ -38,6 +38,10 @@ namespace RichTextCleanerFW
                 VersionLabel.Content = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             }
 
+#if DEBUG
+            VersionLabel.Content += " 🐛";
+#endif
+
             StatusForeground = StatusLabel.Foreground;
             StatusBackground = StatusLabel.Background;
 
