@@ -48,10 +48,11 @@ The "Check links" button opens a new window with all links that are found in the
 However, there are some issues:
 
 * Some sites don't want to be queried by an app, so they might report an error that a user wouldn't see (Facebook and LinkedIn are ignored specifically because of this - their URLs are considered to be fine)
-* This app only notices the return status. So if the text on the page says "content not found" while the status says "ok" (instead of 404, not found), this app will consider the page to be fine.
-* A redirect can be to the new location of the information, or to a generic page (because the specific content isn't available anymore). This app cannot distinguish between those and will report just the redirect. It is up to the user to make the correct decision.
-* A "simple redirect" (change from http to https, addition or removal of a leading "www." and/or a trailing "/") will be checkmarked for "update"
-* An error or "not found" will be checkmarked for marking
+* This app only notices the return status. So if the text on the page says "content not found" while the status says "ok" (instead of 404, not found, as it should be), this app will consider the page to be fine.
+* A redirect can be to the new location of the information, or to a generic page (because the specific content isn't available anymore). This app cannot distinguish between those and will report just the redirect. It is up to the user to make the correct decision. Inspect the new URL or click on it to visit the page.
+* A "simple redirect" (change from http to https, addition or removal of a leading "www." and/or a trailing "/") will be checkmarked for "update".
+* An error or "not found" will be checkmarked for marking.
+* Local URLs (not starting with "http(s)://") are ignored. However this works best with text from the html (source) tab.
 
 An "Update links in source" button in that Check Links window will update the source for the items that are checked in the "update" columns:
 

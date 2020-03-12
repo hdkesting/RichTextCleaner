@@ -28,6 +28,7 @@ namespace RichTextCleaner.Common
             { "’", "&rsquo;" },
             { "\x2013", "&ndash;" },
             { "\x2014", "&mdash;" },
+            { "<sup>TM</sup>", "&trade;" },
         };
 
         /// <summary>
@@ -602,6 +603,7 @@ namespace RichTextCleaner.Common
             // RemoveNodes(document.DocumentNode, ".//iframe"); // keep iframe - may contain video
             RemoveNodes(document.DocumentNode, ".//noscript");
             RemoveNodes(document.DocumentNode, ".//script");
+            RemoveNodes(document.DocumentNode, ".//time");
 
             void RemoveNodes(HtmlNode node, string xpath)
             {
