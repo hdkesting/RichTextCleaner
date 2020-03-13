@@ -47,12 +47,14 @@ namespace RichTextCleanerFW
 
             do
             {
-                this.MessageLabel.Text = $"Checking all links: {tasks.Count(t => t.IsCompleted || t.IsFaulted || t.IsCanceled)}/{tasks.Count}";
+                this.MessageLabel.Text = $"Checking all links: {tasks.Count(TaskIsDone)} done out of {tasks.Count}";
                 await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(true);
             }
-            while (tasks.Any(t => !t.IsCompleted && !t.IsFaulted && !t.IsCanceled));
+            while (tasks.Any(t => !TaskIsDone(t)));
 
             this.MessageLabel.Text = "Done checking";
+
+            bool TaskIsDone(Task t) => t.IsCompleted || t.IsFaulted || t.IsCanceled;
         }
 
         private static async Task CheckLink(BindableLinkDescription arg)
@@ -76,12 +78,7 @@ namespace RichTextCleanerFW
         {
             var btn = sender as Button;
 
-            if (btn == null)
-            {
-                return;
-            }
-
-            var url = btn.Content as string;
+            var url = btn?.Content as string;
 
             if (!string.IsNullOrEmpty(url))
             {
@@ -104,40 +101,17 @@ namespace RichTextCleanerFW
         private void UpdateSource(object sender, RoutedEventArgs e)
         {
             int count = 0;
+
+            // process any checked link, but "invalid" beats "update".
             foreach (var lnk in this.Links.Where(l => l.SelectForUpdate || l.SelectForInvalidMark))
             {
-                switch (lnk.Result)
+                if (lnk.SelectForInvalidMark)
                 {
-                    case LinkCheckSummary.Redirected:
-                        if (lnk.SelectForInvalidMark)
-                        {
-                            UpdateError(lnk);
-                        }
-                        else if (lnk.SelectForUpdate)
-                        {
-                            UpdateUrl(lnk);
-                        }
-                        break;
-
-                    case LinkCheckSummary.NotFound:
-                    case LinkCheckSummary.Error:
-                        if (lnk.SelectForInvalidMark)
-                        {
-                            UpdateError(lnk);
-                        }
-                        break;
-
-                    case LinkCheckSummary.SimpleChange:
-                        if (lnk.SelectForUpdate)
-                        {
-                            UpdateUrl(lnk);
-                        }
-                        break;
-
-                    default:
-                        // for the rest, reset the checkbox but don't set status to Updated
-                        lnk.SelectForUpdate = false;
-                        break;
+                    MarkError(lnk);
+                }
+                else if (lnk.SelectForUpdate && !string.IsNullOrEmpty(lnk.LinkAfterRedirect))
+                {
+                    UpdateUrl(lnk);
                 }
 
                 lnk.SelectForInvalidMark = false;
@@ -146,7 +120,7 @@ namespace RichTextCleanerFW
 
             this.MessageLabel.Text = $"{count} link(s) updated.";
 
-            void UpdateError(BindableLinkDescription link)
+            void MarkError(BindableLinkDescription link)
             {
                 this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(link.OriginalLink, LinkModification.MarkInvalid));
                 link.Result = LinkCheckSummary.Updated;
