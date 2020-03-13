@@ -62,6 +62,14 @@
 
             <CheckBox Margin="2,2,2,10" x:Name="ChangeToFancyQuotes" IsChecked="True" ToolTip="Change straight quotes to nice ones">Change to fancy quotes</CheckBox>
 
+            <StackPanel Orientation="Vertical" x:Name="QueryCleanupGroup">
+                <Label>URL query cleanup:</Label>
+                <ComboBox Margin="2,2,2,10" x:Name="QueryCleanup" SelectionChanged="QueryCleanup_SelectionChanged">
+                    <ComboBoxItem Tag="0">Keep as-is</ComboBoxItem>
+                    <ComboBoxItem Tag="1">Remove utm*</ComboBoxItem>
+                    <ComboBoxItem Tag="2">Remove query</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
             <Separator/>
 
             <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="Or press (Ctrl-)T">Get text only</Button>

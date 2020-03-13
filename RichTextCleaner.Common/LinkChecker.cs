@@ -196,7 +196,14 @@ namespace RichTextCleaner.Common
                 return original.Substring(0, original.IndexOf('?'));
             }
 
+
             var qry = original.Substring(original.IndexOf('?') + 1);
+            bool encoded = qry.Contains("&amp;");
+            if (encoded)
+            {
+                // decode (ignoring any other encodings)
+                qry = qry.Replace("&amp;", "&");
+            }
 
             // ignore all "utm_whatever=value" parts
             qry = string.Join("&",
@@ -204,6 +211,12 @@ namespace RichTextCleaner.Common
             if (string.IsNullOrEmpty(qry))
             {
                 return original.Substring(0, original.IndexOf('?'));
+            }
+
+            if (encoded)
+            {
+                // re-encode
+                qry = qry.Replace("&", "&amp;");
             }
 
             return original.Substring(0, original.IndexOf('?')) + "?" + qry;

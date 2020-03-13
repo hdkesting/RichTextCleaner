@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -65,6 +66,12 @@ namespace RichTextCleanerFW
             this.ClearUnderlineMarkup.IsChecked = CleanerSettings.RemoveUnderline;
             this.AddBlankTarget.IsChecked = CleanerSettings.AddTargetBlank;
             this.ChangeToFancyQuotes.IsChecked = CleanerSettings.QuoteProcess != QuoteProcessing.NoChange;
+            this.QueryCleanup.SelectedIndex = (int)CleanerSettings.QueryCleanLevel;
+
+#if !DEBUG
+            // hide until OK
+            this.QueryCleanupGroup.Visibility = Visibility.Collapsed;
+#endif
 
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
@@ -137,7 +144,8 @@ namespace RichTextCleanerFW
                     html,
                     GetStyleSetting(),
                     AddBlankTarget.IsChecked.GetValueOrDefault(),
-                    GetQuoteSetting());
+                    GetQuoteSetting(),
+                    CleanerSettings.QueryCleanLevel);
             }
             catch (Exception ex)
             {
@@ -389,6 +397,24 @@ namespace RichTextCleanerFW
             checker.Focus();
 
             await checker.CheckAllLinks().ConfigureAwait(false);
+        }
+
+        private void QueryCleanup_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            switch (((ComboBox)sender).SelectedIndex)
+            {
+                case 0:
+                    CleanerSettings.QueryCleanLevel = LinkQueryCleanLevel.None;
+                    break;
+
+                case 1:
+                    CleanerSettings.QueryCleanLevel = LinkQueryCleanLevel.RemoveUtmParams;
+                    break;
+
+                case 2:
+                    CleanerSettings.QueryCleanLevel = LinkQueryCleanLevel.RemoveQuery;
+                    break;
+            }
         }
     }
 }

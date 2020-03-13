@@ -38,12 +38,14 @@ namespace RichTextCleaner.Common
         /// <param name="markupToRemove">The style markup to remove.</param>
         /// <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
         /// <param name="quoteProcessing">Set how to process quotes.</param>
+        /// <param name="queryCleanLevel">The query clean level.</param>
         /// <returns></returns>
         public static string ClearStylingFromHtml(
             string html,
             StyleElements markupToRemove,
             bool addBlankLinkTarget,
-            QuoteProcessing quoteProcessing)
+            QuoteProcessing quoteProcessing,
+            LinkQueryCleanLevel queryCleanLevel)
         {
         
             var doc = CreateHtmlDocument(html ?? string.Empty);
@@ -56,7 +58,7 @@ namespace RichTextCleaner.Common
             RemoveEmptySpans(doc);
             ClearParagraphsInBlocks(doc);
             RemoveAnchors(doc);
-            CombineAndCleanLinks(doc);
+            CombineAndCleanLinks(doc, queryCleanLevel);
             if (addBlankLinkTarget)
             {
                 AddBlankLinkTargets(doc);
@@ -258,19 +260,34 @@ namespace RichTextCleaner.Common
             }
         }
 
-        private static void CombineAndCleanLinks(HtmlDocument document)
+        private static void CombineAndCleanLinks(HtmlDocument document, LinkQueryCleanLevel queryCleanLevel)
         {
+            if (queryCleanLevel > LinkQueryCleanLevel.None)
+            {
+                CleanLinkQuery(document, queryCleanLevel);
+            }
+
             CombineLinks(document);
             RemoveEmptyLinks(document);
             RemoveLeadingAndTrailingSpacesFromLinks(document);
             CleanLinkContent(document);
         }
 
+        private static void CleanLinkQuery(HtmlDocument document, LinkQueryCleanLevel queryCleanLevel)
+        {
+            var links = document.DocumentNode.SelectNodes("//a[@href]") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var link in links)
+            {
+                var href = link.Attributes["href"].Value;
+                href = LinkChecker.CleanQueryString(href, queryCleanLevel);
+                link.Attributes["href"].Value = href;
+            }
+        }
+
         /// <summary>
-        /// If a text in a link seems to be an URL, then remove "http(s)://" and any trailing "/".
+        /// If a text in a link seems to be a URL, then remove "http(s)://" and any trailing "/".
         /// </summary>
         /// <param name="document">The document.</param>
-        /// <exception cref="NotImplementedException"></exception>
         private static void CleanLinkContent(HtmlDocument document)
         {
             var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
