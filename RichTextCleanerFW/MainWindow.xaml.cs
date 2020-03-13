@@ -60,13 +60,11 @@ namespace RichTextCleanerFW
                 return;
             }
 
-            var settings = Properties.Settings.Default;
-
-            this.ClearBoldMarkup.IsChecked = settings.RemoveBold;
-            this.ClearItalicMarkup.IsChecked = settings.RemoveItalic;
-            this.ClearUnderlineMarkup.IsChecked = settings.RemoveUnderline;
-            this.AddBlankTarget.IsChecked = settings.AddTargetBlank;
-            this.ChangeToFancyQuotes.IsChecked = (QuoteProcessing)settings.QuoteProcess != QuoteProcessing.NoChange;
+            this.ClearBoldMarkup.IsChecked = CleanerSettings.RemoveBold;
+            this.ClearItalicMarkup.IsChecked = CleanerSettings.RemoveItalic;
+            this.ClearUnderlineMarkup.IsChecked = CleanerSettings.RemoveUnderline;
+            this.AddBlankTarget.IsChecked = CleanerSettings.AddTargetBlank;
+            this.ChangeToFancyQuotes.IsChecked = CleanerSettings.QuoteProcess != QuoteProcessing.NoChange;
 
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
@@ -166,41 +164,38 @@ namespace RichTextCleanerFW
 
             StyleElements GetStyleSetting()
             {
-                // settings are stored in C:\Users\<user>\AppData\Local\Hans_Kesting\RichTextCleaner.exe...\<version>\user.config
-                var settings = Properties.Settings.Default;
                 var styles = StyleElements.None;
                 if (ClearBoldMarkup.IsChecked.GetValueOrDefault())
                 {
                     styles |= StyleElements.Bold;
-                    settings.RemoveBold = true;
+                    CleanerSettings.RemoveBold = true;
                 }
                 else
                 {
-                    settings.RemoveBold = false;
+                    CleanerSettings.RemoveBold = false;
                 }
 
                 if (ClearItalicMarkup.IsChecked.GetValueOrDefault())
                 {
                     styles |= StyleElements.Italic;
-                    settings.RemoveItalic = true;
+                    CleanerSettings.RemoveItalic = true;
                 }
                 else
                 {
-                    settings.RemoveItalic = false;
+                    CleanerSettings.RemoveItalic = false;
                 }
 
                 if (ClearUnderlineMarkup.IsChecked.GetValueOrDefault())
                 {
                     styles |= StyleElements.Underline;
-                    settings.RemoveUnderline = true;
+                    CleanerSettings.RemoveUnderline = true;
                 }
                 else
                 {
-                    settings.RemoveUnderline = false;
+                    CleanerSettings.RemoveUnderline = false;
                 }
 
-                settings.AddTargetBlank = AddBlankTarget.IsChecked.GetValueOrDefault();
-                settings.Save();
+                CleanerSettings.AddTargetBlank = AddBlankTarget.IsChecked.GetValueOrDefault();
 
                 return styles;
             }
@@ -216,8 +211,7 @@ namespace RichTextCleanerFW
                     qp = QuoteProcessing.NoChange;
                 }
 
-                Properties.Settings.Default.QuoteProcess = (int)qp;
-                Properties.Settings.Default.Save();
+                CleanerSettings.QuoteProcess = qp;
 
                 return qp;
             }
