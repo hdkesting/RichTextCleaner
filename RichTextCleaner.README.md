@@ -43,21 +43,22 @@ The "Get text only" button (hotkey: (Ctrl-)T) removes all HTML elements, leaving
 
 ### Link Checker window
 
-The "Check links" button opens a new window with all links that are found in the current html source. It will check whether those links exist. There is a "mark invalid links" button that will put `[ ]` around any link that returned an error or a "not found" status. Also it will update links where the only change was to update from http to https.
+The "Check links" button opens a new window with all links that are found in the current html source. It will check those links.
 
-However, there are some issues:
-
-* Some sites don't want to be queried by an app, so they might report an error that a user wouldn't see (Facebook and LinkedIn are ignored specifically because of this - their URLs are considered to be fine)
-* This app only notices the return status. So if the text on the page says "content not found" while the status says "ok" (instead of 404, not found, as it should be), this app will consider the page to be fine.
-* A redirect can be to the new location of the information, or to a generic page (because the specific content isn't available anymore). This app cannot distinguish between those and will report just the redirect. It is up to the user to make the correct decision. Inspect the new URL or click on it to visit the page.
-* A "simple redirect" (change from http to https, addition or removal of a leading "www." and/or a trailing "/") will be checkmarked for "update".
-* An error or "not found" will be checkmarked for marking.
+* A "simple redirect" (change from http to https, addition or removal of a leading "www." and/or a trailing "/") will be automatically checkmarked for "update".
+* An error or "not found" will be automatically checkmarked for marking.
 * Local URLs (not starting with "http(s)://") are ignored. However this works best with text from the html (source) tab.
 
-An "Update links in source" button in that Check Links window will update the source for the items that are checked in the "update" columns:
+However, the checker has some issues:
 
-* Items that are checked in the "update" column and have a new URL will have their URL updated in the source
-* Items that are checked in the "mark" column (and are not OK) will be marked with [ ] around the link text, in the source
+* Some sites don't want to be queried by an app, so they might report an error that a user wouldn't see (Facebook and LinkedIn are ignored specifically because of this - so their URLs are considered to be fine)
+* This app only notices the return status. So if the text on the page says "content not found" while the status says "ok" (instead of 404 (not found) as it should be), this app will consider the page to be fine.
+* A redirect can be to the new location of the information, or to a generic page (because the specific content isn't available anymore). This app cannot distinguish between those and will report just the redirect. It is up to you to make the correct decision. Inspect the new URL or click on it to visit the page.
+
+An "Update links in source" button in that Check Links window will update the source for the items that are checked in the "update" and "marked" columns:
+
+* Items that are checked in the "mark" column will be marked with `[ ]` around the link text, in the source
+* Items that are checked in the "update" column will have their URL updated in the source (except when "mark" is also checked)
 
 ## Hotkeys
 
