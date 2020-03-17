@@ -32,8 +32,7 @@ namespace RichTextCleaner
         {
             string html = this.TextContent.Text;
 
-            html = TextCleaner.ClearStylingFromHtml(html, StyleElements.All, 
-                true, QuoteProcessing.NoChange, LinkQueryCleanLevel.RemoveUtmParams); 
+            html = TextCleaner.ClearStylingFromHtml(html, CleanerSettings.Default); 
             // I *should* get those settings from somewhere, see the WPF version
 
             ClipboardHelper.CopyToClipboard(html, html);

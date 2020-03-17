@@ -64,7 +64,7 @@
 
             <StackPanel Orientation="Vertical" x:Name="QueryCleanupGroup">
                 <Label>URL query cleanup:</Label>
-                <ComboBox Margin="2,2,2,10" x:Name="QueryCleanup" SelectionChanged="QueryCleanup_SelectionChanged">
+                <ComboBox Margin="2,2,2,10" x:Name="QueryCleanup">
                     <ComboBoxItem Tag="0">Keep as-is</ComboBoxItem>
                     <ComboBoxItem Tag="1">Remove utm*</ComboBoxItem>
                     <ComboBoxItem Tag="2">Remove query</ComboBoxItem>

@@ -42,31 +42,32 @@ namespace RichTextCleaner.Common
         /// <returns></returns>
         public static string ClearStylingFromHtml(
             string html,
-            StyleElements markupToRemove,
-            bool addBlankLinkTarget,
-            QuoteProcessing quoteProcessing,
-            LinkQueryCleanLevel queryCleanLevel)
+            ICleanerSettings settings)
         {
-        
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             var doc = CreateHtmlDocument(html ?? string.Empty);
 
             RemoveNonCMSElements(doc);
             ClearStyling(doc);
-            TranslateStyleNodes(doc, markupToRemove);
+            TranslateStyleNodes(doc, settings.MarkupToRemove);
             RemoveSurroundingTags(doc, "span");
             RemoveSurroundingTags(doc, "div");
             RemoveEmptySpans(doc);
             ClearParagraphsInBlocks(doc);
             RemoveAnchors(doc);
-            CombineAndCleanLinks(doc, queryCleanLevel);
-            if (addBlankLinkTarget)
+            CombineAndCleanLinks(doc, settings.QueryCleanLevel);
+            if (settings.AddTargetBlank)
             {
                 AddBlankLinkTargets(doc);
             }
 
             TrimParagraphs(doc);
 
-            UpdateQuotes(doc, quoteProcessing);
+            UpdateQuotes(doc, settings.QuoteProcess);
 
             return GetHtmlSource(doc);
         }

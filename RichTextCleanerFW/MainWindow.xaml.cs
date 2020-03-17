@@ -61,12 +61,12 @@ namespace RichTextCleanerFW
                 return;
             }
 
-            this.ClearBoldMarkup.IsChecked = CleanerSettings.RemoveBold;
-            this.ClearItalicMarkup.IsChecked = CleanerSettings.RemoveItalic;
-            this.ClearUnderlineMarkup.IsChecked = CleanerSettings.RemoveUnderline;
-            this.AddBlankTarget.IsChecked = CleanerSettings.AddTargetBlank;
-            this.ChangeToFancyQuotes.IsChecked = CleanerSettings.QuoteProcess != QuoteProcessing.NoChange;
-            this.QueryCleanup.SelectedIndex = (int)CleanerSettings.QueryCleanLevel;
+            this.ClearBoldMarkup.IsChecked = CleanerSettings.Instance.RemoveBold;
+            this.ClearItalicMarkup.IsChecked = CleanerSettings.Instance.RemoveItalic;
+            this.ClearUnderlineMarkup.IsChecked = CleanerSettings.Instance.RemoveUnderline;
+            this.AddBlankTarget.IsChecked = CleanerSettings.Instance.AddTargetBlank;
+            this.ChangeToFancyQuotes.IsChecked = CleanerSettings.Instance.QuoteProcess != QuoteProcessing.NoChange;
+            this.QueryCleanup.SelectedIndex = (int)CleanerSettings.Instance.QueryCleanLevel;
 
 #if !DEBUG
             // hide until OK
@@ -137,15 +137,14 @@ namespace RichTextCleanerFW
         {
             string html = this.SourceValue;
 
+            UpdateCleanerSettings();
+
 #pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 html = TextCleaner.ClearStylingFromHtml(
                     html,
-                    GetStyleSetting(),
-                    AddBlankTarget.IsChecked.GetValueOrDefault(),
-                    GetQuoteSetting(),
-                    CleanerSettings.QueryCleanLevel);
+                    CleanerSettings.Instance);
             }
             catch (Exception ex)
             {
@@ -170,58 +169,21 @@ namespace RichTextCleanerFW
 
             await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
 
-            StyleElements GetStyleSetting()
+            void UpdateCleanerSettings()
             {
-                var styles = StyleElements.None;
-                if (ClearBoldMarkup.IsChecked.GetValueOrDefault())
-                {
-                    styles |= StyleElements.Bold;
-                    CleanerSettings.RemoveBold = true;
-                }
-                else
-                {
-                    CleanerSettings.RemoveBold = false;
-                }
+                CleanerSettings.Instance.RemoveBold = ClearBoldMarkup.IsChecked.GetValueOrDefault();
 
-                if (ClearItalicMarkup.IsChecked.GetValueOrDefault())
-                {
-                    styles |= StyleElements.Italic;
-                    CleanerSettings.RemoveItalic = true;
-                }
-                else
-                {
-                    CleanerSettings.RemoveItalic = false;
-                }
+                CleanerSettings.Instance.RemoveItalic = ClearItalicMarkup.IsChecked.GetValueOrDefault();
 
-                if (ClearUnderlineMarkup.IsChecked.GetValueOrDefault())
-                {
-                    styles |= StyleElements.Underline;
-                    CleanerSettings.RemoveUnderline = true;
-                }
-                else
-                {
-                    CleanerSettings.RemoveUnderline = false;
-                }
+                CleanerSettings.Instance.RemoveUnderline = ClearUnderlineMarkup.IsChecked.GetValueOrDefault();
 
-                CleanerSettings.AddTargetBlank = AddBlankTarget.IsChecked.GetValueOrDefault();
+                CleanerSettings.Instance.AddTargetBlank = AddBlankTarget.IsChecked.GetValueOrDefault();
 
-                return styles;
-            }
+                CleanerSettings.Instance.QuoteProcess = this.ChangeToFancyQuotes.IsChecked.GetValueOrDefault()
+                    ? QuoteProcessing.ChangeToSmartQuotes
+                    : QuoteProcessing.NoChange;
 
-            QuoteProcessing GetQuoteSetting() {
-                QuoteProcessing qp;
-                if (this.ChangeToFancyQuotes.IsChecked.GetValueOrDefault())
-                {
-                    qp = QuoteProcessing.ChangeToSmartQuotes;
-                }
-                else
-                {
-                    qp = QuoteProcessing.NoChange;
-                }
-
-                CleanerSettings.QuoteProcess = qp;
-
-                return qp;
+                CleanerSettings.Instance.QueryCleanLevel = (LinkQueryCleanLevel)this.QueryCleanup.SelectedIndex;
             }
         }
 
@@ -397,24 +359,6 @@ namespace RichTextCleanerFW
             checker.Focus();
 
             await checker.CheckAllLinks().ConfigureAwait(false);
-        }
-
-        private void QueryCleanup_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            switch (((ComboBox)sender).SelectedIndex)
-            {
-                case 0:
-                    CleanerSettings.QueryCleanLevel = LinkQueryCleanLevel.None;
-                    break;
-
-                case 1:
-                    CleanerSettings.QueryCleanLevel = LinkQueryCleanLevel.RemoveUtmParams;
-                    break;
-
-                case 2:
-                    CleanerSettings.QueryCleanLevel = LinkQueryCleanLevel.RemoveQuery;
-                    break;
-            }
         }
     }
 }
