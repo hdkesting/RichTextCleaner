@@ -59,6 +59,11 @@ namespace RichTextCleaner.Common
             RemoveEmptySpans(doc);
             ClearParagraphsInBlocks(doc);
             RemoveAnchors(doc);
+            if (settings.CreateLinkFromText)
+            {
+                CreateMissingLinks(doc);
+            }
+
             CombineAndCleanLinks(doc, settings.QueryCleanLevel);
             if (settings.AddTargetBlank)
             {
@@ -259,6 +264,26 @@ namespace RichTextCleaner.Common
             {
                 anchor.Attributes.Remove("tabindex");
             }
+        }
+
+        /// <summary>
+        /// Find link-like texts and make real links.
+        /// </summary>
+        /// <param name="document"></param>
+        private static void CreateMissingLinks(HtmlDocument document)
+        {
+            // search for text nodes directly under a <p>
+            var plainTexts = document.DocumentNode.SelectNodes("//p/text()") ?? Enumerable.Empty<HtmlNode>();
+
+            foreach (var textnode in plainTexts)
+            {
+                // start with http(s):// or www or 2 "words", then at least one more "word"
+                textnode.InnerHtml = Regex.Replace(textnode.InnerHtml, @"((https?://[a-z0-9]{2,})|www|[a-zA-Z0-9-]{2,}\.[a-zA-Z0-9-]{2,})(\.[a-zA-Z0-9-]{2,})+(/[a-zA-Z0-9.-]+)*", new MatchEvaluator(LinkCreator));
+            }
+
+            string LinkCreator(Match m) => m.Value.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
+                ? $"<a href=\"{m.Value}\">{m.Value}</a>"
+                : $"<a href=\"http://{m.Value}\">{m.Value}</a>";
         }
 
         private static void CombineAndCleanLinks(HtmlDocument document, LinkQueryCleanLevel queryCleanLevel)
