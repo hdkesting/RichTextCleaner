@@ -20,6 +20,8 @@ namespace RichTextCleanerFW
     {
         public static readonly DependencyProperty SourceValueProperty = DependencyProperty.Register(nameof(SourceValue), typeof(string), typeof(MainWindow));
 
+        private static bool FeatureCleanUrlQuery = false;
+
         private readonly Brush StatusForeground;
         private readonly Brush StatusBackground;
         private LinkCheckerWindow checker;
@@ -68,10 +70,11 @@ namespace RichTextCleanerFW
             this.ChangeToFancyQuotes.IsChecked = CleanerSettings.Instance.QuoteProcess != QuoteProcessing.NoChange;
             this.QueryCleanup.SelectedIndex = (int)CleanerSettings.Instance.QueryCleanLevel;
 
-#if !DEBUG
-            // hide until OK
-            this.QueryCleanupGroup.Visibility = Visibility.Collapsed;
-#endif
+            if (FeatureCleanUrlQuery)
+            {
+                // hide until OK
+                this.QueryCleanupGroup.Visibility = Visibility.Collapsed;
+            }
 
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
