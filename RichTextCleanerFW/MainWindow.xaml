@@ -36,45 +36,15 @@
 
             <Separator/>
 
-            <Button Margin="2,10,2,2" Click="ClearStylingAndCopy" ToolTip="Or press (Ctrl-)C">Clear styling &amp; Copy</Button>
-            <CheckBox Margin="2,2,2,10" x:Name="ClearBoldMarkup" IsChecked="True" ToolTip="Remove &lt;b&gt; and &lt;strong&gt; elements">
-                <TextBlock>
-                    <Run>Remove </Run>
-                    <Run FontWeight="Bold">bold</Run>
-                    <Run> tags</Run>                    
-                </TextBlock>
-            </CheckBox>
-            <CheckBox Margin="2,2,2,10" x:Name="ClearItalicMarkup" IsChecked="True" ToolTip="Remove &lt;i&gt; and &lt;em&gt; elements">
-                <TextBlock>
-                    <Run>Remove </Run>
-                    <Run FontStyle="Italic">italic</Run>
-                    <Run> tags</Run>
-                </TextBlock>
-            </CheckBox>
-            <CheckBox Margin="2,2,2,10" x:Name="ClearUnderlineMarkup" IsChecked="True" ToolTip="Remove &lt;u&gt; elements">
-                <TextBlock>
-                    <Run>Remove </Run>
-                    <Underline><Run>underline</Run></Underline>
-                    <Run> tags</Run>
-                </TextBlock>
-            </CheckBox>
-            <CheckBox Margin="2,2,2,10" x:Name="AddBlankTarget" IsChecked="True" ToolTip="Set link target to new window for hrefs starting with http(s)">Add target=__blank</CheckBox>
-
-            <CheckBox Margin="2,2,2,10" x:Name="ChangeToFancyQuotes" IsChecked="True" ToolTip="Change straight quotes to nice ones">Change to fancy quotes</CheckBox>
-
-            <StackPanel Orientation="Vertical" x:Name="QueryCleanupGroup">
-                <Label>URL query cleanup:</Label>
-                <ComboBox Margin="2,2,2,10" x:Name="QueryCleanup">
-                    <ComboBoxItem Tag="0">Keep as-is</ComboBoxItem>
-                    <ComboBoxItem Tag="1">Remove utm*</ComboBoxItem>
-                    <ComboBoxItem Tag="2">Remove query</ComboBoxItem>
-                </ComboBox>
-            </StackPanel>
+            <Button Margin="2,10" Click="ClearStylingAndCopy" ToolTip="Or press (Ctrl-)C">Clear styling &amp; Copy</Button>
+            
             <Separator/>
 
             <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="Or press (Ctrl-)T">Get text only</Button>
 
             <Separator/>
+            
+            <Button Margin="2,10,2,2" Click="OpenSettingsWindow">⚙ Settings</Button>
 
             <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="2,10" Foreground="Gray">Ready for pasting</TextBlock>
         </StackPanel>

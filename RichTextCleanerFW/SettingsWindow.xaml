@@ -1,0 +1,86 @@
+﻿<Window x:Class="RichTextCleanerFW.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RichTextCleanerFW"
+        mc:Ignorable="d"
+        Title="Settings" Height="450" Width="600">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <CheckBox x:Name="ClearBoldMarkup" Grid.Row="0" Grid.Column="0">
+            <TextBlock>
+                    <Run>Remove </Run>
+                    <Run FontWeight="Bold">bold</Run>
+                    <Run> tags</Run>
+            </TextBlock>
+        </CheckBox>
+        <TextBlock Grid.Row="0" Grid.Column="1" TextWrapping="Wrap">
+            Remove all &lt;b&gt; and &lt;strong&gt; elements, keeping their text
+        </TextBlock>
+        
+        <CheckBox x:Name="ClearItalicMarkup" Grid.Row="1" Grid.Column="0">
+            <TextBlock>
+                    <Run>Remove </Run>
+                    <Run FontStyle="Italic">italic</Run>
+                    <Run> tags</Run>
+            </TextBlock>
+        </CheckBox>
+        <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap">
+            Remove all &lt;i&gt; and &lt;em&gt; elements, keeping their text
+        </TextBlock>
+
+        <CheckBox x:Name="ClearUnderlineMarkup" Grid.Row="2" Grid.Column="0">
+            <TextBlock>
+                    <Run>Remove </Run>
+                    <Underline><Run>underline</Run></Underline>
+                    <Run> tags</Run>
+            </TextBlock>
+        </CheckBox>
+        <TextBlock Grid.Row="2" Grid.Column="1">
+            Remove all &lt;u&gt; elements, keeping their text
+        </TextBlock>
+
+        <CheckBox x:Name="AddBlankTarget" Grid.Row="3">Add target=__blank</CheckBox>
+
+        <TextBlock Grid.Row="3" Grid.Column="1" TextWrapping="Wrap">
+            All link-hrefs starting with http or https are updated to add &quot;target=_blank&quot;
+        </TextBlock>
+
+        <CheckBox x:Name="ChangeToFancyQuotes" Grid.Row="4">Change to fancy quotes</CheckBox>
+        <TextBlock Grid.Row="4" Grid.Column="1" TextWrapping="Wrap">
+            Change &quot;straight quotes&quot; to &#x201c;nice ones&#x201d; (&amp;ldquo; and &amp;rdquo;)
+        </TextBlock>
+
+        <StackPanel Grid.Row="5"
+            Orientation="Vertical" x:Name="QueryCleanupGroup">
+            <Label>URL query cleanup:</Label>
+            <ComboBox Margin="2,2,2,10" x:Name="QueryCleanup">
+                <ComboBoxItem Tag="0">Keep as-is</ComboBoxItem>
+                <ComboBoxItem Tag="1">Remove utm*</ComboBoxItem>
+                <ComboBoxItem Tag="2">Remove query</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+        <TextBlock Grid.Row="5" Grid.Column="1" TextWrapping="Wrap">
+            <Run FontWeight="Bold">Keep as-is</Run>: don't do anything special;
+            <Run FontWeight="Bold">Remove utm*</Run>: remove all parameters starting with utm (tracking);
+            <Run FontWeight="Bold">Remove query</Run>: remove everything after a "?"
+        </TextBlock>
+
+        <Button Grid.Row="6" Grid.Column="1" Width="100" Height="20" HorizontalAlignment="Left"
+            Content="Save &amp; close" Click="SaveSettings"/>
+    </Grid>
+</Window>
