@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -18,6 +19,8 @@ namespace RichTextCleanerFW
     public partial class MainWindow : Window
     {
         public static readonly DependencyProperty SourceValueProperty = DependencyProperty.Register(nameof(SourceValue), typeof(string), typeof(MainWindow));
+
+        private static bool FeatureCleanUrlQuery = false;
 
         private readonly Brush StatusForeground;
         private readonly Brush StatusBackground;
@@ -60,13 +63,18 @@ namespace RichTextCleanerFW
                 return;
             }
 
-            var settings = Properties.Settings.Default;
+            this.ClearBoldMarkup.IsChecked = CleanerSettings.Instance.RemoveBold;
+            this.ClearItalicMarkup.IsChecked = CleanerSettings.Instance.RemoveItalic;
+            this.ClearUnderlineMarkup.IsChecked = CleanerSettings.Instance.RemoveUnderline;
+            this.AddBlankTarget.IsChecked = CleanerSettings.Instance.AddTargetBlank;
+            this.ChangeToFancyQuotes.IsChecked = CleanerSettings.Instance.QuoteProcess != QuoteProcessing.NoChange;
+            this.QueryCleanup.SelectedIndex = (int)CleanerSettings.Instance.QueryCleanLevel;
 
-            this.ClearBoldMarkup.IsChecked = settings.RemoveBold;
-            this.ClearItalicMarkup.IsChecked = settings.RemoveItalic;
-            this.ClearUnderlineMarkup.IsChecked = settings.RemoveUnderline;
-            this.AddBlankTarget.IsChecked = settings.AddTargetBlank;
-            this.ChangeToFancyQuotes.IsChecked = (QuoteProcessing)settings.QuoteProcess != QuoteProcessing.NoChange;
+            if (FeatureCleanUrlQuery)
+            {
+                // hide until OK
+                this.QueryCleanupGroup.Visibility = Visibility.Collapsed;
+            }
 
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
@@ -132,14 +140,14 @@ namespace RichTextCleanerFW
         {
             string html = this.SourceValue;
 
+            UpdateCleanerSettings();
+
 #pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 html = TextCleaner.ClearStylingFromHtml(
                     html,
-                    GetStyleSetting(),
-                    AddBlankTarget.IsChecked.GetValueOrDefault(),
-                    GetQuoteSetting());
+                    CleanerSettings.Instance);
             }
             catch (Exception ex)
             {
@@ -164,62 +172,21 @@ namespace RichTextCleanerFW
 
             await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
 
-            StyleElements GetStyleSetting()
+            void UpdateCleanerSettings()
             {
-                // settings are stored in C:\Users\<user>\AppData\Local\Hans_Kesting\RichTextCleaner.exe...\<version>\user.config
-                var settings = Properties.Settings.Default;
-                var styles = StyleElements.None;
-                if (ClearBoldMarkup.IsChecked.GetValueOrDefault())
-                {
-                    styles |= StyleElements.Bold;
-                    settings.RemoveBold = true;
-                }
-                else
-                {
-                    settings.RemoveBold = false;
-                }
+                CleanerSettings.Instance.RemoveBold = ClearBoldMarkup.IsChecked.GetValueOrDefault();
 
-                if (ClearItalicMarkup.IsChecked.GetValueOrDefault())
-                {
-                    styles |= StyleElements.Italic;
-                    settings.RemoveItalic = true;
-                }
-                else
-                {
-                    settings.RemoveItalic = false;
-                }
+                CleanerSettings.Instance.RemoveItalic = ClearItalicMarkup.IsChecked.GetValueOrDefault();
 
-                if (ClearUnderlineMarkup.IsChecked.GetValueOrDefault())
-                {
-                    styles |= StyleElements.Underline;
-                    settings.RemoveUnderline = true;
-                }
-                else
-                {
-                    settings.RemoveUnderline = false;
-                }
+                CleanerSettings.Instance.RemoveUnderline = ClearUnderlineMarkup.IsChecked.GetValueOrDefault();
 
-                settings.AddTargetBlank = AddBlankTarget.IsChecked.GetValueOrDefault();
-                settings.Save();
+                CleanerSettings.Instance.AddTargetBlank = AddBlankTarget.IsChecked.GetValueOrDefault();
 
-                return styles;
-            }
+                CleanerSettings.Instance.QuoteProcess = this.ChangeToFancyQuotes.IsChecked.GetValueOrDefault()
+                    ? QuoteProcessing.ChangeToSmartQuotes
+                    : QuoteProcessing.NoChange;
 
-            QuoteProcessing GetQuoteSetting() {
-                QuoteProcessing qp;
-                if (this.ChangeToFancyQuotes.IsChecked.GetValueOrDefault())
-                {
-                    qp = QuoteProcessing.ChangeToSmartQuotes;
-                }
-                else
-                {
-                    qp = QuoteProcessing.NoChange;
-                }
-
-                Properties.Settings.Default.QuoteProcess = (int)qp;
-                Properties.Settings.Default.Save();
-
-                return qp;
+                CleanerSettings.Instance.QueryCleanLevel = (LinkQueryCleanLevel)this.QueryCleanup.SelectedIndex;
             }
         }
 

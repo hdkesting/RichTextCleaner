@@ -82,5 +82,29 @@ namespace RichTextCleanerFW.Properties {
                 this["QuoteProcess"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int QueryCleanLevel {
+            get {
+                return ((int)(this["QueryCleanLevel"]));
+            }
+            set {
+                this["QueryCleanLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CreateLinkFromText {
+            get {
+                return ((bool)(this["CreateLinkFromText"]));
+            }
+            set {
+                this["CreateLinkFromText"] = value;
+            }
+        }
     }
 }

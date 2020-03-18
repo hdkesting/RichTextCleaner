@@ -40,6 +40,14 @@
             <param name="newHref">The new href.</param>
             <returns></returns>
         </member>
+        <member name="M:RichTextCleaner.Common.LinkChecker.CleanQueryString(System.String,RichTextCleaner.Common.Support.LinkQueryCleanLevel)">
+            <summary>
+            Cleans the query part of the supplied URL.
+            </summary>
+            <param name="original">The original URL.</param>
+            <param name="cleanLevel">The requested clean level.</param>
+            <returns></returns>
+        </member>
         <member name="T:RichTextCleaner.Common.Support.LinkCheckResult">
             <summary>
             The result of checking a link.
@@ -170,6 +178,26 @@
             <value>
             The link after redirect.
             </value>
+        </member>
+        <member name="T:RichTextCleaner.Common.Support.LinkQueryCleanLevel">
+            <summary>
+            The level at which to clean the query part of a URL.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.Support.LinkQueryCleanLevel.None">
+            <summary>
+            Perform no query string cleaning.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.Support.LinkQueryCleanLevel.RemoveUtmParams">
+            <summary>
+            Remove only parameters starting with "utm".
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.Support.LinkQueryCleanLevel.RemoveQuery">
+            <summary>
+            Remove the full query
+            </summary>
         </member>
         <member name="T:RichTextCleaner.Common.Support.QuoteProcessing">
             <summary>

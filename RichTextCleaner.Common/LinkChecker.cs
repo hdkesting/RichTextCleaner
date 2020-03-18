@@ -178,6 +178,50 @@ namespace RichTextCleaner.Common
             return TextCleaner.GetHtmlSource(doc);
         }
 
+        /// <summary>
+        /// Cleans the query part of the supplied URL.
+        /// </summary>
+        /// <param name="original">The original URL.</param>
+        /// <param name="cleanLevel">The requested clean level.</param>
+        /// <returns></returns>
+        public static string CleanQueryString(string original, LinkQueryCleanLevel cleanLevel)
+        {
+            if (cleanLevel == LinkQueryCleanLevel.None || string.IsNullOrWhiteSpace(original) || !original.Contains('?'))
+            {
+                return original;
+            }
+
+            if (cleanLevel == LinkQueryCleanLevel.RemoveQuery)
+            {
+                return original.Substring(0, original.IndexOf('?'));
+            }
+
+
+            var qry = original.Substring(original.IndexOf('?') + 1);
+            bool encoded = qry.Contains("&amp;");
+            if (encoded)
+            {
+                // decode (ignoring any other encodings)
+                qry = qry.Replace("&amp;", "&");
+            }
+
+            // ignore all "utm_whatever=value" parts
+            qry = string.Join("&",
+                qry.Split('&').Where(x => !x.StartsWith("utm", StringComparison.OrdinalIgnoreCase)));
+            if (string.IsNullOrEmpty(qry))
+            {
+                return original.Substring(0, original.IndexOf('?'));
+            }
+
+            if (encoded)
+            {
+                // re-encode
+                qry = qry.Replace("&", "&amp;");
+            }
+
+            return original.Substring(0, original.IndexOf('?')) + "?" + qry;
+        }
+
         private static bool IsSimpleRedirect(Uri oldUri, Uri newUri)
         {
             // assumption: the uris are different (that was already checked)
