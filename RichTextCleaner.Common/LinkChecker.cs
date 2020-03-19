@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -84,7 +85,8 @@ namespace RichTextCleaner.Common
                 return new LinkCheckResult(LinkCheckSummary.Error);
             }
 
-            if (uri.Host.Contains("linkedin.com") || uri.Host.Contains("facebook.com"))
+            if (uri.Host.EndsWith("linkedin.com", StringComparison.OrdinalIgnoreCase) 
+                || uri.Host.EndsWith("facebook.com", StringComparison.OrdinalIgnoreCase))
             {
                 // these accept only known browsers - just ignore the link (except for a http->https change)
                 if (uri.Scheme == "http")
@@ -95,6 +97,15 @@ namespace RichTextCleaner.Common
                 return new LinkCheckResult(LinkCheckSummary.Ignored);
             }
 
+            var defaultResult = LinkCheckSummary.Ok;
+
+            var link2 = CleanHref(link, LinkQueryCleanLevel.RemoveQuery);
+            if (link2 != link)
+            {
+                uri = new Uri(link2);
+                defaultResult = LinkCheckSummary.SimpleChange;
+            }
+
             try
             {
                 var response = await client.GetAsync(uri, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
@@ -103,7 +114,7 @@ namespace RichTextCleaner.Common
                     // ignore any added (or removed) trailing '/'
                     if (string.Equals((response.RequestMessage.RequestUri?.AbsoluteUri ?? link).TrimEnd('/'), link.TrimEnd('/'), StringComparison.OrdinalIgnoreCase))
                     {
-                        return new LinkCheckResult(LinkCheckSummary.Ok, null, response.StatusCode);
+                        return new LinkCheckResult(defaultResult, link2, response.StatusCode);
                     }
                     else
                     {
@@ -199,10 +210,25 @@ namespace RichTextCleaner.Common
             // for example https://nam04.safelinks.protection.outlook.com/?url=http%3A%2F%2Fhealthclarity.wolterskluwer.com ...
             if (uri.Host.EndsWith("safelinks.protection.outlook.com", StringComparison.OrdinalIgnoreCase))
             {
-                // I want the "url" parameter and can ignore the rest
+                // I want the "url" parameter (decoded) and can ignore the rest
                 var query = original.Substring(original.IndexOf('?') + 1).Replace("&amp;", "&");
                 var urlparam = query.Split('&').First(p => p.StartsWith("url=", StringComparison.Ordinal));
-                original = System.Net.WebUtility.UrlDecode(urlparam.Substring(4));
+                original = System.Net.WebUtility.UrlDecode(urlparam.Substring(4)); // skip the "url="
+            }
+            else if (uri.Host.Equals("urldefense.com", StringComparison.OrdinalIgnoreCase))
+            {
+                // assume /v3/__http(s)://fullpath;security
+                var query = uri.PathAndQuery;
+                query = query.Substring(query.IndexOf("__", StringComparison.Ordinal) + 2);
+                var p = query.IndexOf(";", StringComparison.Ordinal);
+                if (p > 0)
+                {
+                    query = query.Substring(0, p);
+                }
+
+                // undo some conversions that I saw in two examples: *20 -> %20, /*/ -> /#/
+                query = Regex.Replace(query, "\\*(?=[0-9a-zA-Z]{2})", "%").Replace("*", "#");
+                original = query;
             }
 
             return CleanQueryString(original, cleanLevel);
