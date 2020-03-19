@@ -13,7 +13,7 @@
         /// <summary>
         /// Remove only parameters starting with "utm".
         /// </summary>
-        RemoveUtmParams,
+        RemoveTrackingParams,
 
         /// <summary>
         /// Remove the full query

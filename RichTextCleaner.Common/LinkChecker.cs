@@ -178,13 +178,37 @@ namespace RichTextCleaner.Common
             return TextCleaner.GetHtmlSource(doc);
         }
 
+        public static string CleanHref(string original, LinkQueryCleanLevel cleanLevel)
+        {
+            if (string.IsNullOrWhiteSpace(original) || !original.StartsWith("http", StringComparison.Ordinal))
+            {
+                return original;
+            }
+
+            if (!Uri.TryCreate(original, UriKind.Absolute, out Uri uri))
+            {
+                return original;
+            }
+
+            // for example https://nam04.safelinks.protection.outlook.com/?url=http%3A%2F%2Fhealthclarity.wolterskluwer.com ...
+            if (uri.Host.EndsWith("safelinks.protection.outlook.com", StringComparison.OrdinalIgnoreCase))
+            {
+                // I want the "url" parameter and can ignore the rest
+                var query = original.Substring(original.IndexOf('?') + 1).Replace("&amp;", "&");
+                var urlparam = query.Split('&').First(p => p.StartsWith("url=", StringComparison.Ordinal));
+                original = System.Net.WebUtility.UrlDecode(urlparam.Substring(4));
+            }
+
+            return CleanQueryString(original, cleanLevel);
+        }
+
         /// <summary>
         /// Cleans the query part of the supplied URL.
         /// </summary>
         /// <param name="original">The original URL.</param>
         /// <param name="cleanLevel">The requested clean level.</param>
         /// <returns></returns>
-        public static string CleanQueryString(string original, LinkQueryCleanLevel cleanLevel)
+        private static string CleanQueryString(string original, LinkQueryCleanLevel cleanLevel)
         {
             if (cleanLevel == LinkQueryCleanLevel.None || string.IsNullOrWhiteSpace(original) || !original.Contains('?'))
             {

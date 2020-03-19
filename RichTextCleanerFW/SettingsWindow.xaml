@@ -70,13 +70,13 @@
             <Label>URL query cleanup:</Label>
             <ComboBox Margin="2,2,2,10" x:Name="QueryCleanup">
                 <ComboBoxItem Tag="0">Keep as-is</ComboBoxItem>
-                <ComboBoxItem Tag="1">Remove utm*</ComboBoxItem>
+                <ComboBoxItem Tag="1">Remove trackers</ComboBoxItem>
                 <ComboBoxItem Tag="2">Remove query</ComboBoxItem>
             </ComboBox>
         </StackPanel>
         <TextBlock Grid.Row="5" Grid.Column="1" TextWrapping="Wrap">
             <Run FontWeight="Bold">Keep as-is</Run>: don't do anything special;
-            <Run FontWeight="Bold">Remove utm*</Run>: remove all parameters starting with utm (tracking);
+            <Run FontWeight="Bold">Remove trackers</Run>: remove all (tracking) parameters starting with utm;
             <Run FontWeight="Bold">Remove query</Run>: remove everything after a "?"
         </TextBlock>
 

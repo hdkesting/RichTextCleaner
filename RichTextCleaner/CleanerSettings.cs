@@ -22,7 +22,7 @@ namespace RichTextCleaner
 
         public QuoteProcessing QuoteProcess => QuoteProcessing.ChangeToSmartQuotes;
 
-        public LinkQueryCleanLevel QueryCleanLevel => LinkQueryCleanLevel.RemoveUtmParams;
+        public LinkQueryCleanLevel QueryCleanLevel => LinkQueryCleanLevel.RemoveTrackingParams;
 
         public bool CreateLinkFromText => true;
     }

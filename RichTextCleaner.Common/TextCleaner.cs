@@ -288,24 +288,20 @@ namespace RichTextCleaner.Common
 
         private static void CombineAndCleanLinks(HtmlDocument document, LinkQueryCleanLevel queryCleanLevel)
         {
-            if (queryCleanLevel > LinkQueryCleanLevel.None)
-            {
-                CleanLinkQuery(document, queryCleanLevel);
-            }
-
+            CleanLinks(document, queryCleanLevel);
             CombineLinks(document);
             RemoveEmptyLinks(document);
             RemoveLeadingAndTrailingSpacesFromLinks(document);
             CleanLinkContent(document);
         }
 
-        private static void CleanLinkQuery(HtmlDocument document, LinkQueryCleanLevel queryCleanLevel)
+        private static void CleanLinks(HtmlDocument document, LinkQueryCleanLevel queryCleanLevel)
         {
             var links = document.DocumentNode.SelectNodes("//a[@href]") ?? Enumerable.Empty<HtmlNode>();
             foreach (var link in links)
             {
                 var href = link.Attributes["href"].Value;
-                href = LinkChecker.CleanQueryString(href, queryCleanLevel);
+                href = LinkChecker.CleanHref(href, queryCleanLevel);
                 link.Attributes["href"].Value = href;
             }
         }

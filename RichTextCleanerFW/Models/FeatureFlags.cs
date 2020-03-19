@@ -2,11 +2,6 @@
 {
     internal static class FeatureFlags
     {
-        public static bool CleanUrlQuery
-#if DEBUG
-            => true;
-#else
-            => false;
-#endif
+        public static bool CleanUrlQuery => true;
     }
 }
