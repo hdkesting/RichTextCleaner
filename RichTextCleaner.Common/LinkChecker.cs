@@ -178,6 +178,12 @@ namespace RichTextCleaner.Common
             return TextCleaner.GetHtmlSource(doc);
         }
 
+        /// <summary>
+        /// Cleans the href value.
+        /// </summary>
+        /// <param name="original">The original URL.</param>
+        /// <param name="cleanLevel">The clean level.</param>
+        /// <returns></returns>
         public static string CleanHref(string original, LinkQueryCleanLevel cleanLevel)
         {
             if (string.IsNullOrWhiteSpace(original) || !original.StartsWith("http", StringComparison.Ordinal))

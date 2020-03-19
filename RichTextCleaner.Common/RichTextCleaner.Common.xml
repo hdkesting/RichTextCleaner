@@ -40,6 +40,14 @@
             <param name="newHref">The new href.</param>
             <returns></returns>
         </member>
+        <member name="M:RichTextCleaner.Common.LinkChecker.CleanHref(System.String,RichTextCleaner.Common.Support.LinkQueryCleanLevel)">
+            <summary>
+            Cleans the href value.
+            </summary>
+            <param name="original">The original URL.</param>
+            <param name="cleanLevel">The clean level.</param>
+            <returns></returns>
+        </member>
         <member name="M:RichTextCleaner.Common.LinkChecker.CleanQueryString(System.String,RichTextCleaner.Common.Support.LinkQueryCleanLevel)">
             <summary>
             Cleans the query part of the supplied URL.
@@ -47,6 +55,52 @@
             <param name="original">The original URL.</param>
             <param name="cleanLevel">The requested clean level.</param>
             <returns></returns>
+        </member>
+        <member name="T:RichTextCleaner.Common.Support.ICleanerSettings">
+            <summary>
+            Interface for Cleaner Settings, to be passed to <see cref="T:RichTextCleaner.Common.TextCleaner"/>.
+            </summary>
+        </member>
+        <member name="P:RichTextCleaner.Common.Support.ICleanerSettings.MarkupToRemove">
+            <summary>
+            Gets all the markup to remove.
+            </summary>
+            <value>
+            The markup to remove.
+            </value>
+        </member>
+        <member name="P:RichTextCleaner.Common.Support.ICleanerSettings.AddTargetBlank">
+            <summary>
+            Gets or sets a value indicating whether to add target=_blank to link elements.
+            </summary>
+            <value>
+              <c>true</c> if add target=_blank; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:RichTextCleaner.Common.Support.ICleanerSettings.QuoteProcess">
+            <summary>
+            Gets or sets a value indicating how to process quotes.
+            </summary>
+            <seealso cref="T:RichTextCleaner.Common.Support.QuoteProcessing"/>
+            <value>
+            The quote process.
+            </value>
+        </member>
+        <member name="P:RichTextCleaner.Common.Support.ICleanerSettings.QueryCleanLevel">
+            <summary>
+            Gets or sets the query clean level.
+            </summary>
+            <value>
+            The query clean level.
+            </value>
+        </member>
+        <member name="P:RichTextCleaner.Common.Support.ICleanerSettings.CreateLinkFromText">
+            <summary>
+            Gets a value indicating whether to create links from link-like texts.
+            </summary>
+            <value>
+              <c>true</c> if create link from text; otherwise, <c>false</c>.
+            </value>
         </member>
         <member name="T:RichTextCleaner.Common.Support.LinkCheckResult">
             <summary>
@@ -189,7 +243,7 @@
             Perform no query string cleaning.
             </summary>
         </member>
-        <member name="F:RichTextCleaner.Common.Support.LinkQueryCleanLevel.RemoveUtmParams">
+        <member name="F:RichTextCleaner.Common.Support.LinkQueryCleanLevel.RemoveTrackingParams">
             <summary>
             Remove only parameters starting with "utm".
             </summary>
@@ -254,15 +308,14 @@
             The cleaner module.
             </summary>
         </member>
-        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,RichTextCleaner.Common.Support.StyleElements,System.Boolean,RichTextCleaner.Common.Support.QuoteProcessing)">
+        <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,RichTextCleaner.Common.Support.ICleanerSettings)">
             <summary>
             Clears the styling from the HTML.
             </summary>
             <param name="html">The HTML to clean.</param>
-            <param name="markupToRemove">The style markup to remove.</param>
-            <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
-            <param name="quoteProcessing">Set how to process quotes.</param>
+            <param name="settings">All the settings.</param>
             <returns></returns>
+            <exception cref="T:System.ArgumentNullException">settings</exception>
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.TrimParagraphs(HtmlAgilityPack.HtmlDocument)">
             <summary>
@@ -276,12 +329,17 @@
             </summary>
             <param name="document"></param>
         </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.CreateMissingLinks(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            Find link-like texts and make real links.
+            </summary>
+            <param name="document"></param>
+        </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.CleanLinkContent(HtmlAgilityPack.HtmlDocument)">
             <summary>
-            If a text in a link seems to be an URL, then remove "http(s)://" and any trailing "/".
+            If a text in a link seems to be a URL, then remove "http(s)://" and any trailing "/".
             </summary>
             <param name="document">The document.</param>
-            <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.AddBlankLinkTargets(HtmlAgilityPack.HtmlDocument)">
             <summary>

@@ -35,11 +35,9 @@ namespace RichTextCleaner.Common
         /// Clears the styling from the HTML.
         /// </summary>
         /// <param name="html">The HTML to clean.</param>
-        /// <param name="markupToRemove">The style markup to remove.</param>
-        /// <param name="addBlankLinkTarget">if set to <c>true</c>, add blank link target.</param>
-        /// <param name="quoteProcessing">Set how to process quotes.</param>
-        /// <param name="queryCleanLevel">The query clean level.</param>
+        /// <param name="settings">All the settings.</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException">settings</exception>
         public static string ClearStylingFromHtml(
             string html,
             ICleanerSettings settings)

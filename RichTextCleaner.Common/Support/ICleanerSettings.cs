@@ -5,6 +5,9 @@
 
 namespace RichTextCleaner.Common.Support
 {
+    /// <summary>
+    /// Interface for Cleaner Settings, to be passed to <see cref="TextCleaner"/>.
+    /// </summary>
     public interface ICleanerSettings
     {
         /// <summary>
