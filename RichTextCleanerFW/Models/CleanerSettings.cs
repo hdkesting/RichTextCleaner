@@ -122,15 +122,7 @@ namespace RichTextCleanerFW.Models
         /// <value>
         /// The query clean level.
         /// </value>
-        public LinkQueryCleanLevel QueryCleanLevel
-        {
-            get { return (LinkQueryCleanLevel)Properties.Settings.Default.QueryCleanLevel; }
-            set
-            {
-                Properties.Settings.Default.QueryCleanLevel = (int)value;
-                Properties.Settings.Default.Save();
-            }
-        }
+        public LinkQueryCleanLevel QueryCleanLevel => LinkQueryCleanLevel.RemoveQuery;
 
         /// <summary>
         /// Gets a value indicating whether to create links from link-like texts.

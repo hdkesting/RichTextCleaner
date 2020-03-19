@@ -18,13 +18,6 @@ namespace RichTextCleanerFW
             this.ClearUnderlineMarkup.IsChecked = CleanerSettings.Instance.RemoveUnderline;
             this.AddBlankTarget.IsChecked = CleanerSettings.Instance.AddTargetBlank;
             this.ChangeToFancyQuotes.IsChecked = CleanerSettings.Instance.QuoteProcess != QuoteProcessing.NoChange;
-            this.QueryCleanup.SelectedIndex = (int)CleanerSettings.Instance.QueryCleanLevel;
-
-            if (!FeatureFlags.CleanUrlQuery)
-            {
-                // hide until OK
-                this.QueryCleanupGroup.Visibility = Visibility.Collapsed;
-            }
         }
 
         private void UpdateCleanerSettings()
@@ -41,8 +34,6 @@ namespace RichTextCleanerFW
             cs.QuoteProcess = this.ChangeToFancyQuotes.IsChecked.GetValueOrDefault()
                 ? QuoteProcessing.ChangeToSmartQuotes
                 : QuoteProcessing.NoChange;
-
-            CleanerSettings.Instance.QueryCleanLevel = (LinkQueryCleanLevel)this.QueryCleanup.SelectedIndex;
         }
 
         private void SaveSettings(object sender, RoutedEventArgs e)

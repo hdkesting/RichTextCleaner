@@ -5,14 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RichTextCleanerFW"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="600">
+        Title="Settings" Height="300" Width="500">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="170"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -63,21 +62,6 @@
         <CheckBox x:Name="ChangeToFancyQuotes" Grid.Row="4">Change to fancy quotes</CheckBox>
         <TextBlock Grid.Row="4" Grid.Column="1" TextWrapping="Wrap">
             Change &quot;straight quotes&quot; to &#x201c;nice ones&#x201d; (&amp;ldquo; and &amp;rdquo;)
-        </TextBlock>
-
-        <StackPanel Grid.Row="5"
-            Orientation="Vertical" x:Name="QueryCleanupGroup">
-            <Label>URL query cleanup:</Label>
-            <ComboBox Margin="2,2,2,10" x:Name="QueryCleanup">
-                <ComboBoxItem Tag="0">Keep as-is</ComboBoxItem>
-                <ComboBoxItem Tag="1">Remove trackers</ComboBoxItem>
-                <ComboBoxItem Tag="2">Remove query</ComboBoxItem>
-            </ComboBox>
-        </StackPanel>
-        <TextBlock Grid.Row="5" Grid.Column="1" TextWrapping="Wrap">
-            <Run FontWeight="Bold">Keep as-is</Run>: don't do anything special;
-            <Run FontWeight="Bold">Remove trackers</Run>: remove all (tracking) parameters starting with utm;
-            <Run FontWeight="Bold">Remove query</Run>: remove everything after a "?"
         </TextBlock>
 
         <Button Grid.Row="6" Grid.Column="1" Width="100" Height="20" HorizontalAlignment="Left"

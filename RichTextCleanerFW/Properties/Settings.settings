@@ -18,7 +18,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="QueryCleanLevel" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="CreateLinkFromText" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

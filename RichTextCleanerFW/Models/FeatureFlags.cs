@@ -2,6 +2,6 @@
 {
     internal static class FeatureFlags
     {
-        public static bool CleanUrlQuery => true;
+        // none, at the monent?
     }
 }
