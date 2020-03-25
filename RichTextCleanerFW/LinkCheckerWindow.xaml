@@ -6,7 +6,8 @@
         xmlns:cvt="clr-namespace:RichTextCleanerFW.Converters"
         xmlns:local="clr-namespace:RichTextCleanerFW"
         mc:Ignorable="d"
-        Title="Link Checker" Height="450" Width="800">
+        Title="Link Checker" Height="450" Width="800"
+        Closing="Window_Closing">
     <Window.Resources>
         <cvt:LinkResultToDisplayTextConverter x:Key="ResultToDisplay" />
         <Style x:Key="LinkButton" TargetType="Button" BasedOn="{StaticResource ResourceKey={x:Type Button}}">

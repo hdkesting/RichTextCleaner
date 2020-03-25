@@ -16,7 +16,7 @@ namespace RichTextCleanerFW
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
         public static readonly DependencyProperty SourceValueProperty = DependencyProperty.Register(nameof(SourceValue), typeof(string), typeof(MainWindow));
 
@@ -71,7 +71,9 @@ namespace RichTextCleanerFW
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Debug.WriteLine("MainWindow is closing");
             this.checker?.Close();
+            this.checker?.Dispose();
         }
 
         /// <summary>
@@ -298,8 +300,10 @@ namespace RichTextCleanerFW
 
         private void Checker_Closed(object sender, EventArgs e)
         {
+            Debug.WriteLine("Checker was closed");
             this.checker.Closed -= Checker_Closed;
             this.checker.LinkToProcess -= Checker_LinkToProcess;
+            this.checker.Dispose();
             this.checker = null;
         }
 
@@ -336,5 +340,36 @@ namespace RichTextCleanerFW
             var settingsWindow = new SettingsWindow();
             settingsWindow.ShowDialog();
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing && checker != null)
+                {
+                    checker.Close();
+                    checker.Dispose();
+                    checker = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+
+        // This code added to correctly implement the disposable pattern.
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

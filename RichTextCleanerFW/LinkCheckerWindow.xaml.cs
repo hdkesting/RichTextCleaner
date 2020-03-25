@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,9 +16,11 @@ namespace RichTextCleanerFW
     /// <summary>
     /// Interaction logic for LinkCheckerWindow.xaml
     /// </summary>
-    public partial class LinkCheckerWindow : Window
+    public partial class LinkCheckerWindow : Window, IDisposable
     {
         public static readonly DependencyProperty LinksProperty = DependencyProperty.Register(nameof(Links), typeof(ObservableCollection<BindableLinkDescription>), typeof(LinkCheckerWindow), new PropertyMetadata(new ObservableCollection<BindableLinkDescription>()));
+
+        private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         public LinkCheckerWindow()
         {
@@ -37,12 +40,14 @@ namespace RichTextCleanerFW
         internal async Task CheckAllLinks()
         {
             var tasks = new List<Task>();
+
+            var cancelToken = tokenSource.Token;
             
             // gradually start checking all that still need (re-)checking
             foreach (var lnk in this.Links.Where(l => l.Result == LinkCheckSummary.NotCheckedYet))
             {
                 await Task.Delay(250).ConfigureAwait(true);
-                tasks.Add(CheckLink(lnk));
+                tasks.Add(CheckLink(lnk, cancelToken));
             }
 
             do
@@ -57,9 +62,9 @@ namespace RichTextCleanerFW
             bool TaskIsDone(Task t) => t.IsCompleted || t.IsFaulted || t.IsCanceled;
         }
 
-        private static async Task CheckLink(BindableLinkDescription arg)
+        private static async Task CheckLink(BindableLinkDescription arg, CancellationToken cancelToken)
         {
-            var res = await LinkChecker.CheckLink(arg.OriginalLink).ConfigureAwait(false);
+            var res = await LinkChecker.CheckLink(arg.OriginalLink, cancelToken).ConfigureAwait(false);
             arg.HttpStatus = (int)res.HttpStatusCode;
             arg.LinkAfterRedirect = res.NewLink;
             arg.Result = res.Summary;
@@ -134,5 +139,38 @@ namespace RichTextCleanerFW
                 count++;
             }
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            tokenSource.Cancel();
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    tokenSource.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

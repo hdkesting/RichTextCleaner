@@ -60,9 +60,10 @@ namespace RichTextCleaner.Common
         /// <summary>
         /// Checks the link for existance and redirects.
         /// </summary>
-        /// <param name="link">The link.</param>
+        /// <param name="link">The link to check.</param>
+        /// <param name="cancelToken">The cancellation token.</param>
         /// <returns></returns>
-        public static async Task<LinkCheckResult> CheckLink(string link)
+        public static async Task<LinkCheckResult> CheckLink(string link, System.Threading.CancellationToken cancelToken)
         {
             if (string.IsNullOrWhiteSpace(link))
             {
@@ -108,7 +109,7 @@ namespace RichTextCleaner.Common
 
             try
             {
-                var response = await client.GetAsync(uri, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
+                var response = await client.GetAsync(uri, HttpCompletionOption.ResponseContentRead, cancelToken).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
                     // ignore any added (or removed) trailing '/'

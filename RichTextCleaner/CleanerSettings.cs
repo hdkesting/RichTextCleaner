@@ -14,7 +14,7 @@ namespace RichTextCleaner
         {
         }
 
-        public static CleanerSettings Default = lazyInstance.Value;
+        public static readonly CleanerSettings Default = lazyInstance.Value;
 
         public StyleElements MarkupToRemove => StyleElements.All;
 
