@@ -16,10 +16,10 @@ Copy text from a webpage (select the fragment you want and hit Ctrl-C), then use
 
 A "Check links" button will open a new window with all links found in the text. These are tried out and the result is noted. See below.
 
-Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the HTML fragment:
+Use the "Clear Styling & Copy" button (or use (Ctrl-)C) to clean up the styling in the HTML fragment:
 
 * Replace all "`&nbsp;`" with a plain space - this does destroy attempts at layout-by-spaces that would need replacing anyway;
-* Remove all "`<script>`" and "`<noscript>`" elements including contents. iframes (that may contain videos) are left intact;
+* Remove all "`<script>`", "`<noscript>`" and "`<time>`" elements including contents. iframes (that may contain videos) are left intact;
 * Remove all "style" and "class" attributes;
 * Replace "`<b>`" elements with "`<strong>`" and "`<i>`" with "`<em>`";
 * Remove "`<font>`" and "`<span>`" elements while keeping their contents;
@@ -32,14 +32,17 @@ Use the "Clear Styling" button (or use (Ctrl-)C) to clean up the styling in the 
 * Links that contain just whitespace are replaced by that whitespace;
 * In linked texts that seem to be a url, a leading "http(s)://" and trailing "/" are removed from the text (the real link is kept);
 
-There are several checkboxes that influence the cleaning:
-
-* "Remove [Style] Tags" (3x) - when checked, tags like "`<strong>`", "`<em>`" and "`<u>`" are removed, keeping their contents.
-* "Add target=_blank" - when checked, this will add an attribute "target" with value "_blank" to all links (that don't already have this attribute), where "_blank" is HTML-speak for Sitecore's "New Window". This assumes that most links need this set anyway.
-
 The cleaned text is immediately copied onto the clipboard, so you can use Ctrl-V in a rich-text editor to paste it, either in the rich-text tab or the html-source tab.
 
 The "Get text only" button (hotkey: (Ctrl-)T) removes all HTML elements, leaving only the plain text (with some attempt at sane formatting). Here also this text is placed on the clipboard.
+
+Through the "Settings" button you can set several checkboxes that influence the cleaning:
+
+* "Remove [Style] Tags" (3x) - when checked, tags like "`<strong>`", "`<em>`" and "`<u>`" are removed, keeping their contents.
+* "Add target=_blank" - when checked, this will add an attribute "target" with value "_blank" to all links (that don't already have this attribute), where "_blank" is HTML-speak for Sitecore's "New Window". This assumes that most links need this set anyway.
+* "Change to fancy quotes" - this changes any regular quotes to "smart quotes", like Outlook and Word.
+
+The settings are remembered (until a new version of this app is installed).
 
 ### Link Checker window
 

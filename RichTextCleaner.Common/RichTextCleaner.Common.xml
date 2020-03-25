@@ -16,11 +16,12 @@
             <param name="html">The HTML.</param>
             <returns></returns>
         </member>
-        <member name="M:RichTextCleaner.Common.LinkChecker.CheckLink(System.String)">
+        <member name="M:RichTextCleaner.Common.LinkChecker.CheckLink(System.String,System.Threading.CancellationToken)">
             <summary>
             Checks the link for existance and redirects.
             </summary>
-            <param name="link">The link.</param>
+            <param name="link">The link to check.</param>
+            <param name="cancelToken">The cancellation token.</param>
             <returns></returns>
         </member>
         <member name="M:RichTextCleaner.Common.LinkChecker.MarkInvalid(System.String,System.String)">
