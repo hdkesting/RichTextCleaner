@@ -1,4 +1,4 @@
-﻿using RichTextCleanerFW.Common.Logging;
+﻿using RichTextCleaner.Common.Logging;
 using System.IO;
 using System.Windows;
 
