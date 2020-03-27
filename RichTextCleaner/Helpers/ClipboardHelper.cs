@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows;
 
-namespace RichTextCleaner
+namespace RichTextCleaner.Helpers
 {
     // source: https://gist.github.com/ArthurHub/10729205
     /// <summary>

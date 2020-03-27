@@ -3,32 +3,50 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cvt="clr-namespace:RichTextCleaner.Converters"
         xmlns:local="clr-namespace:RichTextCleaner"
         mc:Ignorable="d"
         Title="Rich Text Cleaner" Height="450" Width="800" 
+        Icon="Icojam-Blue-Bits-Document-check.ico"
         KeyDown="Grid_KeyDown">
+    <Window.Resources>
+        <cvt:StringToSimpleInlineConverter x:Key="StringToSimpleInline" />
+        <cvt:HtmlToSyntaxHighlightConverter x:Key="SyntaxHighlighter" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="22"/>
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="0">
-            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top"  
-                ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"
-                x:Name="TextContent">
-                <Run FontWeight="Bold">Cleaning up HTML fragments.</Run><LineBreak/><LineBreak/>
-                <Run>Select and copy (a part of) an HTML page.</Run><LineBreak/>
-                <Run>Click the "Paste" button below to insert the HTML source, or press Ctrl-V.</Run><LineBreak/><LineBreak/>
-                <Run>Click the "Clear styling" button (or Ctrl-C) to remove all "class" and "style" attributes. This also copies the new text onto the clipboard.</Run><LineBreak/>
-                <Run>Paste into a Rich Text editor.</Run><LineBreak/><LineBreak/>
-                <Run>OR use the "text only" button to get just the text, without any HTML</Run>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <ScrollViewer Grid.Row="0" Grid.Column="1" Background="#f8f8f8" Padding="2">
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWithOverflow"
+                ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"
+                cvt:TextBlockExtensions.BindableInlines="{Binding SourceValue, Converter={StaticResource SyntaxHighlighter}, Mode=OneWay}">
             </TextBlock>
         </ScrollViewer>
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Margin="2" Click="CopyFromClipboard" ToolTip="Ctrl-V">Paste (HTML) from clipboard</Button>
-            <Button Margin="2" Click="ClearStylingAndCopy" ToolTip="Ctrl-C">Clear styling and copy HTML to clipboard</Button>
-            <Button Margin="2" Click="PlainTextAndCopy">Get text only and copy TEXT to clipboard</Button>
-            <Label>© Hans Kesting 2019</Label>
+        <StackPanel Orientation="Vertical" Grid.Column="0">
+            <Button Margin="2,10" Click="CopyFromClipboard" ToolTip="Or press (Ctrl-)V">Paste (HTML)</Button>
+
+            <Separator/>
+
+            <Button Margin="2,10" Click="CheckLinks" ToolTip="check all links in text">Check links</Button>
+
+            <Button Margin="2,10" Click="ClearStylingAndCopy" ToolTip="Or press (Ctrl-)C">Clear styling &amp; Copy</Button>
+
+            <Button Margin="2,10" Click="PlainTextAndCopy" ToolTip="Or press (Ctrl-)T">Get text only</Button>
+
+            <Separator/>
+
+            <Button Margin="2,10,2,2" Click="OpenSettingsWindow">⚙ Settings</Button>
+
+            <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="2,10" Foreground="Gray">Ready for pasting</TextBlock>
         </StackPanel>
+        <Label Grid.Row="1" Grid.Column="0" FontSize="9" Foreground="Gray">© Hans Kesting 2019-2020</Label>
+        <Label Grid.Row="1" Grid.Column="1" FontSize="9" Foreground="Gray" x:Name="VersionLabel"/>
     </Grid>
 </Window>

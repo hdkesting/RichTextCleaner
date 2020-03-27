@@ -2,7 +2,7 @@
 // Copyright (c) Hans Kesting. All rights reserved.
 // </copyright>
 
-namespace RichTextCleanerFW.Common.Logging
+namespace RichTextCleaner.Common.Logging
 {
     using System;
 
