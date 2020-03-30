@@ -52,9 +52,12 @@ namespace RichTextCleaner.Common
             RemoveNonCMSElements(doc);
             ClearStyling(doc);
             TranslateStyleNodes(doc, settings.MarkupToRemove);
+            RemoveEmptySpans(doc);
             RemoveSurroundingTags(doc, "span");
             RemoveSurroundingTags(doc, "div");
-            RemoveEmptySpans(doc);
+            RemoveSurroundingTags(doc, "header");
+            RemoveSurroundingTags(doc, "footer");
+
             ClearParagraphsInBlocks(doc);
             RemoveAnchors(doc);
             if (settings.CreateLinkFromText)
@@ -113,12 +116,12 @@ namespace RichTextCleaner.Common
                 html = html
                     .Replace("</p>", "</p>" + Environment.NewLine);
 
+                // remove double line breaks
+                html = Regex.Replace(html, @"\s*[\r\n]+", Environment.NewLine);
+
                 // line break before and after any header
                 html = Regex.Replace(html, "(<h[1-6]>)", Environment.NewLine + "$1");
                 html = Regex.Replace(html, "(</h[1-6]>)", "$1" + Environment.NewLine);
-
-                // remove double line breaks
-                html = html.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             }
 
             return html;
@@ -450,14 +453,23 @@ namespace RichTextCleaner.Common
                         }
                     }
 
-                    // now a single P is really the only node
-                    if (cell.ChildNodes.Count == 1 && cell.ChildNodes[0].Name.Equals("p", StringComparison.OrdinalIgnoreCase))
+                    // now a single P is really the only node, or it is a P followed by a UL or OL
+                    if (FirstNodeIsParagraph(cell) && SecondNodeIsEmptyOrList(cell))
                     {
                         var para = cell.ChildNodes[0];
                         RemoveSurroundingTags(para);
                     }
                 }
             }
+
+            bool FirstNodeIsParagraph(HtmlNode node) =>
+                node.ChildNodes.Count >= 1 && node.ChildNodes[0].Name.Equals("p", StringComparison.OrdinalIgnoreCase);
+
+            bool SecondNodeIsEmptyOrList(HtmlNode node) => 
+                node.ChildNodes.Count == 1
+                || (node.ChildNodes.Count == 2
+                    && (node.ChildNodes[1].Name.Equals("ul", StringComparison.OrdinalIgnoreCase) 
+                       || node.ChildNodes[1].Name.Equals("ol", StringComparison.OrdinalIgnoreCase)));
         }
 
         /// <summary>
@@ -632,7 +644,7 @@ namespace RichTextCleaner.Common
         }
 
         /// <summary>
-        /// Remove elements that don't belong in a CMS text.
+        /// Remove elements that don't belong in a CMS text, including contents.
         /// </summary>
         /// <param name="document"></param>
         internal static void RemoveNonCMSElements(HtmlDocument document)
@@ -641,6 +653,7 @@ namespace RichTextCleaner.Common
             RemoveNodes(document.DocumentNode, ".//noscript");
             RemoveNodes(document.DocumentNode, ".//script");
             RemoveNodes(document.DocumentNode, ".//time");
+            RemoveNodes(document.DocumentNode, ".//nav");
 
             void RemoveNodes(HtmlNode node, string xpath)
             {
