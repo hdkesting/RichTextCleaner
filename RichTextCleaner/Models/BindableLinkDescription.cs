@@ -8,7 +8,7 @@ namespace RichTextCleaner.Models
     public class BindableLinkDescription : INotifyPropertyChanged
     {
         private LinkCheckSummary result;
-        private string? linkAfterRedirect;
+        private string linkAfterRedirect = string.Empty;
         private int httpStatus;
         private bool selectForUpdate;
         private bool selectForInvalidMark;
@@ -49,7 +49,7 @@ namespace RichTextCleaner.Models
             }
         }
 
-        public string? LinkAfterRedirect
+        public string LinkAfterRedirect
         {
             get { return this.linkAfterRedirect; }
             set { this.SetValue(ref this.linkAfterRedirect, value); }

@@ -12,7 +12,7 @@ namespace RichTextCleaner.Converters
     /// <seealso cref="RichTextCleaner.Converters.StringToSimpleInlineConverter" />
     public class HtmlToSyntaxHighlightConverter : StringToSimpleInlineConverter
     {
-        protected override IEnumerable<Inline> SyntaxHighlightHtml(string source)
+        protected override IEnumerable<Inline?> SyntaxHighlightHtml(string source)
         {
             if (string.IsNullOrWhiteSpace(source))
             {
@@ -78,7 +78,7 @@ namespace RichTextCleaner.Converters
             yield return CreateRun(state, text.ToString());
         }
 
-        private Run CreateRun(State state, string text)
+        private Run? CreateRun(State state, string text)
         {
             if (string.IsNullOrEmpty(text))
             {
