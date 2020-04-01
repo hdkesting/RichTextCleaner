@@ -32,6 +32,16 @@ namespace RichTextCleaner.Common
         };
 
         /// <summary>
+        /// The tags to remove while keeping their contents.
+        /// </summary>
+        private static readonly List<string> TagsToRemove = new List<string>() { "span", "div", "header", "footer" };
+
+        /// <summary>
+        /// The non CMS elements to remove including contents.
+        /// </summary>
+        private static readonly List<string> NonCmsElementsToRemove = new List<string>() { "noscript", "script", "time", "nav" };
+
+        /// <summary>
         /// Clears the styling from the HTML.
         /// </summary>
         /// <param name="html">The HTML to clean.</param>
@@ -53,10 +63,8 @@ namespace RichTextCleaner.Common
             ClearStyling(doc);
             TranslateStyleNodes(doc, settings.MarkupToRemove);
             RemoveEmptySpans(doc);
-            RemoveSurroundingTags(doc, "span");
-            RemoveSurroundingTags(doc, "div");
-            RemoveSurroundingTags(doc, "header");
-            RemoveSurroundingTags(doc, "footer");
+
+            RemoveUnneededTags(doc);
 
             ClearParagraphsInBlocks(doc);
             RemoveAnchors(doc);
@@ -162,6 +170,14 @@ namespace RichTextCleaner.Common
                 textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"""((?=(\s|\)))|$)", "&rdquo;", RegexOptions.None);
                 textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"(^|(?<=(\s|\()))'", "&lsquo;", RegexOptions.None);
                 textNode.InnerHtml = Regex.Replace(textNode.InnerHtml, @"'((?=(\s|\)))|$)", "&rsquo;", RegexOptions.None);
+            }
+        }
+
+        private static void RemoveUnneededTags(HtmlDocument document)
+        {
+            foreach (var tag in TagsToRemove)
+            {
+                RemoveSurroundingTags(document, tag);
             }
         }
 
@@ -649,15 +665,11 @@ namespace RichTextCleaner.Common
         /// <param name="document"></param>
         internal static void RemoveNonCMSElements(HtmlDocument document)
         {
-            // RemoveNodes(document.DocumentNode, ".//iframe"); // keep iframe - may contain video
-            RemoveNodes(document.DocumentNode, ".//noscript");
-            RemoveNodes(document.DocumentNode, ".//script");
-            RemoveNodes(document.DocumentNode, ".//time");
-            RemoveNodes(document.DocumentNode, ".//nav");
-
-            void RemoveNodes(HtmlNode node, string xpath)
+            // keep iframe - may contain video
+            foreach (var elt in NonCmsElementsToRemove)
             {
-                var toremove = node.SelectNodes(xpath) ?? Enumerable.Empty<HtmlNode>();
+                var xpath = ".//" + elt;
+                var toremove = document.DocumentNode.SelectNodes(xpath) ?? Enumerable.Empty<HtmlNode>();
                 foreach (var child in toremove)
                 {
                     child.Remove();
