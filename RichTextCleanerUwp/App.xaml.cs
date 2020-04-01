@@ -1,19 +1,11 @@
 ﻿using RichTextCleaner.Common.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace RichTextCleanerUwp
@@ -73,8 +65,18 @@ namespace RichTextCleanerUwp
                     // parameter
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
+
+                float DPI = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi;
+                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
+                // Height="450" Width="800" 
+                var desiredSize = new Windows.Foundation.Size(800f * 96.0f / DPI, 450f * 96.0f / DPI);
+                ApplicationView.PreferredLaunchViewSize = desiredSize;
+                ApplicationView.GetForCurrentView().Title = "Rich Text Cleaner";
+
                 // Ensure the current window is active
                 Window.Current.Activate();
+                ApplicationView.GetForCurrentView().TryResizeView(desiredSize);
             }
         }
 

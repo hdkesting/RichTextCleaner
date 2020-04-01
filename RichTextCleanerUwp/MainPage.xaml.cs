@@ -4,32 +4,21 @@ using RichTextCleanerUwp.Forms;
 using RichTextCleanerUwp.Helpers;
 using RichTextCleanerUwp.Models;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI;
-using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace RichTextCleanerUwp
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// The main page of the cleaner, containing menu buttons and work area.
     /// </summary>
     public sealed partial class MainPage : Page
     {
@@ -53,20 +42,22 @@ namespace RichTextCleanerUwp
             StatusForeground = StatusLabel.Foreground;
             StatusForegroundHighlight = new SolidColorBrush(Colors.Black);
 
-            // set Assembly Version in the Package tab of the properties of project RichTextCleaner.Common
-            var libVersion = typeof(TextCleaner).Assembly.GetName().Version;
-
             // set Assembly Version in AssemblyInfo.cs in this project (below Properties)
             var appVersion = this.GetType().Assembly.GetName().Version;
+
+            /*
+            // set Assembly Version in the Package tab of the properties of project RichTextCleaner.Common
+            var libVersion = typeof(TextCleaner).Assembly.GetName().Version;
 
             if (libVersion != appVersion)
             {
                 Logger.Log(LogLevel.Error, "Startup", $"Version mismatch: app={appVersion}, lib={libVersion}.");
                 var mbox = new MessageDialog("The installation didn't succeed properly. Please run the installer to remove the current installation and then install again.");
                 mbox.Commands.Add(new UICommand("Close app", CloseApp));
+                //TODO show mbox
                 return;
             }
-
+            */
 
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
@@ -96,17 +87,17 @@ namespace RichTextCleanerUwp
                 // "Ctrl-V" - paste
                 case VirtualKey.V:
                     // ignored (don't know how): check for Ctrl
-                    await this.CopyFromClipboard().ConfigureAwait(false);
+                    await this.CopyFromClipboardAsync().ConfigureAwait(false);
                     break;
 
                 // "Ctrl-C" - copy
                 case VirtualKey.C:
-                    await this.ClearStylingAndCopy().ConfigureAwait(false);
+                    await this.ClearStylingAndCopyAsync().ConfigureAwait(false);
                     break;
 
                 // "Ctrl-T"- copy text
                 case VirtualKey.T:
-                    await this.PlainTextAndCopy().ConfigureAwait(false);
+                    await this.PlainTextAndCopyAsync().ConfigureAwait(false);
                     break;
 
                 case VirtualKey.H:
@@ -119,7 +110,7 @@ namespace RichTextCleanerUwp
                     break;
 
                 case VirtualKey.L:
-                    await CheckLinks().ConfigureAwait(false);
+                    await this.CheckLinksAsync().ConfigureAwait(false);
                     break;
 
                 case VirtualKey.Delete:
@@ -131,25 +122,26 @@ namespace RichTextCleanerUwp
 
         private async void CopyFromClipboard(object sender, RoutedEventArgs e)
         {
-            await this.CopyFromClipboard().ConfigureAwait(false);
+            await this.CopyFromClipboardAsync().ConfigureAwait(false);
         }
 
         private async void ClearStylingAndCopy(object sender, RoutedEventArgs e)
         {
-            await this.ClearStylingAndCopy().ConfigureAwait(false);
+            await this.ClearStylingAndCopyAsync().ConfigureAwait(false);
         }
         private async void PlainTextAndCopy(object sender, RoutedEventArgs e)
         {
-            await this.PlainTextAndCopy().ConfigureAwait(false);
+            await this.PlainTextAndCopyAsync().ConfigureAwait(false);
         }
 
         private async void CheckLinks(object sender, RoutedEventArgs e)
         {
-            await CheckLinks().ConfigureAwait(true);
+            await this.CheckLinksAsync().ConfigureAwait(true);
         }
 
         private void OpenSettingsWindow(object sender, RoutedEventArgs e)
         {
+            // TODO fix
             //var settingsWindow = new SettingsWindow();
             //settingsWindow.ShowDialog();
         }
@@ -201,7 +193,7 @@ namespace RichTextCleanerUwp
 
         #endregion
 
-        private async Task CopyFromClipboard()
+        private async Task CopyFromClipboardAsync()
         {
 #pragma warning disable CA1031 // Do not catch general exception types
             try
@@ -227,7 +219,7 @@ namespace RichTextCleanerUwp
 #pragma warning restore CA1031 // Do not catch general exception types
         }
 
-        private async Task ClearStylingAndCopy()
+        private async Task ClearStylingAndCopyAsync()
         {
             string html = this.SourceValue;
 
@@ -262,7 +254,7 @@ namespace RichTextCleanerUwp
             await this.SetStatusAsync("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
         }
 
-        private async Task PlainTextAndCopy()
+        private async Task PlainTextAndCopyAsync()
         {
             string html = this.SourceValue;
 
@@ -316,9 +308,9 @@ namespace RichTextCleanerUwp
             await this.SetStatusAsync("The HTML source is on the clipboard as Text, use Ctrl-V to paste.").ConfigureAwait(false);
         }
 
-        private async Task CheckLinks()
+        private async Task CheckLinksAsync()
         {
-            /*
+            /* TODO fix
             this.checker?.Links.Clear();
             var links = LinkChecker.FindLinks(this.SourceValue);
             if (!links.Any())
