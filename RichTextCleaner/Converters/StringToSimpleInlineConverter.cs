@@ -24,7 +24,7 @@ namespace RichTextCleaner.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 
-        protected virtual IEnumerable<Inline> SyntaxHighlightHtml(string source)
+        protected virtual IEnumerable<Inline?> SyntaxHighlightHtml(string source)
         {
             var run = new Run
             {

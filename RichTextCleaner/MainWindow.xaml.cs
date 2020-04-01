@@ -255,7 +255,7 @@ namespace RichTextCleaner
 
                 case Key.Delete:
                 case Key.Back:
-                    this.SourceValue = null;
+                    this.SourceValue = string.Empty;
                     break;
             }
         }
