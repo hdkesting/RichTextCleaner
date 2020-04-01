@@ -120,9 +120,10 @@ namespace RichTextCleaner.Common
 
             if (cleanup)
             {
-                // single line break after paragraph
+                // single line break after paragraph and table row
                 html = html
-                    .Replace("</p>", "</p>" + Environment.NewLine);
+                    .Replace("</p>", "</p>" + Environment.NewLine)
+                    .Replace("</tr>", "</tr>" + Environment.NewLine);
 
                 // remove double line breaks
                 html = Regex.Replace(html, @"\s*[\r\n]+", Environment.NewLine);
@@ -193,7 +194,12 @@ namespace RichTextCleaner.Common
                 bool trimmed;
                 do
                 {
-                    var child = para.ChildNodes.First();
+                    var child = para.ChildNodes.FirstOrDefault();
+                    if (child == null)
+                    {
+                        break;
+                    }
+
                     trimmed = false;
                     if (child.NodeType == HtmlNodeType.Text)
                     {
@@ -224,7 +230,12 @@ namespace RichTextCleaner.Common
 
                 do
                 {
-                    var child = para.ChildNodes.Last(); // may be the same as first
+                    var child = para.ChildNodes.LastOrDefault(); // may be the same as first
+                    if (child == null)
+                    {
+                        break;
+                    }
+
                     trimmed = false;
                     if (child.NodeType == HtmlNodeType.Text)
                     {
@@ -290,17 +301,28 @@ namespace RichTextCleaner.Common
         private static void CreateMissingLinks(HtmlDocument document)
         {
             // search for text nodes directly under a <p>
-            var plainTexts = document.DocumentNode.SelectNodes("//p/text()") ?? Enumerable.Empty<HtmlNode>();
+            var plainTexts = document.DocumentNode.SelectNodes("(//p|//li|//td)/text()") ?? Enumerable.Empty<HtmlNode>();
 
             foreach (var textnode in plainTexts)
             {
                 // start with http(s):// or www or 2 "words", then at least one more "word"
-                textnode.InnerHtml = Regex.Replace(textnode.InnerHtml, @"((https?://[a-z0-9]{2,})|www|[a-zA-Z0-9-]{2,}\.[a-zA-Z0-9-]{2,})(\.[a-zA-Z0-9-]{2,})+(/[a-zA-Z0-9.-]+)*", new MatchEvaluator(LinkCreator));
+                textnode.InnerHtml = Regex.Replace(
+                    textnode.InnerHtml, 
+                    @"((https?://[a-z0-9]{2,})|www|[a-zA-Z0-9-]{2,}\.[a-zA-Z0-9-]{2,})(\.[a-zA-Z0-9-]{2,})+(/[a-zA-Z0-9.-]+)*", 
+                    new MatchEvaluator(LinkCreator));
+
+                // start with a "+" and then numbers and spaces - that is a telephone number
+                textnode.InnerHtml = Regex.Replace(
+                    textnode.InnerHtml,
+                    @"\+[1-9][ ]?([0-9][ ]?){7,}",
+                    new MatchEvaluator(PhoneLinkCreator));
             }
 
             string LinkCreator(Match m) => m.Value.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
                 ? $"<a href=\"{m.Value}\">{m.Value}</a>"
                 : $"<a href=\"http://{m.Value}\">{m.Value}</a>";
+
+            string PhoneLinkCreator(Match m) => $"<a href=\"tel:{m.Value}\">{m.Value}</a>";
         }
 
         private static void CombineAndCleanLinks(HtmlDocument document, LinkQueryCleanLevel queryCleanLevel)
@@ -665,6 +687,12 @@ namespace RichTextCleaner.Common
         /// <param name="document"></param>
         internal static void RemoveNonCMSElements(HtmlDocument document)
         {
+            // remove all comments
+            foreach (var cmt in document.DocumentNode.SelectNodes("//comment()") ?? Enumerable.Empty<HtmlNode>())
+            {
+                cmt.ParentNode.RemoveChild(cmt);
+            }
+
             // keep iframe - may contain video
             foreach (var elt in NonCmsElementsToRemove)
             {
