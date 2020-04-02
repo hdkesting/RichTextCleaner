@@ -17,12 +17,6 @@
     <Page.Resources>
         <cvt:StringToSimpleInlineConverter x:Key="StringToSimpleInline" />
         <cvt:HtmlToSyntaxHighlightConverter x:Key="SyntaxHighlighter" />
-        <Style x:Key="CommandButton" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
-            <Setter Property="Margin" Value="2,10"/>
-            <Setter Property="Background" Value="#40000000"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="Width" Value="150"/>
-        </Style>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>

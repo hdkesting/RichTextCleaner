@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RichTextCleaner (Uwp)")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EPAM Systems")]
+[assembly: AssemblyCompany("Hans Kesting")]
 [assembly: AssemblyProduct("RichTextCleaner")]
 [assembly: AssemblyCopyright("Copyright © Hans Kesting 2020")]
 [assembly: AssemblyTrademark("")]
