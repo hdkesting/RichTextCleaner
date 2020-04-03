@@ -105,7 +105,7 @@ namespace RichTextCleanerFW
                 else
                 {
                     this.SourceValue = text;
-                    Logger.Log(LogLevel.Debug, nameof(CopyFromClipboard), "Copied text from cliboard");
+                    Logger.Log(LogLevel.Debug, nameof(CopyFromClipboard), "Copied text from clipboard");
                     await this.SetStatus("Copied text from clipboard.").ConfigureAwait(false);
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using RichTextCleaner.Common.Logging;
+using RichTextCleanerUwp.Forms;
 using System;
 using System.IO;
 using Windows.ApplicationModel;

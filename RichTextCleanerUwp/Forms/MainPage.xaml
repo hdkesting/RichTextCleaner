@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="RichTextCleanerUwp.MainPage"
+    x:Class="RichTextCleanerUwp.Forms.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:RichTextCleanerUwp"
@@ -33,39 +33,28 @@
             </TextBlock>
         </ScrollViewer>
         <StackPanel Orientation="Vertical" Grid.Column="0">
-            <Button Click="CopyFromClipboard" Content="Paste (HTML)" Style="{StaticResource CommandButton}">
-                <ToolTipService.ToolTip>
-                    <ToolTip>Or press (Ctrl-)V</ToolTip>
-                </ToolTipService.ToolTip>
-            </Button>
+            <Button Click="CopyFromClipboard" Content="Paste (HTML)" Style="{StaticResource CommandButton}" ToolTipService.ToolTip="Or press (Ctrl-)V"/>
+
 
             <Border Width="100" BorderBrush="Blue" BorderThickness="1" />
 
-            <Button Click="CheckLinks" Content="Check links"  Style="{StaticResource CommandButton}">
-                <ToolTipService.ToolTip>
-                    <ToolTip>Check all links in text</ToolTip>
-                </ToolTipService.ToolTip>
-            </Button>
+            <Button Click="CheckLinks" Content="Check links"  Style="{StaticResource CommandButton}"
+                    ToolTipService.ToolTip="Check all links in text" />
 
-            <Button Click="ClearStylingAndCopy" Content="Clear styling &amp; Copy"  Style="{StaticResource CommandButton}">
-                <ToolTipService.ToolTip>
-                    <ToolTip>Or press (Ctrl-)C</ToolTip>
-                </ToolTipService.ToolTip>
-            </Button>
+            <Button Click="ClearStylingAndCopy" Content="Clear styling &amp; Copy"  Style="{StaticResource CommandButton}" 
+                    ToolTipService.ToolTip="Or press (Ctrl-)C" />
 
-            <Button Click="PlainTextAndCopy" Content="Get text only"  Style="{StaticResource CommandButton}">
-                <ToolTipService.ToolTip>
-                    <ToolTip>Or press (Ctrl-)T</ToolTip>
-                </ToolTipService.ToolTip>
-            </Button>
+            <Button Click="PlainTextAndCopy" Content="Get text only"  Style="{StaticResource CommandButton}"
+                    ToolTipService.ToolTip="Or press (Ctrl-)T" />
+
 
             <Border Width="100" BorderBrush="Blue" BorderThickness="1" />
 
-            <Button Click="OpenSettingsWindow"  Style="{StaticResource CommandButton}">⚙ Settings</Button>
+            <Button Click="OpenSettingsWindow"  Style="{StaticResource CommandButton}" Content="⚙ Settings" />
 
-            <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="2,10" Foreground="Gray">Ready for pasting</TextBlock>
+            <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="2,10" Foreground="Gray" Text="Ready for pasting"/>
         </StackPanel>
-        <TextBlock Grid.Row="1" Grid.Column="0" FontSize="9" Foreground="Gray">© Hans Kesting 2019-2020</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" FontSize="9" Foreground="Gray" Text="© Hans Kesting 2019-2020" />
         <TextBlock Grid.Row="1" Grid.Column="1" FontSize="9" Foreground="Gray" x:Name="VersionLabel"/>
     </Grid>
 </Page>

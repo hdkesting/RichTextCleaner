@@ -1,10 +1,10 @@
 ﻿using RichTextCleaner.Common;
 using RichTextCleaner.Common.Logging;
-using RichTextCleanerUwp.Forms;
 using RichTextCleanerUwp.Helpers;
 using RichTextCleanerUwp.Models;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI;
@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
-namespace RichTextCleanerUwp
+namespace RichTextCleanerUwp.Forms
 {
     /// <summary>
     /// The main page of the cleaner, containing menu buttons and work area.
@@ -110,7 +110,11 @@ namespace RichTextCleanerUwp
 
                 case VirtualKey.F1:
                 case VirtualKey.F:
-                    Process.Start(Logger.LogFolder);
+                    try
+                    {
+                        await Launcher.LaunchFolderAsync(await Windows.Storage.StorageFolder.GetFolderFromPathAsync(Logger.LogFolder));
+                    }
+                    catch { }
                     break;
 
                 case VirtualKey.L:
@@ -205,19 +209,19 @@ namespace RichTextCleanerUwp
                 var text = await ClipboardHelper.GetTextFromClipboardAsync();
                 if (text is null)
                 {
-                    Logger.Log(LogLevel.Error, nameof(CopyFromClipboard), "Couldn't read text from clipboard");
+                    Logger.Log(LogLevel.Error, nameof(CopyFromClipboardAsync), "Couldn't read text from clipboard");
                     await this.SetStatusAsync("Couldn't read text from clipboard");
                 }
                 else
                 {
                     this.SourceValue = text;
-                    Logger.Log(LogLevel.Debug, nameof(CopyFromClipboard), "Copied text from cliboard");
+                    Logger.Log(LogLevel.Debug, nameof(CopyFromClipboardAsync), "Copied text from clipboard");
                     await this.SetStatusAsync("Copied text from clipboard.").ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, nameof(CopyFromClipboard), "Error reading clipboard", ex);
+                Logger.Log(LogLevel.Error, nameof(CopyFromClipboardAsync), "Error reading clipboard", ex);
                 await this.SetStatusAsync("There was an error reading from the clipboard");
             }
 #pragma warning restore CA1031 // Do not catch general exception types
@@ -314,40 +318,16 @@ namespace RichTextCleanerUwp
 
         private async Task CheckLinksAsync()
         {
-            /* TODO fix
-            this.checker?.Links.Clear();
             var links = LinkChecker.FindLinks(this.SourceValue);
             if (!links.Any())
             {
-                MessageBox.Show("No links found.");
+                // MessageBox.Show("No links found.");
                 return;
             }
 
-            OpenLinkCheckerWindow();
-            this.checker!.Links.Clear();
+            this.Frame.Navigate(typeof(LinkCheckerWindow), links);
 
-            foreach (var lnk in links)
-            {
-                checker.Links.Add(new BindableLinkDescription(lnk));
-            }
-
-            checker.Focus();
-
-            await checker.CheckAllLinks().ConfigureAwait(false);
-            */
             await Task.CompletedTask;
-        }
-
-        private void OpenLinkCheckerWindow()
-        {
-            if (this.checker == null)
-            {
-                //this.checker = new LinkCheckerWindow();
-                //this.checker.LinkToProcess += this.Checker_LinkToProcess;
-                //this.checker.Closed += this.Checker_Closed;
-            }
-
-            //this.checker.Show();
         }
     }
 }

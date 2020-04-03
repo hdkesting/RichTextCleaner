@@ -127,7 +127,7 @@
       <DependentUpon>LinkCheckerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ClipboardHelper.cs" />
-    <Compile Include="MainPage.xaml.cs">
+    <Compile Include="Forms\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\BindableLinkDescription.cs" />
@@ -204,14 +204,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage.xaml">
+    <Page Include="Forms\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.9</Version>
+      <Version>6.2.10</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
