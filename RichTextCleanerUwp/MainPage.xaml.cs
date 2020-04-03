@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Popups;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -80,7 +79,12 @@ namespace RichTextCleanerUwp
 
         #region Callbacks and eventhandlers
 
-        private async void Page_KeyDown(object sender, KeyRoutedEventArgs e)
+        /// <summary>
+        /// Handles the KeyDown event of the Page control. Is linked to rootFrame.KeyDown, to catch *all* key presses.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyRoutedEventArgs"/> instance containing the event data.</param>
+        public async void Page_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             switch (e.Key)
             {

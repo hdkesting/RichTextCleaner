@@ -129,7 +129,6 @@ EndSelection:<<<<<<<<4";
         {
             var dataObject = new DataPackage();
             dataObject.SetData(FormatText, plainText);
-            //dataObject.SetData(DataFormats.UnicodeText, plainText);
             Clipboard.SetContent(dataObject);
         }
 
@@ -147,10 +146,6 @@ EndSelection:<<<<<<<<4";
             {
                 return await package.GetTextAsync();
             }
-            //else if (Clipboard.ContainsText(TextDataFormat.Text))
-            //{
-            //    return Clipboard.GetText(TextDataFormat.Text);
-            //}
 
             return null;
         }

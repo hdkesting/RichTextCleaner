@@ -77,6 +77,9 @@ namespace RichTextCleanerUwp
                 // Ensure the current window is active
                 Window.Current.Activate();
                 ApplicationView.GetForCurrentView().TryResizeView(desiredSize);
+
+                var main = (MainPage)((Frame)Window.Current.Content).Content;
+                rootFrame.KeyDown += main.Page_KeyDown;
             }
         }
 

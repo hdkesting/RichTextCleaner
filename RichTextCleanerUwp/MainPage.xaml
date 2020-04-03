@@ -7,8 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cvt="using:RichTextCleanerUwp.Converters"
     mc:Ignorable="d"
-    KeyDown="Page_KeyDown"
-    
     >
     <Page.Background>
         <AcrylicBrush BackgroundSource="HostBackdrop" FallbackColor="WhiteSmoke" 
