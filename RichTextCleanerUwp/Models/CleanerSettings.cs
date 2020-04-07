@@ -1,5 +1,6 @@
 ﻿using RichTextCleaner.Common.Support;
 using System;
+using Windows.Storage;
 
 namespace RichTextCleanerUwp.Models
 {
@@ -13,25 +14,45 @@ namespace RichTextCleanerUwp.Models
     public class CleanerSettings: ICleanerSettings
     {
         private static readonly Lazy<CleanerSettings> lazyInstance = new Lazy<CleanerSettings>(() => new CleanerSettings());
+        private readonly Windows.Storage.ApplicationDataContainer localSettings;
+
+        private const string RemoveBoldKey = "RemoveBold";
+        private const string RemoveItalicKey = "RemoveItalic";
+        private const string RemoveUnderlineKey = "RemoveUnderline";
+        private const string AddTargetBlankKey = "AddTargetBlank";
+        private const string QuoteProcessKey = "QuoteProcess";
+        private const string QueryCleanLevelKey = "QueryCleanLevel";
+        private const string CreateLinkFromTextKey = "CreateLinkFromText";
 
         /// <summary>
         /// Prevents a default instance of the <see cref="CleanerSettings"/> class from being created.
         /// </summary>
         private CleanerSettings()
         {
-            // TODO load/save
+            localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            EnsureDefaultValues(localSettings);
         }
+
 
         public static CleanerSettings Instance => lazyInstance.Value;
 
-#pragma warning disable CA1822 // Mark members as static
         /// <summary>
         /// Gets or sets a value indicating whether to remove bold elements.
         /// </summary>
         /// <value>
         ///   <c>true</c> if remove bold; otherwise, <c>false</c>.
         /// </value>
-        public bool RemoveBold { get; set; } = true;
+        public bool RemoveBold
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[RemoveBoldKey];
+            }
+            set
+            {
+                this.localSettings.Values[RemoveBoldKey] = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether to remove italic elements.
@@ -39,7 +60,17 @@ namespace RichTextCleanerUwp.Models
         /// <value>
         ///   <c>true</c> if remove italic; otherwise, <c>false</c>.
         /// </value>
-        public bool RemoveItalic { get; set; } = false;
+        public bool RemoveItalic
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[RemoveItalicKey];
+            }
+            set
+            {
+                this.localSettings.Values[RemoveItalicKey] = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether to remove underline elements.
@@ -47,7 +78,17 @@ namespace RichTextCleanerUwp.Models
         /// <value>
         ///   <c>true</c> if remove underline; otherwise, <c>false</c>.
         /// </value>
-        public bool RemoveUnderline { get; set; } = true;
+        public bool RemoveUnderline
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[RemoveUnderlineKey];
+            }
+            set
+            {
+                this.localSettings.Values[RemoveUnderlineKey] = value;
+            }
+        }
 
         /// <summary>
         /// Gets all the markup to remove.
@@ -66,7 +107,17 @@ namespace RichTextCleanerUwp.Models
         /// <value>
         ///   <c>true</c> if add target=_blank; otherwise, <c>false</c>.
         /// </value>
-        public bool AddTargetBlank { get; set; } = true;
+        public bool AddTargetBlank
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[AddTargetBlankKey];
+            }
+            set
+            {
+                this.localSettings.Values[AddTargetBlankKey] = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating how to process quotes.
@@ -75,7 +126,17 @@ namespace RichTextCleanerUwp.Models
         /// <value>
         /// The quote process.
         /// </value>
-        public QuoteProcessing QuoteProcess { get; set; } = QuoteProcessing.ChangeToSmartQuotes;
+        public QuoteProcessing QuoteProcess
+        {
+            get
+            {
+                return (QuoteProcessing)(int)this.localSettings.Values[QuoteProcessKey];
+            }
+            set
+            {
+                this.localSettings.Values[QuoteProcessKey] = (int)value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the query clean level.
@@ -91,7 +152,39 @@ namespace RichTextCleanerUwp.Models
         /// <value>
         /// <c>true</c> if create link from text; otherwise, <c>false</c>.
         /// </value>
-        public bool CreateLinkFromText { get; set; } = true;
-#pragma warning restore CA1822 // Mark members as static
+        public bool CreateLinkFromText
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[CreateLinkFromTextKey];
+            }
+            set
+            {
+                this.localSettings.Values[CreateLinkFromTextKey] = value;
+            }
+        }
+
+        /// <summary>
+        /// Makes sure that at least the default values exist.
+        /// </summary>
+        /// <param name="localSettings">The local settings.</param>
+        private static void EnsureDefaultValues(ApplicationDataContainer localSettings)
+        {
+            EnsureSetting(RemoveBoldKey, true);
+            EnsureSetting(RemoveItalicKey, false);
+            EnsureSetting(RemoveUnderlineKey, true);
+            EnsureSetting(AddTargetBlankKey, true);
+            EnsureSetting(QuoteProcessKey, (int)QuoteProcessing.ChangeToSmartQuotes);
+            EnsureSetting(QueryCleanLevelKey, (int)LinkQueryCleanLevel.RemoveQuery);
+            EnsureSetting(CreateLinkFromTextKey, true);
+
+            void EnsureSetting(string key, object value)
+            {
+                if (!localSettings.Values.ContainsKey(key))
+                {
+                    localSettings.Values[key] = value;
+                }
+            }
+        }
     }
 }
