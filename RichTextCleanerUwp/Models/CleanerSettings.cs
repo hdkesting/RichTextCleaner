@@ -1,0 +1,190 @@
+﻿using RichTextCleaner.Common.Support;
+using System;
+using Windows.Storage;
+
+namespace RichTextCleanerUwp.Models
+{
+
+    /// <summary>
+    /// Strongly typed settings.
+    /// </summary>
+    /// <remarks>
+    /// Settings are stored in C:\Users\{user}\AppData\Local\Hans_Kesting\RichTextCleaner.exe...\{version}\user.config
+    /// </remarks>
+    public class CleanerSettings: ICleanerSettings
+    {
+        private static readonly Lazy<CleanerSettings> lazyInstance = new Lazy<CleanerSettings>(() => new CleanerSettings());
+        private readonly Windows.Storage.ApplicationDataContainer localSettings;
+
+        private const string RemoveBoldKey = "RemoveBold";
+        private const string RemoveItalicKey = "RemoveItalic";
+        private const string RemoveUnderlineKey = "RemoveUnderline";
+        private const string AddTargetBlankKey = "AddTargetBlank";
+        private const string QuoteProcessKey = "QuoteProcess";
+        private const string QueryCleanLevelKey = "QueryCleanLevel";
+        private const string CreateLinkFromTextKey = "CreateLinkFromText";
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="CleanerSettings"/> class from being created.
+        /// </summary>
+        private CleanerSettings()
+        {
+            localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            EnsureDefaultValues(localSettings);
+        }
+
+
+        public static CleanerSettings Instance => lazyInstance.Value;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to remove bold elements.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if remove bold; otherwise, <c>false</c>.
+        /// </value>
+        public bool RemoveBold
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[RemoveBoldKey];
+            }
+            set
+            {
+                this.localSettings.Values[RemoveBoldKey] = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to remove italic elements.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if remove italic; otherwise, <c>false</c>.
+        /// </value>
+        public bool RemoveItalic
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[RemoveItalicKey];
+            }
+            set
+            {
+                this.localSettings.Values[RemoveItalicKey] = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to remove underline elements.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if remove underline; otherwise, <c>false</c>.
+        /// </value>
+        public bool RemoveUnderline
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[RemoveUnderlineKey];
+            }
+            set
+            {
+                this.localSettings.Values[RemoveUnderlineKey] = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets all the markup to remove.
+        /// </summary>
+        /// <value>
+        /// The markup to remove.
+        /// </value>
+        public StyleElements MarkupToRemove =>
+            (RemoveBold ? StyleElements.Bold : StyleElements.None) |
+            (RemoveItalic ? StyleElements.Italic : StyleElements.None) |
+            (RemoveUnderline ? StyleElements.Underline : StyleElements.None);
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to add target=_blank to link elements.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if add target=_blank; otherwise, <c>false</c>.
+        /// </value>
+        public bool AddTargetBlank
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[AddTargetBlankKey];
+            }
+            set
+            {
+                this.localSettings.Values[AddTargetBlankKey] = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating how to process quotes.
+        /// </summary>
+        /// <seealso cref="QuoteProcessing"/>
+        /// <value>
+        /// The quote process.
+        /// </value>
+        public QuoteProcessing QuoteProcess
+        {
+            get
+            {
+                return (QuoteProcessing)(int)this.localSettings.Values[QuoteProcessKey];
+            }
+            set
+            {
+                this.localSettings.Values[QuoteProcessKey] = (int)value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the query clean level.
+        /// </summary>
+        /// <value>
+        /// The query clean level.
+        /// </value>
+        public LinkQueryCleanLevel QueryCleanLevel => LinkQueryCleanLevel.RemoveQuery;
+
+        /// <summary>
+        /// Gets a value indicating whether to create links from link-like texts.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if create link from text; otherwise, <c>false</c>.
+        /// </value>
+        public bool CreateLinkFromText
+        {
+            get
+            {
+                return (bool)this.localSettings.Values[CreateLinkFromTextKey];
+            }
+            set
+            {
+                this.localSettings.Values[CreateLinkFromTextKey] = value;
+            }
+        }
+
+        /// <summary>
+        /// Makes sure that at least the default values exist.
+        /// </summary>
+        /// <param name="localSettings">The local settings.</param>
+        private static void EnsureDefaultValues(ApplicationDataContainer localSettings)
+        {
+            EnsureSetting(RemoveBoldKey, true);
+            EnsureSetting(RemoveItalicKey, false);
+            EnsureSetting(RemoveUnderlineKey, true);
+            EnsureSetting(AddTargetBlankKey, true);
+            EnsureSetting(QuoteProcessKey, (int)QuoteProcessing.ChangeToSmartQuotes);
+            EnsureSetting(QueryCleanLevelKey, (int)LinkQueryCleanLevel.RemoveQuery);
+            EnsureSetting(CreateLinkFromTextKey, true);
+
+            void EnsureSetting(string key, object value)
+            {
+                if (!localSettings.Values.ContainsKey(key))
+                {
+                    localSettings.Values[key] = value;
+                }
+            }
+        }
+    }
+}
