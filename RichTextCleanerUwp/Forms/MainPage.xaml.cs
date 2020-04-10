@@ -44,20 +44,6 @@ namespace RichTextCleanerUwp.Forms
             // set Assembly Version in AssemblyInfo.cs in this project (below Properties)
             var appVersion = this.GetType().Assembly.GetName().Version;
 
-            /*
-            // set Assembly Version in the Package tab of the properties of project RichTextCleaner.Common
-            var libVersion = typeof(TextCleaner).Assembly.GetName().Version;
-
-            if (libVersion != appVersion)
-            {
-                Logger.Log(LogLevel.Error, "Startup", $"Version mismatch: app={appVersion}, lib={libVersion}.");
-                var mbox = new MessageDialog("The installation didn't succeed properly. Please run the installer to remove the current installation and then install again.");
-                mbox.Commands.Add(new UICommand("Close app", CloseApp));
-                //TODO show mbox
-                return;
-            }
-            */
-
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
             Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmllib.Name} version {htmllib.Version}.");
@@ -114,7 +100,10 @@ namespace RichTextCleanerUwp.Forms
                     {
                         await Launcher.LaunchFolderAsync(await Windows.Storage.StorageFolder.GetFolderFromPathAsync(Logger.LogFolder));
                     }
-                    catch { }
+                    catch
+                    {
+                        // ignore any problem
+                    }
                     break;
 
                 case VirtualKey.L:
@@ -137,6 +126,7 @@ namespace RichTextCleanerUwp.Forms
         {
             await this.ClearStylingAndCopyAsync().ConfigureAwait(false);
         }
+
         private async void PlainTextAndCopy(object sender, RoutedEventArgs e)
         {
             await this.PlainTextAndCopyAsync().ConfigureAwait(false);
@@ -149,9 +139,7 @@ namespace RichTextCleanerUwp.Forms
 
         private void OpenSettingsWindow(object sender, RoutedEventArgs e)
         {
-            // TODO fix
-            //var settingsWindow = new SettingsWindow();
-            //settingsWindow.ShowDialog();
+            this.Frame.Navigate(typeof(SettingsPage), null);
         }
 
         private void Checker_LinkToProcess(object sender, LinkModificationEventArgs e)

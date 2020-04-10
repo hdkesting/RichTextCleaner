@@ -136,6 +136,9 @@
     <Compile Include="Forms\LinkCheckerWindow.xaml.cs">
       <DependentUpon>LinkCheckerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\ClipboardHelper.cs" />
     <Compile Include="Forms\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -217,6 +220,10 @@
     <Page Include="Forms\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Forms\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
