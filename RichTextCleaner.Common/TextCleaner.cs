@@ -34,12 +34,27 @@ namespace RichTextCleaner.Common
         /// <summary>
         /// The tags to remove while keeping their contents.
         /// </summary>
-        private static readonly List<string> TagsToRemove = new List<string>() { "span", "div", "header", "footer" };
+        private static readonly List<string> TagsToRemove = new List<string>() 
+        { 
+            "span",
+            "div",
+            "header",
+            "footer",
+            "body"
+        };
 
         /// <summary>
         /// The non CMS elements to remove including contents.
         /// </summary>
-        private static readonly List<string> NonCmsElementsToRemove = new List<string>() { "noscript", "script", "time", "nav" };
+        private static readonly List<string> NonCmsElementsToRemove = new List<string>()
+        {
+            "noscript",
+            "script",
+            "time",
+            "nav",
+            "audio",
+            "canvas"
+        };
 
         /// <summary>
         /// Clears the styling from the HTML.
