@@ -23,6 +23,7 @@ namespace RichTextCleanerUwp.Models
         private const string QuoteProcessKey = "QuoteProcess";
         private const string QueryCleanLevelKey = "QueryCleanLevel";
         private const string CreateLinkFromTextKey = "CreateLinkFromText";
+        private const string HtmlSourceKey = "HtmlSource";
 
         /// <summary>
         /// Prevents a default instance of the <see cref="CleanerSettings"/> class from being created.
@@ -163,6 +164,26 @@ namespace RichTextCleanerUwp.Models
                 this.localSettings.Values[CreateLinkFromTextKey] = value;
             }
         }
+
+
+        /// <summary>
+        /// Gets or sets the HTML source currently being processed.
+        /// </summary>
+        /// <value>
+        /// The HTML source.
+        /// </value>
+        public string HtmlSource
+        {
+            get
+            {
+                return (string)this.localSettings.Values[HtmlSourceKey];
+            }
+            set
+            {
+                this.localSettings.Values[HtmlSourceKey] = value;
+            }
+        }
+
 
         /// <summary>
         /// Makes sure that at least the default values exist.

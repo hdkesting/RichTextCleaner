@@ -25,12 +25,17 @@ namespace RichTextCleanerUwp.Forms
         public static readonly DependencyProperty LinksProperty = DependencyProperty.Register(nameof(Links), typeof(ObservableCollection<BindableLinkDescription>), typeof(LinkCheckerWindow), new PropertyMetadata(new ObservableCollection<BindableLinkDescription>()));
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
-        public event EventHandler<LinkModificationEventArgs> LinkToProcess;
-
         public LinkCheckerWindow()
         {
             this.InitializeComponent();
             this.DataContext = this;
+
+            var links = LinkChecker.FindLinks(CleanerSettings.Instance.HtmlSource);
+            this.Links.Clear();
+            foreach (var lnk in links)
+            {
+                this.Links.Add(new BindableLinkDescription(lnk));
+            }
         }
 
         private ObservableCollection<BindableLinkDescription> Links
@@ -41,17 +46,8 @@ namespace RichTextCleanerUwp.Forms
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.Parameter is List<LinkDescription> links)
-            {
-                this.Links.Clear();
-                foreach (var lnk in links)
-                {
-                    this.Links.Add(new BindableLinkDescription(lnk));
-                }
-            }
-
             base.OnNavigatedTo(e);
-            Task.Run(() => Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await CheckAllLinks()));
+            Task.Run(() => Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await this.CheckAllLinks()));
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -149,6 +145,8 @@ namespace RichTextCleanerUwp.Forms
         {
             int count = 0;
 
+            var html = CleanerSettings.Instance.HtmlSource;
+
             // process any checked link, but "invalid" beats "update".
             foreach (var lnk in this.Links.Where(l => l.SelectForUpdate || l.SelectForInvalidMark))
             {
@@ -166,17 +164,18 @@ namespace RichTextCleanerUwp.Forms
             }
 
             this.MessageLabel.Text = $"{count} link(s) updated.";
+            CleanerSettings.Instance.HtmlSource = html;
 
             void MarkError(BindableLinkDescription link)
             {
-                this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(link.OriginalLink, LinkModification.MarkInvalid));
+                html = LinkChecker.MarkInvalid(html, link.OriginalLink);
                 link.Result = LinkCheckSummary.Updated;
                 count++;
             }
 
             void UpdateUrl(BindableLinkDescription link)
             {
-                this.LinkToProcess?.Invoke(this, new LinkModificationEventArgs(link.OriginalLink, LinkModification.UpdateSchema, link.LinkAfterRedirect));
+                html = LinkChecker.UpdateHref(html, link.OriginalLink, link.LinkAfterRedirect);
                 link.Result = LinkCheckSummary.Updated;
                 count++;
             }

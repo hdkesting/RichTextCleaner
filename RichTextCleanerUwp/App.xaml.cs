@@ -49,6 +49,10 @@ namespace RichTextCleanerUwp
                     //TODO: Load state from previously suspended application
                     // N/A?
                 }
+                else if (e.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
+                {
+                    Models.CleanerSettings.Instance.HtmlSource = string.Empty;
+                }
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;

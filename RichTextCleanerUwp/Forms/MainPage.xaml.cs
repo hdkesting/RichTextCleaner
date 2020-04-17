@@ -3,12 +3,10 @@ using RichTextCleaner.Common.Logging;
 using RichTextCleanerUwp.Helpers;
 using RichTextCleanerUwp.Models;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -25,7 +23,6 @@ namespace RichTextCleanerUwp.Forms
 
         private readonly Brush StatusForegroundHighlight;
         private readonly Brush StatusForeground;
-        private LinkCheckerWindow checker;
 
         public MainPage()
         {
@@ -48,11 +45,12 @@ namespace RichTextCleanerUwp.Forms
 
             Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmllib.Name} version {htmllib.Version}.");
 
-            // this.Closing += this.MainWindow_Closing;
+            // restore source value, needed in case of a navigate-back
+            this.SourceValue = CleanerSettings.Instance.HtmlSource;
         }
 
         /// <summary>
-        /// Gets or sets the source value to be converted (or just converted).
+        /// Gets or sets the source value to be converted (or that just was converted).
         /// </summary>
         /// <value>
         /// The source value.
@@ -60,7 +58,11 @@ namespace RichTextCleanerUwp.Forms
         public string SourceValue
         {
             get { return (string)this.GetValue(SourceValueProperty); }
-            private set { this.SetValue(SourceValueProperty, value); }
+            private set 
+            { 
+                this.SetValue(SourceValueProperty, value);
+                CleanerSettings.Instance.HtmlSource = value;
+            }
         }
 
         #region Callbacks and eventhandlers
@@ -140,38 +142,6 @@ namespace RichTextCleanerUwp.Forms
         private void OpenSettingsWindow(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(SettingsPage), null);
-        }
-
-        private void Checker_LinkToProcess(object sender, LinkModificationEventArgs e)
-        {
-            switch (e.Modification)
-            {
-                case LinkModification.MarkInvalid:
-                    this.SourceValue = LinkChecker.MarkInvalid(this.SourceValue, e.LinkHref);
-                    break;
-
-                case LinkModification.UpdateSchema:
-                    this.SourceValue = LinkChecker.UpdateHref(this.SourceValue, e.LinkHref, e.NewHref);
-                    break;
-            }
-        }
-
-        private void Checker_Closed(object sender, EventArgs e)
-        {
-            Debug.WriteLine("Checker was closed");
-            if (this.checker != null)
-            {
-                //this.checker.Closed -= Checker_Closed;
-                //this.checker.LinkToProcess -= Checker_LinkToProcess;
-                //this.checker.Dispose();
-            }
-
-            this.checker = null;
-        }
-
-        private void CloseApp(IUICommand command) 
-        {
-            Application.Current.Exit();
         }
 
         private async Task SetStatusAsync(string message)
@@ -313,7 +283,7 @@ namespace RichTextCleanerUwp.Forms
                 return;
             }
 
-            this.Frame.Navigate(typeof(LinkCheckerWindow), links);
+            this.Frame.Navigate(typeof(LinkCheckerWindow));
 
             await Task.CompletedTask;
         }
