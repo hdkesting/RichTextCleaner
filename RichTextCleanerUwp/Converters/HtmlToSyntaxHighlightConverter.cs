@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Media;
 namespace RichTextCleanerUwp.Converters
 {
     /// <summary>
-    /// Provides very basic syntax highlighting for HTML source: tags in grey (including attributes), entities in blue, the rest is black (default).
+    /// Provides very basic syntax highlighting for HTML source: tags in grey (including attributes), entities in brown, the rest is black (default).
     /// Note that this assumes reasonably clean HTML.
     /// </summary>
     /// <seealso cref="StringToSimpleInlineConverter" />
@@ -14,6 +14,7 @@ namespace RichTextCleanerUwp.Converters
     {
         private static readonly Brush entityForegroundBrush = new SolidColorBrush(Windows.UI.Colors.Brown);
         private static readonly Brush tagForegroundBrush = new SolidColorBrush(Windows.UI.Colors.Gray);
+        private static readonly FontFamily nonTextFont = new FontFamily("Consolas");
 
         protected override IEnumerable<Inline> SyntaxHighlightHtml(string source)
         {
@@ -94,11 +95,15 @@ namespace RichTextCleanerUwp.Converters
             {
                 case State.Entity:
                     run.Foreground = entityForegroundBrush;
-                    run.FontSize -= 1.0;
+                    run.FontSize -= 2.0;
+                    run.FontFamily = nonTextFont;
+                    run.FontStretch = Windows.UI.Text.FontStretch.ExtraCondensed;
                     break;
 
                 case State.Tag:
                     run.Foreground = tagForegroundBrush;
+                    run.FontSize -= 2.0;
+                    run.FontFamily = nonTextFont;
                     break;
 
                 default:

@@ -61,7 +61,7 @@ namespace RichTextCleanerUwp.Converters
 (3) Click the ""Clear styling"" button (or Ctrl-C) to remove all ""class"" and ""style"" attributes and do some more cleanup.
 This also copies the new text onto the clipboard so you can paste it into a Rich Text editor.
 
-You can select to remove bold, italic and/or underline tags (keeping the text inside them) by checking the checkbox.
+You can select to remove bold, italic and/or underline tags (keeping the text inside them) by adjusting the settings.
 
 "
             };
@@ -74,16 +74,15 @@ You can select to remove bold, italic and/or underline tags (keeping the text in
             };
             lines.Add(run);
 
-            run = new Run { Text = "(3) Use the \"text only\" button to get just the text, without any HTML." };
+            run = new Run { Text = "(3) Use the \"text only\" button to get just the text, without any HTML. Some attempt is made for sane formatting." };
             lines.Add(run);
 
             run = new Run { Text = @"
 
-(4) Paste this into the Rich Text editor (either design or html tab)." };
+(4) Paste this into the Rich Text editor (either the rich-text view or the html source)." };
             lines.Add(run);
 
             return lines;
         }
-
     }
 }

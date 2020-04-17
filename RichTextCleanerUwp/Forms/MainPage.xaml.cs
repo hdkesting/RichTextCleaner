@@ -309,7 +309,7 @@ namespace RichTextCleanerUwp.Forms
             var links = LinkChecker.FindLinks(this.SourceValue);
             if (!links.Any())
             {
-                // MessageBox.Show("No links found.");
+                await this.SetStatusAsync("No links found to check.").ConfigureAwait(false);
                 return;
             }
 
