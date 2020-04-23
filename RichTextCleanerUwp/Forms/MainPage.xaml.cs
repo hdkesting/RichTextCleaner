@@ -5,6 +5,7 @@ using RichTextCleanerUwp.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -29,7 +30,8 @@ namespace RichTextCleanerUwp.Forms
             this.InitializeComponent();
             this.DataContext = this;
 
-            VersionLabel.Text = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3);
+            var appVersion = GetAppVersion();
+            VersionLabel.Text = appVersion;
 
 #if DEBUG
             VersionLabel.Text += " 🐛";
@@ -38,14 +40,12 @@ namespace RichTextCleanerUwp.Forms
             StatusForeground = StatusLabel.Foreground;
             StatusForegroundHighlight = new SolidColorBrush(Colors.Black);
 
-            // set Assembly Version in AssemblyInfo.cs in this project (below Properties)
-            var appVersion = this.GetType().Assembly.GetName().Version;
-
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
+            var cleanerver = typeof(TextCleaner).Assembly.GetName().Version;
 
-            Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmllib.Name} version {htmllib.Version}.");
+            Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using cleaner {cleanerver} and {htmllib.Name} version {htmllib.Version}.");
 
-            // restore source value, needed in case of a navigate-back
+            // restore source value, required in case of a navigate-back
             this.SourceValue = CleanerSettings.Instance.HtmlSource;
         }
 
@@ -286,6 +286,14 @@ namespace RichTextCleanerUwp.Forms
             this.Frame.Navigate(typeof(LinkCheckerWindow));
 
             await Task.CompletedTask;
+        }
+
+        private static string GetAppVersion()
+        {
+            Package package = Package.Current;
+            PackageId packageId = package.Id;
+            PackageVersion version = packageId.Version;
+            return $"{version.Major}.{version.Minor}.{version.Build}";
         }
     }
 }

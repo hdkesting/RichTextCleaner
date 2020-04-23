@@ -23,15 +23,26 @@ namespace RichTextCleanerUwp
         public App()
         {
             this.InitializeComponent();
+
+            string logdir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "Logging");
+            Logger.Initialize(new DirectoryInfo(logdir));
+
             this.Suspending += OnSuspending;
+            this.UnhandledException += this.App_UnhandledException;
+        }
+
+        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            Logger.Log(LogLevel.Error, nameof(App), "Unhandled exception: " + e.Message, e.Exception);
+            e.Handled = false; // true means that the app doesn't exit
         }
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
-        /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        /// <param name="args">Details about the launch request and process.</param>
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -44,12 +55,11 @@ namespace RichTextCleanerUwp
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    //TODO: Load state from previously suspended application
-                    // N/A?
+                    // N/A? - saved in Settings" that will be loaded automatically.
                 }
-                else if (e.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
+                else if (args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
                 {
                     Models.CleanerSettings.Instance.HtmlSource = string.Empty;
                 }
@@ -58,17 +68,16 @@ namespace RichTextCleanerUwp
                 Window.Current.Content = rootFrame;
             }
 
-            string logdir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "Logging");
-            Logger.Initialize(new DirectoryInfo(logdir));
+            Logger.Log(LogLevel.Information, nameof(App), $"Started from previous state {args.PreviousExecutionState}.");
 
-            if (!e.PrelaunchActivated)
+            if (!args.PrelaunchActivated)
             {
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(MainPage), args.Arguments);
                 }
 
                 float DPI = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi;

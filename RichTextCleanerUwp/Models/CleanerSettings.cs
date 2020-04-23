@@ -1,5 +1,6 @@
 ﻿using RichTextCleaner.Common.Support;
 using System;
+using System.IO;
 using Windows.Storage;
 
 namespace RichTextCleanerUwp.Models
@@ -23,7 +24,9 @@ namespace RichTextCleanerUwp.Models
         private const string QuoteProcessKey = "QuoteProcess";
         private const string QueryCleanLevelKey = "QueryCleanLevel";
         private const string CreateLinkFromTextKey = "CreateLinkFromText";
-        private const string HtmlSourceKey = "HtmlSource";
+
+        private string htmlSource;
+        private readonly string htmlSourcePath;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="CleanerSettings"/> class from being created.
@@ -32,6 +35,13 @@ namespace RichTextCleanerUwp.Models
         {
             localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             EnsureDefaultValues(localSettings);
+
+            // The name of each setting can be 255 characters in length at most.
+            // Each setting can be up to 8K bytes in size 
+            // and each composite setting can be up to 64K bytes in size.
+            // https://docs.microsoft.com/en-us/uwp/api/windows.storage.applicationdata.localsettings?view=winrt-18362#remarks
+
+            this.htmlSourcePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "source.html");
         }
 
 
@@ -169,6 +179,9 @@ namespace RichTextCleanerUwp.Models
         /// <summary>
         /// Gets or sets the HTML source currently being processed.
         /// </summary>
+        /// <remarks>
+        /// Store in separate file because the local settings are limited in size.
+        /// </remarks>
         /// <value>
         /// The HTML source.
         /// </value>
@@ -176,11 +189,37 @@ namespace RichTextCleanerUwp.Models
         {
             get
             {
-                return (string)this.localSettings.Values[HtmlSourceKey];
+                if (this.htmlSource is null)
+                {
+                    if (File.Exists(this.htmlSourcePath))
+                    {
+                        this.htmlSource = File.ReadAllText(this.htmlSourcePath);
+                    }
+                    else
+                    {
+                        // signal that I've tried the file already
+                        this.htmlSource = string.Empty;
+                    }
+                }
+
+                return this.htmlSource;
             }
+
             set
             {
-                this.localSettings.Values[HtmlSourceKey] = value;
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    this.htmlSource = string.Empty;
+                    if (File.Exists(this.htmlSourcePath))
+                    {
+                        File.Delete(this.htmlSourcePath);
+                    }
+                }
+                else
+                {
+                    File.WriteAllText(this.htmlSourcePath, value);
+                    this.htmlSource = value;
+                }
             }
         }
 
