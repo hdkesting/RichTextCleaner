@@ -670,9 +670,10 @@ namespace RichTextCleaner.Common
                             }
                         }
 
-                        // onclick, onchange, ...
+                        // onclick, onchange, ..., plus all "data-" attributes
                         foreach (var name in node.Attributes
-                            .Where(a => a.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase))
+                            .Where(a => a.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase)
+                                        || a.Name.StartsWith("data-", StringComparison.Ordinal))
                             .Select(a => a.Name)
                             .ToList())
                         {
