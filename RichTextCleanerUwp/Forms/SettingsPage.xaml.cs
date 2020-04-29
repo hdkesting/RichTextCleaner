@@ -1,19 +1,7 @@
 ﻿using RichTextCleaner.Common.Support;
 using RichTextCleanerUwp.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -27,6 +15,9 @@ namespace RichTextCleanerUwp.Forms
         public SettingsPage()
         {
             this.InitializeComponent();
+
+            var appView = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+            appView.Title = "Settings";
 
             this.ClearBoldMarkup.IsChecked = CleanerSettings.Instance.RemoveBold;
             this.ClearItalicMarkup.IsChecked = CleanerSettings.Instance.RemoveItalic;

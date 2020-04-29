@@ -30,6 +30,9 @@ namespace RichTextCleanerUwp.Forms
             this.InitializeComponent();
             this.DataContext = this;
 
+            var appView = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+            appView.Title = "Main";
+
             var appVersion = GetAppVersion();
             VersionLabel.Text = appVersion;
 

@@ -30,6 +30,9 @@ namespace RichTextCleanerUwp.Forms
             this.InitializeComponent();
             this.DataContext = this;
 
+            var appView = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+            appView.Title = "Link Checker";
+
             var links = LinkChecker.FindLinks(CleanerSettings.Instance.HtmlSource);
             this.Links.Clear();
             foreach (var lnk in links)

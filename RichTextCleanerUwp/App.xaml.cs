@@ -86,7 +86,6 @@ namespace RichTextCleanerUwp
                 // Height="450" Width="800" 
                 var desiredSize = new Windows.Foundation.Size(800f * 96.0f / DPI, 450f * 96.0f / DPI);
                 ApplicationView.PreferredLaunchViewSize = desiredSize;
-                ApplicationView.GetForCurrentView().Title = "Rich Text Cleaner";
 
                 // Ensure the current window is active
                 Window.Current.Activate();
