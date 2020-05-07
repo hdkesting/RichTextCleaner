@@ -30,6 +30,14 @@ namespace RichTextCleaner.Common.Logging
         public static string LogFolder { get; private set; }
 
         /// <summary>
+        /// Gets or sets the minimum level to log.
+        /// </summary>
+        /// <value>
+        /// The minimum log level.
+        /// </value>
+        public static LogLevel MinLogLevel { get; set; }
+
+        /// <summary>
         /// (Re-)initializes this instance.
         /// </summary>
         /// <param name="basePath">The base path, the "logs" folder will be below this.</param>
@@ -87,9 +95,17 @@ namespace RichTextCleaner.Common.Logging
         /// <param name="exception">The exception (optional).</param>
         public static void Log(LogLevel level, string pageName, string message, Exception exception = null)
         {
-            var msg = new LogMessage(level, pageName, message, exception);
-            logWriter.Add(msg);
+            if (level >= MinLogLevel)
+            {
+                var msg = new LogMessage(level, pageName, message, exception);
+                logWriter.Add(msg);
 
+                RestartIfStopped();
+             }
+        }
+
+        private static void RestartIfStopped()
+        {
             lock (logWriter)
             {
                 if (stoppedFlushing)
@@ -99,6 +115,17 @@ namespace RichTextCleaner.Common.Logging
                     emptyFlushCount = 0;
                     flushTimer.Change(flushTime, flushTime);
                 }
+            }
+        }
+
+        private static void PauseFlushing()
+        {
+            lock (logWriter)
+            {
+                flushTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                logWriter.Flush();
+
+                stoppedFlushing = true;
             }
         }
 
@@ -115,13 +142,7 @@ namespace RichTextCleaner.Common.Logging
                 if (emptyFlushCount > MaxEmptyFlushes)
                 {
                     // lots of empty flushes, so stop timer
-                    lock (logWriter)
-                    {
-                        flushTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                        logWriter.Flush();
-
-                        stoppedFlushing = true;
-                    }
+                    PauseFlushing();
                 }
             }
         }

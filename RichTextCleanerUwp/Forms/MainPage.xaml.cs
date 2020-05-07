@@ -46,7 +46,7 @@ namespace RichTextCleanerUwp.Forms
             var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
             var cleanerver = typeof(TextCleaner).Assembly.GetName().Version;
 
-            Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using cleaner {cleanerver} and {htmllib.Name} version {htmllib.Version}.");
+            Logger.Log(LogLevel.Information, "MainPage Startup", $"Version {appVersion} has started, using cleaner {cleanerver} and {htmllib.Name} version {htmllib.Version}.");
 
             // restore source value, required in case of a navigate-back
             this.SourceValue = CleanerSettings.Instance.HtmlSource;
@@ -77,6 +77,8 @@ namespace RichTextCleanerUwp.Forms
         /// <param name="e">The <see cref="KeyRoutedEventArgs"/> instance containing the event data.</param>
         public async void Page_KeyDown(object sender, KeyRoutedEventArgs e)
         {
+            Logger.Log(LogLevel.Debug, nameof(MainPage), $"Key pressed {e.Key}");
+
             switch (e.Key)
             {
                 // "Ctrl-V" - paste
@@ -164,6 +166,8 @@ namespace RichTextCleanerUwp.Forms
 
         private async Task CopyFromClipboardAsync()
         {
+            Logger.Log(LogLevel.Debug, nameof(MainPage), "Start copying text from clipboard");
+
 #pragma warning disable CA1031 // Do not catch general exception types
             try
             {
@@ -186,11 +190,14 @@ namespace RichTextCleanerUwp.Forms
                 await this.SetStatusAsync("There was an error reading from the clipboard");
             }
 #pragma warning restore CA1031 // Do not catch general exception types
+            Logger.Log(LogLevel.Debug, nameof(MainPage), "Done copying text from clipboard");
         }
 
         private async Task ClearStylingAndCopyAsync()
         {
+            Logger.Log(LogLevel.Debug, nameof(MainPage), "Start clearing styling");
             string html = this.SourceValue;
+            Logger.Log(LogLevel.Debug, nameof(MainPage), $"HTML size before processing: {html?.Length ?? 0}");
 
 #pragma warning disable CA1031 // Do not catch general exception types
             try
@@ -205,6 +212,8 @@ namespace RichTextCleanerUwp.Forms
                 await this.SetStatusAsync("There was an error cleaning the HTML");
                 return;
             }
+
+            Logger.Log(LogLevel.Debug, nameof(MainPage), $"HTML size after processing: {html?.Length ?? 0}");
 
             try
             {
@@ -221,6 +230,7 @@ namespace RichTextCleanerUwp.Forms
 #pragma warning restore CA1031 // Do not catch general exception types
 
             await this.SetStatusAsync("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
+            Logger.Log(LogLevel.Debug, nameof(MainPage), "Done clearing styling");
         }
 
         private async Task PlainTextAndCopyAsync()

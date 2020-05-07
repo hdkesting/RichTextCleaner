@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using RichTextCleaner.Common.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
@@ -17,6 +20,19 @@ namespace RichTextCleanerUwp.Converters
         private static readonly FontFamily nonTextFont = new FontFamily("Consolas");
 
         protected override IEnumerable<Inline> SyntaxHighlightHtml(string source)
+        {
+            try
+            {
+                return SyntaxHighlightHtmlImpl(source);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, nameof(HtmlToSyntaxHighlightConverter), "Error converting to highlight Inlines", ex);
+                return Enumerable.Repeat(new Run { Text = source }, 1);
+            }
+        }
+
+        private IEnumerable<Inline> SyntaxHighlightHtmlImpl(string source)
         {
             if (string.IsNullOrWhiteSpace(source))
             {

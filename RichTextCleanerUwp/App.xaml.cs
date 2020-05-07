@@ -26,6 +26,11 @@ namespace RichTextCleanerUwp
 
             string logdir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "Logging");
             Logger.Initialize(new DirectoryInfo(logdir));
+#if DEBUG
+            Logger.MinLogLevel = LogLevel.Debug;
+#else
+            Logger.MinLogLevel = LogLevel.Information;
+#endif
 
             this.Suspending += OnSuspending;
             this.UnhandledException += this.App_UnhandledException;
