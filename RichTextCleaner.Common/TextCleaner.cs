@@ -792,15 +792,15 @@ namespace RichTextCleaner.Common
 
             ConvertToPlainText(sb, doc.DocumentNode);
 
-            string text = CleanupText(sb.ToString());
-            return text;
+            return CleanupText(sb.ToString());
         }
 
         private static string CleanupText(string text)
         {
+            // remove trailing spaces from lines, add extra line break
             text = Regex.Replace(text, @"(\s*\r\n){3,}", Environment.NewLine + Environment.NewLine, RegexOptions.Multiline);
 
-            return text;
+            return text.Trim();
         }
 
         private static void ConvertToPlainText(StringBuilder sb, HtmlNode node)

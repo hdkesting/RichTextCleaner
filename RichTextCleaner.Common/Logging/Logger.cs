@@ -12,7 +12,6 @@ namespace RichTextCleaner.Common.Logging
     /// </summary>
     public static class Logger
     {
-        private const string Name = "System";
         private const int MaxEmptyFlushes = 20; // @ 2 secs each (see flushTime)
 
         private static TimeSpan flushTime = TimeSpan.FromSeconds(2);
@@ -63,7 +62,7 @@ namespace RichTextCleaner.Common.Logging
             LogFolder = Path.Combine(basePath.FullName, "logs");
             logWriter = new LogWriter(LogFolder);
 
-            Log(LogLevel.Information, Name, "App startup");
+            Log(LogLevel.Information, nameof(Logger), "Log writer startup");
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace RichTextCleaner.Common.Logging
         /// </summary>
         public static void Shutdown()
         {
-            Log(LogLevel.Information, Name, "App shutdown");
+            Log(LogLevel.Information, nameof(Logger), "Log writer shutdown");
             flushTimer.Change(-1, -1);
             flushTimer.Dispose();
             logWriter.Flush();
@@ -95,6 +94,17 @@ namespace RichTextCleaner.Common.Logging
         /// <param name="exception">The exception (optional).</param>
         public static void Log(LogLevel level, string pageName, string message, Exception exception = null)
         {
+            if (logWriter == null)
+            {
+                if (String.IsNullOrEmpty(LogFolder))
+                {
+                    // cannot initialize, just forget about it
+                    return;
+                }
+
+                Initialize(new DirectoryInfo(LogFolder));
+            }
+
             if (level >= MinLogLevel)
             {
                 var msg = new LogMessage(level, pageName, message, exception);

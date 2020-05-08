@@ -24,15 +24,8 @@ namespace RichTextCleanerUwp
         {
             this.InitializeComponent();
 
-            string logdir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "Logging");
-            Logger.Initialize(new DirectoryInfo(logdir));
-#if DEBUG
-            Logger.MinLogLevel = LogLevel.Debug;
-#else
-            Logger.MinLogLevel = LogLevel.Information;
-#endif
-
             this.Suspending += OnSuspending;
+            this.Resuming += OnResuming;
             this.UnhandledException += this.App_UnhandledException;
         }
 
@@ -49,6 +42,8 @@ namespace RichTextCleanerUwp
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
+            this.EnableLogging();
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -120,11 +115,31 @@ namespace RichTextCleanerUwp
         /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            Logger.Log(LogLevel.Debug, nameof(App), "Suspending app");
+
             Logger.Shutdown();
 
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+
+        private void OnResuming(object sender, object e)
+        {
+            this.EnableLogging();
+            Logger.Log(LogLevel.Debug, nameof(App), "Resumed app");
+        }
+
+        private void EnableLogging()
+        {
+            string logdir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "Logging");
+            Logger.Initialize(new DirectoryInfo(logdir));
+#if DEBUG
+            Logger.MinLogLevel = LogLevel.Debug;
+#else
+            Logger.MinLogLevel = LogLevel.Information;
+#endif
         }
     }
 }
