@@ -54,12 +54,12 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="{x:Bind LinkText, Mode=OneWay}"/>
-                        <HyperlinkButton Grid.Column="1" Content="{x:Bind OriginalLink, Mode=OneWay}" Click="ClickLink" />
+                        <HyperlinkButton Grid.Column="1" Content="{x:Bind OriginalLink, Mode=OneWay}" Click="ClickLink" ToolTipService.ToolTip="{x:Bind OriginalLink, Mode=OneWay}" />
                         <CheckBox Grid.Column="2" IsChecked="{x:Bind SelectForUpdate, Mode=TwoWay}"/>
                         <CheckBox Grid.Column="3" IsChecked="{x:Bind SelectForInvalidMark, Mode=TwoWay}"/>
                         <TextBlock Grid.Column="4" Text="{x:Bind Result, Converter={StaticResource ResultToDisplay}, Mode=OneWay}"/>
                         <TextBlock Grid.Column="5" Text="{x:Bind HttpStatus, Mode=OneWay}"/>
-                        <HyperlinkButton Grid.Column="6" Content="{x:Bind LinkAfterRedirect, Mode=OneWay}" Click="ClickLink" />
+                        <HyperlinkButton Grid.Column="6" Content="{x:Bind LinkAfterRedirect, Mode=OneWay}" Click="ClickLink" ToolTipService.ToolTip="{x:Bind LinkAfterRedirect, Mode=OneWay}"/>
                     </Grid>
 
                 </DataTemplate>
