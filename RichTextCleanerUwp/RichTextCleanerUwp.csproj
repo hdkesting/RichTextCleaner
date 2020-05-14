@@ -143,6 +143,7 @@
     <Compile Include="Forms\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\DispatcherExtensions.cs" />
     <Compile Include="Models\BindableLinkDescription.cs" />
     <Compile Include="Models\CleanerSettings.cs" />
     <Compile Include="Models\LinkModificationEventArgs.cs" />

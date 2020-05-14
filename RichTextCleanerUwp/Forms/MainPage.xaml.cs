@@ -79,6 +79,8 @@ namespace RichTextCleanerUwp.Forms
         {
             Logger.Log(LogLevel.Debug, nameof(MainPage), $"Key pressed {e.Key}");
 
+            await Dispatcher.SwitchToUi();
+
             switch (e.Key)
             {
                 // "Ctrl-V" - paste
@@ -124,27 +126,27 @@ namespace RichTextCleanerUwp.Forms
             }
         }
 
-        private async void CopyFromClipboard(object sender, RoutedEventArgs e)
+        private async void CopyFromClipboardClick(object sender, RoutedEventArgs e)
         {
             await this.CopyFromClipboardAsync().ConfigureAwait(false);
         }
 
-        private async void ClearStylingAndCopy(object sender, RoutedEventArgs e)
+        private async void ClearStylingAndCopyClick(object sender, RoutedEventArgs e)
         {
             await this.ClearStylingAndCopyAsync().ConfigureAwait(false);
         }
 
-        private async void PlainTextAndCopy(object sender, RoutedEventArgs e)
+        private async void PlainTextAndCopyClick(object sender, RoutedEventArgs e)
         {
             await this.PlainTextAndCopyAsync().ConfigureAwait(false);
         }
 
-        private async void CheckLinks(object sender, RoutedEventArgs e)
+        private async void CheckLinksClick(object sender, RoutedEventArgs e)
         {
             await this.CheckLinksAsync().ConfigureAwait(true);
         }
 
-        private void OpenSettingsWindow(object sender, RoutedEventArgs e)
+        private void OpenSettingsWindowClick(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(SettingsPage), null);
         }
@@ -180,7 +182,7 @@ namespace RichTextCleanerUwp.Forms
                 else
                 {
                     this.SourceValue = text;
-                    Logger.Log(LogLevel.Debug, nameof(CopyFromClipboardAsync), "Copied text from clipboard");
+                    Logger.Log(LogLevel.Debug, nameof(CopyFromClipboardAsync), $"Copied text from clipboard ({text.Length} chars)");
                     await this.SetStatusAsync("Copied text from clipboard.").ConfigureAwait(false);
                 }
             }
@@ -208,7 +210,7 @@ namespace RichTextCleanerUwp.Forms
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, nameof(ClearStylingAndCopy), "Error cleaning HTML:" + Environment.NewLine + html, ex);
+                Logger.Log(LogLevel.Error, nameof(ClearStylingAndCopyAsync), "Error cleaning HTML:" + Environment.NewLine + html, ex);
                 await this.SetStatusAsync("There was an error cleaning the HTML");
                 return;
             }
@@ -219,11 +221,11 @@ namespace RichTextCleanerUwp.Forms
             {
                 ClipboardHelper.CopyToClipboard(html, html);
                 this.SourceValue = html;
-                Logger.Log(LogLevel.Debug, nameof(ClearStylingAndCopy), "Cleaned HTML and copied to clipboard");
+                Logger.Log(LogLevel.Debug, nameof(ClearStylingAndCopyAsync), "Cleaned HTML and copied to clipboard");
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, nameof(ClearStylingAndCopy), "Error writing HTML to clipboard", ex);
+                Logger.Log(LogLevel.Error, nameof(ClearStylingAndCopyAsync), "Error writing HTML to clipboard", ex);
                 await this.SetStatusAsync("There was an error writing the cleand HTML to the clipboard");
                 return;
             }
@@ -246,7 +248,7 @@ namespace RichTextCleanerUwp.Forms
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, nameof(PlainTextAndCopy), "Error cleaning HTML to text:" + Environment.NewLine + html, ex);
+                Logger.Log(LogLevel.Error, nameof(PlainTextAndCopyAsync), "Error cleaning HTML to text:" + Environment.NewLine + html, ex);
                 await this.SetStatusAsync("There was an error getting text from the HTML");
                 return;
             }
@@ -257,7 +259,7 @@ namespace RichTextCleanerUwp.Forms
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, nameof(PlainTextAndCopy), "Error writing TEXT to clipboard", ex);
+                Logger.Log(LogLevel.Error, nameof(PlainTextAndCopyAsync), "Error writing TEXT to clipboard", ex);
                 await this.SetStatusAsync("There was an error writing the TEXT to the clipboard");
                 return;
             }

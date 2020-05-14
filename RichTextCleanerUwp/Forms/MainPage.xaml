@@ -33,24 +33,24 @@
             </TextBlock>
         </ScrollViewer>
         <StackPanel Orientation="Vertical" Grid.Column="0">
-            <Button Click="CopyFromClipboard" Content="Paste (HTML)" Style="{StaticResource CommandButton}" ToolTipService.ToolTip="Or press (Ctrl-)V"/>
+            <Button Click="CopyFromClipboardClick" Content="Paste (HTML)" Style="{StaticResource CommandButton}" ToolTipService.ToolTip="Or press (Ctrl-)V"/>
 
 
             <Border Width="100" BorderBrush="Blue" BorderThickness="1" />
 
-            <Button Click="CheckLinks" Content="Check links"  Style="{StaticResource CommandButton}"
+            <Button Click="CheckLinksClick" Content="Check links"  Style="{StaticResource CommandButton}"
                     ToolTipService.ToolTip="Check all links in text" />
 
-            <Button Click="ClearStylingAndCopy" Content="Clear styling &amp; Copy"  Style="{StaticResource CommandButton}" 
+            <Button Click="ClearStylingAndCopyClick" Content="Clear styling &amp; Copy"  Style="{StaticResource CommandButton}" 
                     ToolTipService.ToolTip="Or press (Ctrl-)C" />
 
-            <Button Click="PlainTextAndCopy" Content="Get text only"  Style="{StaticResource CommandButton}"
+            <Button Click="PlainTextAndCopyClick" Content="Get text only"  Style="{StaticResource CommandButton}"
                     ToolTipService.ToolTip="Or press (Ctrl-)T" />
 
 
             <Border Width="100" BorderBrush="Blue" BorderThickness="1" />
 
-            <Button Click="OpenSettingsWindow"  Style="{StaticResource CommandButton}" Content="⚙ Settings" />
+            <Button Click="OpenSettingsWindowClick"  Style="{StaticResource CommandButton}" Content="⚙ Settings" />
 
             <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="2,10" Foreground="Gray" Text="Ready for pasting"/>
         </StackPanel>
