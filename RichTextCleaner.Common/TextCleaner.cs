@@ -279,6 +279,13 @@ namespace RichTextCleaner.Common
                 }
                 while (trimmed);
             }
+
+            // remove any trailing <br/>
+            var brnode = (document.DocumentNode.SelectNodes("//br") ?? Enumerable.Empty<HtmlNode>()).LastOrDefault();
+            if (brnode != null && brnode.NextSibling is null)
+            {
+                brnode.ParentNode.RemoveChild(brnode);
+            }
         }
 
         /// <summary>
