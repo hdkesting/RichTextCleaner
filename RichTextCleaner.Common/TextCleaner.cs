@@ -62,7 +62,7 @@ namespace RichTextCleaner.Common
         /// <param name="html">The HTML to clean.</param>
         /// <param name="settings">All the settings.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">settings</exception>
+        /// <exception cref="ArgumentNullException">settings must not be null.</exception>
         public static string ClearStylingFromHtml(
             string html,
             ICleanerSettings settings)
@@ -75,6 +75,7 @@ namespace RichTextCleaner.Common
             var doc = CreateHtmlDocument(html ?? string.Empty);
 
             RemoveNonCMSElements(doc);
+            RemoveOfficeMarkup(doc);
             ClearStyling(doc);
             TranslateStyleNodes(doc, settings.MarkupToRemove);
             RemoveEmptySpans(doc);
@@ -162,6 +163,21 @@ namespace RichTextCleaner.Common
                 case QuoteProcessing.ChangeToSmartQuotes:
                     UpdateQuotesToSmart(document);
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Remove all nodes with a namespace, like &lt;o:p&gt; and &lt;u5:p&gt;.
+        /// </summary>
+        /// <param name="document"></param>
+        internal static void RemoveOfficeMarkup(HtmlDocument document)
+        {
+            foreach (var elt in document.DocumentNode.DescendantsAndSelf()?.ToList() ?? Enumerable.Empty<HtmlNode>())
+            {
+                if (elt.NodeType == HtmlNodeType.Element && elt.Name.Contains(':'))
+                {
+                    RemoveSurroundingTags(elt);
+                }
             }
         }
 
@@ -561,7 +577,7 @@ namespace RichTextCleaner.Common
             }
             else if (ContentIsEmptyText(content))
             {
-                // space-only node - can be replaced by a space
+                // space-only node - can be replaced by a single space
                 if (node.PreviousSibling?.NodeType == HtmlNodeType.Text)
                 {
                     // add space to previous text node

@@ -64,6 +64,7 @@
     <Compile Include="TestTrimParagraph.cs" />
     <Compile Include="TestAnchorsAndLinks.cs" />
     <Compile Include="TestQuoteUpdate.cs" />
+    <Compile Include="TestOfficeMarkup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
