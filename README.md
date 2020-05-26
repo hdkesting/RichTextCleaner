@@ -17,8 +17,8 @@ The "Get text only" button removes all HTML elements, leaving only the plain tex
 Variants
 --------
 
-* The oldest version is a .Net Core WPF version, until I dicovered that the installer project coudn't (then?) handle .Net Core.
-* The next version is plain .Net Framework, also WPF.
-* The third version is a UWP version, that could be published to the Microsoft Store (it isn't, at the moment)
+* The oldest version (RichTextCleaner) is a .Net Core WPF version, until I discovered that the installer project coudn't (then?) handle .Net Core.
+* The next version (RichTextCleanerFW) uses plain .Net Framework, also WPF.
+* The third version (RichTextCleanerUwp) is a UWP version, that could be published to the Microsoft Store (it isn't, at the moment)
 
-All use the same shared .Net Standard Cleaner project.
+All use the same shared .Net Standard RichTextCleaner.Common project.
