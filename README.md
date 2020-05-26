@@ -13,3 +13,11 @@ Use the "Clear Styling" button (or use (Ctrl-)C) to remove all "style" and "clas
 This also copies the cleaned text onto the clipboard, so you can use Ctrl-V in a rich-text editor to paste it.
 
 The "Get text only" button removes all HTML elements, leaving only the plain text (with some attempt at sane formatting). Here also this text is placed on the clipboard.
+
+Variants
+--------
+
+* The oldest version is a .Net Core WPF version, until I dicovered that the installer project coudn't (then?) handle .Net Core.
+* The next version is plain .Net Framework, also WPF.
+* The third version is a UWP version, that could be published to the Microsoft Store (it isn't, at the moment)
+All use the same shared .Net Standard Cleaner project.
