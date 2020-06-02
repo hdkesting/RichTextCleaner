@@ -832,7 +832,11 @@ namespace RichTextCleaner.Common
             {
                 if (node.NodeType == HtmlNodeType.Text)
                 {
-                    if (!string.IsNullOrWhiteSpace(node.InnerText))
+                    if (string.IsNullOrWhiteSpace(node.InnerText))
+                    {
+                        sb.Append(' ');
+                    }
+                    else
                     {
                         sb.Append(System.Net.WebUtility.HtmlDecode(node.InnerText));
                     }
