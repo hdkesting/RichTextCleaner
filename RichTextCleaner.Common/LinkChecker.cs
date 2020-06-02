@@ -218,13 +218,13 @@ namespace RichTextCleaner.Common
             }
             else if (uri.Host.Equals("urldefense.com", StringComparison.OrdinalIgnoreCase))
             {
-                // assume /v3/__http(s)://fullpath;security
+                // assume /v3/__http(s)://fullpath__;security
                 var query = uri.PathAndQuery;
                 query = query.Substring(query.IndexOf("__", StringComparison.Ordinal) + 2);
                 var p = query.IndexOf(";", StringComparison.Ordinal);
                 if (p > 0)
                 {
-                    query = query.Substring(0, p);
+                    query = query.Substring(0, p).Trim('_');
                 }
 
                 // undo some conversions that I saw in two examples: *20 -> %20, /*/ -> /#/
