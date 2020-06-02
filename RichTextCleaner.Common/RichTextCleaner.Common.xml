@@ -487,7 +487,13 @@
             <param name="html">The HTML to clean.</param>
             <param name="settings">All the settings.</param>
             <returns></returns>
-            <exception cref="T:System.ArgumentNullException">settings</exception>
+            <exception cref="T:System.ArgumentNullException">settings must not be null.</exception>
+        </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.RemoveOfficeMarkup(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            Remove all nodes with a namespace, like &lt;o:p&gt; and &lt;u5:p&gt;.
+            </summary>
+            <param name="document"></param>
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.TrimParagraphs(HtmlAgilityPack.HtmlDocument)">
             <summary>
