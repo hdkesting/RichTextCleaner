@@ -16,6 +16,9 @@ namespace RichTextCleaner.Common
     /// </summary>
     public static class TextCleaner
     {
+        /// <summary>
+        /// Standard replacements to do in the source text.
+        /// </summary>
         private static readonly Dictionary<string, string> TextReplacements = new Dictionary<string, string>
         {
             { "&nbsp;", " " }, // replace non-breaking space with simple space
@@ -29,6 +32,7 @@ namespace RichTextCleaner.Common
             { "\x2013", "&ndash;" },
             { "\x2014", "&mdash;" },
             { "<sup>TM</sup>", "&trade;" },
+            { "<sup>&reg;</sup>", "&reg;" },
         };
 
         /// <summary>
@@ -40,7 +44,8 @@ namespace RichTextCleaner.Common
             "div",
             "header",
             "footer",
-            "body"
+            "body",
+            "content", // obsolete tag https://developer.mozilla.org/en-US/docs/Web/HTML/Element/content
         };
 
         /// <summary>
@@ -50,10 +55,11 @@ namespace RichTextCleaner.Common
         {
             "noscript",
             "script",
+            "style",
             "time",
             "nav",
             "audio",
-            "canvas"
+            "canvas",
         };
 
         /// <summary>
