@@ -9,13 +9,13 @@
   <Identity
     Name="d2bccea2-094e-41a2-bc13-f666a235339d"
     Publisher="CN=Hans_Kesting"
-    Version="3.6.1.0" />
+    Version="4.2.7.0" />
 
   <mp:PhoneIdentity PhoneProductId="d2bccea2-094e-41a2-bc13-f666a235339d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>RichTextCleanerUwp</DisplayName>
-    <PublisherDisplayName>Hans_Kesting</PublisherDisplayName>
+    <DisplayName>Rich Text Cleaner</DisplayName>
+    <PublisherDisplayName>Hans Kesting</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
