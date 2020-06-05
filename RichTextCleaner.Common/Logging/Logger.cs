@@ -63,12 +63,13 @@ namespace RichTextCleaner.Common.Logging
             logWriter = new LogWriter(LogFolder);
 
             Log(LogLevel.Information, nameof(Logger), "Log writer startup");
+            System.Threading.Tasks.Task.Run(() => Cleanup());
         }
 
         /// <summary>
         /// Cleans up the old logs.
         /// </summary>
-        public static void Cleanup()
+        private static void Cleanup()
         {
             logWriter.Cleanup();
         }
