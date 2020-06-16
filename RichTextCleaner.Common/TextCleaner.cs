@@ -63,6 +63,14 @@ namespace RichTextCleaner.Common
         };
 
         /// <summary>
+        /// All full attributes to remove ("on*" and "data-*" are handled separately)
+        /// </summary>
+        private static readonly List<string> AttributesToRemove = new List<string>
+        {
+           "style", "class", "tabindex", "align", "id"
+        };
+
+        /// <summary>
         /// Clears the styling from the HTML.
         /// </summary>
         /// <param name="html">The HTML to clean.</param>
@@ -690,23 +698,18 @@ namespace RichTextCleaner.Common
                             // special case: for a <table> remove all attributes
                             node.Attributes.RemoveAll();
                         }
-
-                        foreach (string attrname in new[] { "style", "class", "tabindex" })
+                        else
                         {
-                            if (node.Attributes.Contains(attrname))
+                            // onclick, onchange, ..., plus all "data-" attributes
+                            foreach (var name in node.Attributes
+                                .Where(a => AttributesToRemove.Contains(a.Name, StringComparer.OrdinalIgnoreCase)
+                                            || a.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase)
+                                            || a.Name.StartsWith("data-", StringComparison.Ordinal))
+                                .Select(a => a.Name)
+                                .ToList())
                             {
-                                node.Attributes.Remove(attrname);
+                                node.Attributes.Remove(name);
                             }
-                        }
-
-                        // onclick, onchange, ..., plus all "data-" attributes
-                        foreach (var name in node.Attributes
-                            .Where(a => a.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase)
-                                        || a.Name.StartsWith("data-", StringComparison.Ordinal))
-                            .Select(a => a.Name)
-                            .ToList())
-                        {
-                            node.Attributes.Remove(name);
                         }
 
                         ProcessChildren(node);
