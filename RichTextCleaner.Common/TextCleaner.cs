@@ -32,7 +32,7 @@ namespace RichTextCleaner.Common
             { "\x2013", "&ndash;" },
             { "\x2014", "&mdash;" },
             { "<sup>TM</sup>", "&trade;" },
-            { "<sup>&reg;</sup>", "&reg;" },
+            { "<sup>&reg;</sup>", "&reg;" }, // includes ®, because that was just replaced
         };
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace RichTextCleaner.Common
         /// </summary>
         private static readonly Dictionary<string, List<string>> AttributeWhitelist = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
         {
-            {"a", new List<string>{"href"} },
+            {"a", new List<string>{"href", "target"} },
         };
 
         /// <summary>
