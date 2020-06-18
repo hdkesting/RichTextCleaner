@@ -63,11 +63,11 @@ namespace RichTextCleaner.Common
         };
 
         /// <summary>
-        /// All full attributes to remove ("on*" and "data-*" are handled separately)
+        /// Whitelist of permitted attributes on specific elements. If element is not mentioned (as key), then no attributes are allowed.
         /// </summary>
-        private static readonly List<string> AttributesToRemove = new List<string>
+        private static readonly Dictionary<string, List<string>> AttributeWhitelist = new Dictionary<string, List<string>>
         {
-           "style", "class", "tabindex", "align", "id"
+            {"a", new List<string>{"href"} },
         };
 
         /// <summary>
@@ -693,23 +693,22 @@ namespace RichTextCleaner.Common
                         break;
 
                     case HtmlNodeType.Element:
-                        if (node.Name == "table")
+                        if (AttributeWhitelist.ContainsKey(node.Name))
                         {
-                            // special case: for a <table> remove all attributes
-                            node.Attributes.RemoveAll();
-                        }
-                        else
-                        {
-                            // onclick, onchange, ..., plus all "data-" attributes
-                            foreach (var name in node.Attributes
-                                .Where(a => AttributesToRemove.Contains(a.Name, StringComparer.OrdinalIgnoreCase)
-                                            || a.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase)
-                                            || a.Name.StartsWith("data-", StringComparison.Ordinal))
+                            var whitelist = AttributeWhitelist[node.Name];
+                            var toremove = node.Attributes.Where(a => !whitelist.Contains(a.Name, StringComparer.OrdinalIgnoreCase))
                                 .Select(a => a.Name)
-                                .ToList())
+                                .ToList();
+
+                            foreach (var name in toremove)
                             {
                                 node.Attributes.Remove(name);
                             }
+                        }
+                        else
+                        {
+                            // no attributes whitelisted, so remove all
+                            node.Attributes.RemoveAll();
                         }
 
                         ProcessChildren(node);
