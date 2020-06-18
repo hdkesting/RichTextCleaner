@@ -65,7 +65,7 @@ namespace RichTextCleaner.Common
         /// <summary>
         /// Whitelist of permitted attributes on specific elements. If element is not mentioned (as key), then no attributes are allowed.
         /// </summary>
-        private static readonly Dictionary<string, List<string>> AttributeWhitelist = new Dictionary<string, List<string>>
+        private static readonly Dictionary<string, List<string>> AttributeWhitelist = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
         {
             {"a", new List<string>{"href"} },
         };
@@ -92,7 +92,7 @@ namespace RichTextCleaner.Common
             RemoveOfficeMarkup(doc);
             ClearStyling(doc);
             TranslateStyleNodes(doc, settings.MarkupToRemove);
-            RemoveEmptySpans(doc);
+            RemoveEmptyElements(doc);
 
             RemoveUnneededTags(doc);
 
@@ -319,30 +319,19 @@ namespace RichTextCleaner.Common
         }
 
         /// <summary>
-        /// Remove any &lt;a name=..&gt; elements.
+        /// Remove any &lt;a&gt; elements without attributes.
         /// </summary>
+        /// <remarks>
+        /// The "name" didn't make it through the whitelist, so left an &lt;a&gt; without attributes.
+        /// </remarks>
         /// <param name="document"></param>
         internal static void RemoveAnchors(HtmlDocument document)
         {
-            var anchors = document.DocumentNode.SelectNodes("//a[@name]") ?? Enumerable.Empty<HtmlNode>();
+            var anchors = document.DocumentNode.SelectNodes("//a[not(@href)]") ?? Enumerable.Empty<HtmlNode>();
             foreach (var anchor in anchors)
             {
-                if (anchor.GetAttributeValue("href", null) != null)
-                {
-                    // both "name" and "href" attributes, so just remove the "name"
-                    anchor.Attributes.Remove("name");
-                }
-                else
-                {
-                    // just "<a name>", remove from around contents
-                    RemoveSurroundingTags(anchor);
-                }
-            }
-
-            anchors = document.DocumentNode.SelectNodes("//a[@tabindex]") ?? Enumerable.Empty<HtmlNode>();
-            foreach (var anchor in anchors)
-            {
-                anchor.Attributes.Remove("tabindex");
+                // used to be just "<a name>", remove from around contents
+                RemoveSurroundingTags(anchor);
             }
         }
 
@@ -648,27 +637,38 @@ namespace RichTextCleaner.Common
         }
 
         /// <summary>
-        /// Replace empty SPAN and P elements by a space 
+        /// Remove several empty elements 
         /// </summary>
         /// <param name="document"></param>
-        private static void RemoveEmptySpans(HtmlDocument document)
+        private static void RemoveEmptyElements(HtmlDocument document)
         {
             // empty span nodes - remove
-            var spans = document.DocumentNode.SelectNodes("//span[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
-            foreach (var span in spans)
-            {
-                // insert a text-space to replace the span
-                var space = HtmlNode.CreateNode(" ");
-                span.ParentNode.ReplaceChild(space, span);
-            }
+            ReplaceEmptyElement("span", " ");
 
             // and empty paragraphs
-            spans = document.DocumentNode.SelectNodes("//p[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
-            foreach (var span in spans)
+            ReplaceEmptyElement("p", " ");
+
+            RemoveEmptyElements("strong");
+            RemoveEmptyElements("em");
+            RemoveEmptyElements("a");
+
+            void ReplaceEmptyElement(string elementname, string replacement)
             {
-                // insert a text-space to replace the span
-                var space = HtmlNode.CreateNode(" ");
-                span.ParentNode.ReplaceChild(space, span);
+                var elements = document.DocumentNode.SelectNodes("//" + elementname + "[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
+                foreach (var element in elements)
+                {
+                    // insert a text-element to replace the span
+                    var space = HtmlNode.CreateNode(replacement);
+                    element.ParentNode.ReplaceChild(space, element);
+                }
+            }
+            void RemoveEmptyElements(string elementname)
+            {
+                var elements = document.DocumentNode.SelectNodes("//" + elementname + "[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
+                foreach (var element in elements)
+                {
+                    element.ParentNode.RemoveChild(element);
+                }
             }
         }
 
