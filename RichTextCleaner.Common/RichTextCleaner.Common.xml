@@ -470,6 +470,11 @@
             The cleaner module.
             </summary>
         </member>
+        <member name="F:RichTextCleaner.Common.TextCleaner.TextReplacements">
+            <summary>
+            Standard replacements to do in the source text.
+            </summary>
+        </member>
         <member name="F:RichTextCleaner.Common.TextCleaner.TagsToRemove">
             <summary>
             The tags to remove while keeping their contents.
@@ -478,6 +483,11 @@
         <member name="F:RichTextCleaner.Common.TextCleaner.NonCmsElementsToRemove">
             <summary>
             The non CMS elements to remove including contents.
+            </summary>
+        </member>
+        <member name="F:RichTextCleaner.Common.TextCleaner.AttributeWhitelist">
+            <summary>
+            Whitelist of permitted attributes on specific elements. If element is not mentioned (as key), then no attributes are allowed.
             </summary>
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,RichTextCleaner.Common.Support.ICleanerSettings)">
@@ -503,8 +513,11 @@
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.RemoveAnchors(HtmlAgilityPack.HtmlDocument)">
             <summary>
-            Remove any &lt;a name=..&gt; elements.
+            Remove any &lt;a&gt; elements without attributes.
             </summary>
+            <remarks>
+            The "name" didn't make it through the whitelist, so left an &lt;a&gt; without attributes.
+            </remarks>
             <param name="document"></param>
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.CreateMissingLinks(HtmlAgilityPack.HtmlDocument)">
@@ -544,9 +557,9 @@
             </summary>
             <param name="node"></param>
         </member>
-        <member name="M:RichTextCleaner.Common.TextCleaner.RemoveEmptySpans(HtmlAgilityPack.HtmlDocument)">
+        <member name="M:RichTextCleaner.Common.TextCleaner.RemoveEmptyElements(HtmlAgilityPack.HtmlDocument)">
             <summary>
-            Replace empty SPAN and P elements by a space 
+            Remove several empty elements 
             </summary>
             <param name="document"></param>
         </member>

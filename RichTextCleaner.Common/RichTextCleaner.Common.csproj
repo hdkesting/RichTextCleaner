@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>3.2.7.0</AssemblyVersion>
+    <AssemblyVersion>3.3.0.0</AssemblyVersion>
     <Authors>Hans Kesting</Authors>
-    <Version>3.2.6</Version>
+    <Version>3.3.0</Version>
     <Copyright>Hans Kesting 2019-2020</Copyright>
-    <FileVersion>3.2.7.0</FileVersion>
-    <Company>EPAM Systems</Company>
+    <FileVersion>3.3.0.0</FileVersion>
+    <Company>Hans Kesting</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

@@ -78,7 +78,7 @@ namespace RichTextCleanerFW.Converters
             yield return CreateRun(state, text.ToString());
         }
 
-        private Run CreateRun(State state, string text)
+        private static Run CreateRun(State state, string text)
         {
             if (string.IsNullOrEmpty(text))
             {
