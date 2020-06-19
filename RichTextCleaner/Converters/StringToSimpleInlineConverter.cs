@@ -34,7 +34,7 @@ namespace RichTextCleaner.Converters
             return Enumerable.Repeat((Inline)run, 1);
         }
 
-        private List<Inline> GetStartupMessage()
+        private static List<Inline> GetStartupMessage()
         {
             var lines = new List<Inline>();
             var run = new Run("Cleaning up HTML fragments.")

@@ -46,6 +46,8 @@ namespace RichTextCleaner.Common
             "footer",
             "body",
             "content", // obsolete tag https://developer.mozilla.org/en-US/docs/Web/HTML/Element/content
+            "mark",
+            "ins",
         };
 
         /// <summary>
@@ -58,8 +60,11 @@ namespace RichTextCleaner.Common
             "style",
             "time",
             "nav",
+            "section",
+            "article",
             "audio",
             "canvas",
+            "del",
         };
 
         /// <summary>
@@ -67,7 +72,9 @@ namespace RichTextCleaner.Common
         /// </summary>
         private static readonly Dictionary<string, List<string>> AttributeWhitelist = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
         {
-            {"a", new List<string>{"href", "target"} },
+            { "a", new List<string> { "href", "target", "alt", "title"} },
+            { "img", new List<string> { "src", "srcset", "alt", "title" } },
+            { "iframe", new List<string> { "src", "width", "height", "title" } },
         };
 
         /// <summary>
