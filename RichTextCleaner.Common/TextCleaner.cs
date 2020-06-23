@@ -97,6 +97,7 @@ namespace RichTextCleaner.Common
 
             RemoveNonCMSElements(doc);
             RemoveOfficeMarkup(doc);
+            CreateHeaders(doc);
             ClearStyling(doc);
             TranslateStyleNodes(doc, settings.MarkupToRemove);
             RemoveEmptyElements(doc);
@@ -198,6 +199,26 @@ namespace RichTextCleaner.Common
                 if (elt.NodeType == HtmlNodeType.Element && elt.Name.Contains(':'))
                 {
                     RemoveSurroundingTags(elt);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Find P elements containing a single STRONG, convert to H2.
+        /// </summary>
+        /// <remarks>
+        /// This will not see cases where the "header" ends on (or starts with) a BR.
+        /// </remarks>
+        /// <param name="document"></param>
+        private static void CreateHeaders(HtmlDocument document)
+        {
+            var paras = document.DocumentNode.SelectNodes("//p") ?? Enumerable.Empty<HtmlNode>();
+            foreach (var par in paras)
+            {
+                if (par.ChildNodes.Count == 1 && (par.ChildNodes[0].Name == "strong" || par.ChildNodes[0].Name == "b"))
+                { 
+                    RemoveSurroundingTags(par.ChildNodes[0]);
+                    par.Name = "h2";
                 }
             }
         }

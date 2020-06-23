@@ -505,6 +505,15 @@
             </summary>
             <param name="document"></param>
         </member>
+        <member name="M:RichTextCleaner.Common.TextCleaner.CreateHeaders(HtmlAgilityPack.HtmlDocument)">
+            <summary>
+            Find P elements containing a single STRONG, convert to H2.
+            </summary>
+            <remarks>
+            This will not see cases where the "header" ends on (or starts with) a BR.
+            </remarks>
+            <param name="document"></param>
+        </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.TrimParagraphs(HtmlAgilityPack.HtmlDocument)">
             <summary>
             Remove any whitespace from start and end of paragraphs.
