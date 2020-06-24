@@ -207,7 +207,7 @@ namespace RichTextCleaner.Common
         /// Find P elements containing a single STRONG, convert to H2.
         /// </summary>
         /// <remarks>
-        /// This will not see cases where the "header" ends on (or starts with) a BR.
+        /// This will not see cases where the "header" ends on (or starts with) a BR or other whitespace. Or when it consists of two consecutive STRONGs.
         /// </remarks>
         /// <param name="document"></param>
         private static void CreateHeaders(HtmlDocument document)
@@ -374,20 +374,20 @@ namespace RichTextCleaner.Common
 
             foreach (var textnode in plainTexts)
             {
-                // start with http(s):// or www or 2 "words", then at least one more "word"
+                // start with http(s):// or www or 2 "words", then at least one more "word". TLD must be letters-only
                 textnode.InnerHtml = Regex.Replace(
                     textnode.InnerHtml, 
-                    @"((https?://[a-z0-9]{2,})|www|[a-zA-Z0-9-]{2,}\.[a-zA-Z0-9-]{2,})(\.[a-zA-Z0-9-]{2,})+(/[a-zA-Z0-9.-]+)*", 
-                    new MatchEvaluator(LinkCreator));
+                    @"((https?://[a-z0-9]{2,})|www|[a-zA-Z0-9-]{2,})(\.[a-zA-Z0-9-]{2,})+(\.[a-zA-Z]{2,10})(/[a-zA-Z0-9.-]+)*", 
+                    new MatchEvaluator(WebLinkCreator));
 
                 // start with a "+" and then numbers and spaces - that is a telephone number
                 textnode.InnerHtml = Regex.Replace(
                     textnode.InnerHtml,
-                    @"\+[1-9][ ]?([0-9][ ]?){7,}",
+                    @"\+[1-9][ -]?([0-9][ -]?){6,}[0-9]",
                     new MatchEvaluator(PhoneLinkCreator));
             }
 
-            string LinkCreator(Match m) => m.Value.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
+            string WebLinkCreator(Match m) => m.Value.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
                 ? $"<a href=\"{m.Value}\">{m.Value}</a>"
                 : $"<a href=\"http://{m.Value}\">{m.Value}</a>";
 
