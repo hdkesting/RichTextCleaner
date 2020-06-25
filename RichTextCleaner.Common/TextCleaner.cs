@@ -2,6 +2,7 @@
 using RichTextCleaner.Common.Support;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -210,15 +211,65 @@ namespace RichTextCleaner.Common
         /// This will not see cases where the "header" ends on (or starts with) a BR or other whitespace. Or when it consists of two consecutive STRONGs.
         /// </remarks>
         /// <param name="document"></param>
-        private static void CreateHeaders(HtmlDocument document)
+        internal static void CreateHeaders(HtmlDocument document)
         {
             var paras = document.DocumentNode.SelectNodes("//p") ?? Enumerable.Empty<HtmlNode>();
             foreach (var par in paras)
             {
-                if (par.ChildNodes.Count == 1 && (par.ChildNodes[0].Name == "strong" || par.ChildNodes[0].Name == "b"))
-                { 
-                    RemoveSurroundingTags(par.ChildNodes[0]);
+                var brNodes = new List<HtmlNode>();
+                var strongNodes = new List<HtmlNode>();
+                bool canBeHeader = false;
+
+                // check just a single level deep
+                foreach (var child in par.ChildNodes)
+                {
+                    if (child.NodeType == HtmlNodeType.Text)
+                    {
+                        if (!String.IsNullOrWhiteSpace(child.InnerText))
+                        {
+                            // plain text in P - so not a header
+                            canBeHeader = false;
+                            break;
+                        }
+                    }
+                    else if (child.NodeType == HtmlNodeType.Element)
+                    {
+                        if (child.Name == "br")
+                        {
+                            brNodes.Add(child);
+                        }
+                        else if (child.Name == "strong" || child.Name == "b")
+                        {
+                            canBeHeader = true;
+                            strongNodes.Add(child);
+                        }
+                        else
+                        {
+                            // other node, so not a header
+                            canBeHeader = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (canBeHeader)
+                {
+                    // remove BRs
+                    foreach (var nd in brNodes)
+                    {
+                        par.RemoveChild(nd);
+                    }
+
+                    // remove B/STRONG from around their content
+                    foreach (var nd in strongNodes)
+                    {
+                        RemoveSurroundingTags(nd);
+                    }
+
+                    // make this P into a H2
                     par.Name = "h2";
+
+                    TrimElement(par);
                 }
             }
         }
@@ -264,78 +315,7 @@ namespace RichTextCleaner.Common
             var paras = document.DocumentNode.SelectNodes("//p") ?? Enumerable.Empty<HtmlNode>();
             foreach (var para in paras.Where(p => p.ChildNodes?.Count > 0))
             {
-                bool trimmed;
-                do
-                {
-                    var child = para.ChildNodes.FirstOrDefault();
-                    if (child == null)
-                    {
-                        break;
-                    }
-
-                    trimmed = false;
-                    if (child.NodeType == HtmlNodeType.Text)
-                    {
-                        if (string.IsNullOrWhiteSpace(child.InnerHtml))
-                        {
-                            child.Remove();
-                            trimmed = true;
-                        }
-                        else
-                        {
-                            // remove any leading whitespace
-                            var htmlTrim = child.InnerHtml.TrimStart();
-                            if (htmlTrim != child.InnerHtml)
-                            {
-                                child.InnerHtml = htmlTrim;
-                                trimmed = true;
-                            }
-                        }
-                    }
-                    else if (child.NodeType == HtmlNodeType.Element && child.Name == "br")
-                    {
-                        // remove an initial <br>
-                        child.Remove();
-                        trimmed = true;
-                    }
-                }
-                while (trimmed);
-
-                do
-                {
-                    var child = para.ChildNodes.LastOrDefault(); // may be the same as first
-                    if (child == null)
-                    {
-                        break;
-                    }
-
-                    trimmed = false;
-                    if (child.NodeType == HtmlNodeType.Text)
-                    {
-                        if (string.IsNullOrWhiteSpace(child.InnerHtml))
-                        {
-                            child.Remove();
-                            trimmed = true;
-                        }
-                        else
-                        {
-                            // remove any trailing whitespace
-                            var htmlTrim = child.InnerHtml.TrimEnd();
-                            if (htmlTrim != child.InnerHtml)
-                            {
-                                child.InnerHtml = htmlTrim;
-                                trimmed = true;
-                            }
-                        }
-                    }
-                    else if (child.NodeType == HtmlNodeType.Element && child.Name == "br")
-                    {
-                        // remove an final <br>
-                        child.Remove();
-                        trimmed = true;
-                    }
-                }
-                while (trimmed);
+                TrimElement(para);
             }
 
             // remove any trailing <br/>
@@ -344,6 +324,89 @@ namespace RichTextCleaner.Common
             {
                 brnode.ParentNode.RemoveChild(brnode);
             }
+        }
+
+        private static void TrimElement(HtmlNode node)
+        {
+            if (node is null || (node.ChildNodes?.Count ?? 0) == 0)
+            {
+                return;
+            }
+
+            // remove leading whitespace
+            bool trimmed;
+            do
+            {
+                var child = node.ChildNodes.FirstOrDefault();
+                if (child == null)
+                {
+                    break;
+                }
+
+                trimmed = false;
+                if (child.NodeType == HtmlNodeType.Text)
+                {
+                    if (string.IsNullOrWhiteSpace(child.InnerHtml))
+                    {
+                        child.Remove();
+                        trimmed = true;
+                    }
+                    else
+                    {
+                        // remove any leading whitespace
+                        var htmlTrim = child.InnerHtml.TrimStart();
+                        if (htmlTrim != child.InnerHtml)
+                        {
+                            child.InnerHtml = htmlTrim;
+                            trimmed = true;
+                        }
+                    }
+                }
+                else if (child.NodeType == HtmlNodeType.Element && child.Name == "br")
+                {
+                    // remove an initial <br>
+                    child.Remove();
+                    trimmed = true;
+                }
+            }
+            while (trimmed);
+
+            // remove trailing whitespace
+            do
+            {
+                var child = node.ChildNodes.LastOrDefault(); // may be the same as first
+                if (child == null)
+                {
+                    break;
+                }
+
+                trimmed = false;
+                if (child.NodeType == HtmlNodeType.Text)
+                {
+                    if (string.IsNullOrWhiteSpace(child.InnerHtml))
+                    {
+                        child.Remove();
+                        trimmed = true;
+                    }
+                    else
+                    {
+                        // remove any trailing whitespace
+                        var htmlTrim = child.InnerHtml.TrimEnd();
+                        if (htmlTrim != child.InnerHtml)
+                        {
+                            child.InnerHtml = htmlTrim;
+                            trimmed = true;
+                        }
+                    }
+                }
+                else if (child.NodeType == HtmlNodeType.Element && child.Name == "br")
+                {
+                    // remove an final <br>
+                    child.Remove();
+                    trimmed = true;
+                }
+            }
+            while (trimmed);
         }
 
         /// <summary>

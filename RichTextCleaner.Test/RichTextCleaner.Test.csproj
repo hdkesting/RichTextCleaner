@@ -65,6 +65,7 @@
     <Compile Include="TestAnchorsAndLinks.cs" />
     <Compile Include="TestQuoteUpdate.cs" />
     <Compile Include="TestOfficeMarkup.cs" />
+    <Compile Include="TestCreateHeader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RichTextCleaner.Common\RichTextCleaner.Common.csproj">

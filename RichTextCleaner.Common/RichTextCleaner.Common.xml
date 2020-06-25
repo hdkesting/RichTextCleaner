@@ -510,7 +510,7 @@
             Find P elements containing a single STRONG, convert to H2.
             </summary>
             <remarks>
-            This will not see cases where the "header" ends on (or starts with) a BR.
+            This will not see cases where the "header" ends on (or starts with) a BR or other whitespace. Or when it consists of two consecutive STRONGs.
             </remarks>
             <param name="document"></param>
         </member>

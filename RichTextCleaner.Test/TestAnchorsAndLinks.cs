@@ -10,11 +10,12 @@ namespace RichTextCleaner.Test
         [TestMethod]
         public void TabIndex_ShouldBeRemoved()
         {
-            var source = "<p> follow <a tabindex=\"0\" href=\"https://twitter.com/wkhealth\">@WKHealth</a> or <a tabindex=\"0\" href=\"https://twitter.com/Wolters_Kluwer\">@Wolters_Kluwer</a> on Twitter</p>";
+            var source = "<p> follow <a>@WKHealth</a> or <a name='target'>@Wolters_Kluwer</a> on Twitter</p>";
 
+            // removes an A without HREF
             var html = DocTester.ProcessSource(source, TextCleaner.RemoveAnchors);
 
-            Assert.IsFalse(html.Contains("tabindex"));
+            Assert.IsFalse(html.Contains("<a"));
         }
 
         [TestMethod]
@@ -23,8 +24,8 @@ namespace RichTextCleaner.Test
             var source = "<p><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\"><sup>&reg;</sup></a></p>";
 
             var html = DocTester.ProcessSource(source, TextCleaner.CombineLinks);
-
-            Assert.AreEqual("<p><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper<sup>&reg;</sup></a></p>", html);
+            // SUP is removed from around (R)
+            Assert.AreEqual("<p><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper&reg;</a></p>", html);
         }
 
         [TestMethod]
@@ -34,7 +35,8 @@ namespace RichTextCleaner.Test
 
             var html = DocTester.ProcessSource(source, TextCleaner.CombineLinks);
 
-            Assert.AreEqual("<a href=\"nu.nl\">x</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper<sup>&reg;</sup></a>", html);
+            // SUP is removed from around &reg;
+            Assert.AreEqual("<a href=\"nu.nl\">x</a><a href=\"http://www.example.com/investment-compliance/solutions/gainskeeper.aspx\">GainsKeeper&reg;</a>", html);
         }
 
         [TestMethod]
@@ -104,7 +106,8 @@ namespace RichTextCleaner.Test
 
             var html = DocTester.ProcessSource(source, TextCleaner.RemoveLeadingAndTrailingSpacesFromLinks);
 
-            Assert.AreEqual("<p style=\"\">[<a href=\"http://www.example.com/a\" style=\"\">Some example</a>] bla bla [<a href=\"http://www.example.com/b\" style=\"\">name® bla]</a>.</p>", html);
+            // actual ® is replaced by &reg;
+            Assert.AreEqual("<p style=\"\">[<a href=\"http://www.example.com/a\" style=\"\">Some example</a>] bla bla [<a href=\"http://www.example.com/b\" style=\"\">name&reg; bla]</a>.</p>", html);
 
         }
 

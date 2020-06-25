@@ -10,7 +10,7 @@ namespace RichTextCleaner.Test
         /// Processes the source using the supplied processor and returns the result.
         /// </summary>
         /// <param name="source">The (html) source.</param>
-        /// <param name="processor">The processor.</param>
+        /// <param name="processor">The processor method.</param>
         /// <returns>The resulting HTML.</returns>
         public static string ProcessSource(string source, Action<HtmlDocument> processor)
         {
