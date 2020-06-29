@@ -139,6 +139,11 @@ namespace RichTextCleaner.Models
                 Properties.Settings.Default.Save();
             }
         }
+
+        /// <summary>Gets a value indicating whether to add "rel=noopener" to external links.</summary>
+        /// <value>
+        ///   <c>true</c> if "rel=noopener" should be added; otherwise, <c>false</c>.</value>
+        public bool AddRelNoOpener => true;
 #pragma warning restore CA1822 // Mark members as static
     }
 }

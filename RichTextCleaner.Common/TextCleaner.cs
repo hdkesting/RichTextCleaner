@@ -73,7 +73,7 @@ namespace RichTextCleaner.Common
         /// </summary>
         private static readonly Dictionary<string, List<string>> AttributeWhitelist = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
         {
-            { "a", new List<string> { "href", "target", "alt", "title"} },
+            { "a", new List<string> { "href", "target", "alt", "title", "rel"} },
             { "img", new List<string> { "src", "srcset", "alt", "title" } },
             { "iframe", new List<string> { "src", "width", "height", "title" } },
         };
@@ -115,7 +115,7 @@ namespace RichTextCleaner.Common
             CombineAndCleanLinks(doc, settings.QueryCleanLevel);
             if (settings.AddTargetBlank)
             {
-                AddBlankLinkTargets(doc);
+                AddBlankLinkTargets(doc, settings.AddRelNoOpener);
             }
 
             TrimParagraphs(doc);
@@ -583,11 +583,10 @@ namespace RichTextCleaner.Common
             }
         }
 
-        /// <summary>
-        /// Add "target=_blank" to http links.
-        /// </summary>
-        /// <param name="document"></param>
-        internal static void AddBlankLinkTargets(HtmlDocument document)
+        /// <summary>Add "target=_blank" to http links.</summary>
+        /// <param name="document">The document to process.</param>
+        /// <param name="addRelNoOpener">A value indicating whether "rel=noopener" should be added as well.</param>
+        internal static void AddBlankLinkTargets(HtmlDocument document, bool addRelNoOpener)
         {
             var links = document.DocumentNode.SelectNodes("//a") ?? Enumerable.Empty<HtmlNode>();
 
@@ -596,6 +595,24 @@ namespace RichTextCleaner.Common
                 if (link.Attributes["target"] == null)
                 {
                     link.Attributes.Add("target", "_blank");
+                }
+
+                if (addRelNoOpener)
+                {
+                    // https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/noopener
+                    if (link.Attributes["rel"] == null)
+                    {
+                        link.Attributes.Add("rel", "noopener");
+                    }
+                    else
+                    {
+                        var attr = link.Attributes["rel"];
+
+                        if (!attr.Value.Contains("noopener"))
+                        {
+                            attr.Value += " noopener";
+                        }
+                    }
                 }
             }
         }

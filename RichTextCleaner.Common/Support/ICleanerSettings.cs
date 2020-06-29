@@ -50,5 +50,13 @@ namespace RichTextCleaner.Common.Support
         ///   <c>true</c> if create link from text; otherwise, <c>false</c>.
         /// </value>
         bool CreateLinkFromText { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether to add "rel=noopener" to external links.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if "rel=noopener" should be added; otherwise, <c>false</c>.
+        /// </value>
+        bool AddRelNoOpener { get; }
     }
 }

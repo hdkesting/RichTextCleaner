@@ -21,6 +21,7 @@ Use the "Clear Styling & Copy" button (or use (Ctrl-)C) to clean up the styling 
 * Replace all "`&nbsp;`" with a plain space - this does destroy attempts at layout-by-spaces that would need replacing anyway;
 * Remove all "`<script>`", "`<noscript>`" and "`<time>`" elements including contents. iframes (that may contain videos) are left intact;
 * Remove all "style" and "class" attributes;
+* If a paragraph (`<p>`) contains only bold text, then it is converted to an `<h2>` header - this is not perfect but catches a lot;
 * Replace "`<b>`" elements with "`<strong>`" and "`<i>`" with "`<em>`";
 * Remove "`<font>`" and "`<span>`" elements while keeping their contents;
 * (When checked) remove all "`<strong>`", "`<em>`" and "`<u>`" elements, keeping their contents;
@@ -82,4 +83,4 @@ Do note that "italics" are sometimes used for emphasis (you probably want to cle
 
 ## Source
 
-For anyone that is really interested, the sourcecode of this app is on GitHub: https://github.com/hdkesting/RichTextCleaner
+For anyone that is really interested, the full sourcecode of this app is on GitHub: https://github.com/hdkesting/RichTextCleaner

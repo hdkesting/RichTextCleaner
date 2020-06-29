@@ -175,6 +175,10 @@ namespace RichTextCleanerUwp.Models
             }
         }
 
+        /// <summary>Gets a value indicating whether to add "rel=noopener" to external links.</summary>
+        /// <value>
+        ///   <c>true</c> if "rel=noopener" should be added; otherwise, <c>false</c>.</value>
+        public bool AddRelNoOpener => true;
 
         /// <summary>
         /// Gets or sets the HTML source currently being processed.

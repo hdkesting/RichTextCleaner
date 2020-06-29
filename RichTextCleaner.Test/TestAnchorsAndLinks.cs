@@ -116,9 +116,39 @@ namespace RichTextCleaner.Test
         {
             var source = "<a href=\"https://www.example.com\">link</a>";
 
-            var html = DocTester.ProcessSource(source, TextCleaner.AddBlankLinkTargets);
+            var html = DocTester.ProcessSource(source, doc => TextCleaner.AddBlankLinkTargets(doc, false));
 
             Assert.AreEqual("<a href=\"https://www.example.com\" target=\"_blank\">link</a>", html);
+        }
+
+        [TestMethod]
+        public void LinksToRemote_ShouldGetTargetAndNoOpener()
+        {
+            var source = "<a href=\"https://www.example.com\">link</a>";
+
+            var html = DocTester.ProcessSource(source, doc => TextCleaner.AddBlankLinkTargets(doc, true));
+
+            Assert.AreEqual("<a href=\"https://www.example.com\" target=\"_blank\" rel=\"noopener\">link</a>", html);
+        }
+
+        [TestMethod]
+        public void LinksToRemoteWithRel_ShouldGetTargetAndNoOpener()
+        {
+            var source = "<a href=\"https://www.example.com\" rel=\"noopener\">link</a>";
+
+            var html = DocTester.ProcessSource(source, doc => TextCleaner.AddBlankLinkTargets(doc, true));
+
+            Assert.AreEqual("<a href=\"https://www.example.com\" rel=\"noopener\" target=\"_blank\">link</a>", html);
+        }
+
+        [TestMethod]
+        public void LinksToRemoteWithRel2_ShouldGetTargetAndNoOpener()
+        {
+            var source = "<a href=\"https://www.example.com\" rel=\"noreferrer\">link</a>";
+
+            var html = DocTester.ProcessSource(source, doc => TextCleaner.AddBlankLinkTargets(doc, true));
+
+            Assert.AreEqual("<a href=\"https://www.example.com\" rel=\"noreferrer noopener\" target=\"_blank\">link</a>", html);
         }
 
         [TestMethod]
@@ -126,9 +156,19 @@ namespace RichTextCleaner.Test
         {
             var source = "<a href=\"https://www.example.com\" target=\"_self\">link</a>";
 
-            var html = DocTester.ProcessSource(source, TextCleaner.AddBlankLinkTargets);
+            var html = DocTester.ProcessSource(source, doc => TextCleaner.AddBlankLinkTargets(doc, false));
 
             Assert.AreEqual("<a href=\"https://www.example.com\" target=\"_self\">link</a>", html);
+        }
+
+        [TestMethod]
+        public void LinksToRemoteWithTarget_ShouldNotChangeTargetButAddOpener()
+        {
+            var source = "<a href=\"https://www.example.com\" target=\"_self\">link</a>";
+
+            var html = DocTester.ProcessSource(source, doc => TextCleaner.AddBlankLinkTargets(doc, true));
+
+            Assert.AreEqual("<a href=\"https://www.example.com\" target=\"_self\" rel=\"noopener\">link</a>", html);
         }
 
         [TestMethod]
@@ -136,10 +176,21 @@ namespace RichTextCleaner.Test
         {
             var source = "<a href=\"/default.html\">link</a>";
 
-            var html = DocTester.ProcessSource(source, TextCleaner.AddBlankLinkTargets);
+            var html = DocTester.ProcessSource(source, doc => TextCleaner.AddBlankLinkTargets(doc, false));
 
             Assert.AreEqual("<a href=\"/default.html\">link</a>", html);
         }
+
+        [TestMethod]
+        public void LinksToLocal_ShouldNotGetTargetOrOpener()
+        {
+            var source = "<a href=\"/default.html\">link</a>";
+
+            var html = DocTester.ProcessSource(source, doc => TextCleaner.AddBlankLinkTargets(doc, true));
+
+            Assert.AreEqual("<a href=\"/default.html\">link</a>", html);
+        }
+
     }
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 }
