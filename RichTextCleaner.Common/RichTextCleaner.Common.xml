@@ -519,6 +519,7 @@
             </summary>
             <remarks>
             This will not see cases where the "header" ends on (or starts with) a BR or other whitespace. Or when it consists of two consecutive STRONGs.
+            It will ignore paragraphs of 200 or longer as that is probably not a title (but maybe an abstract/intro).
             </remarks>
             <param name="document"></param>
         </member>

@@ -209,12 +209,13 @@ namespace RichTextCleaner.Common
         /// </summary>
         /// <remarks>
         /// This will not see cases where the "header" ends on (or starts with) a BR or other whitespace. Or when it consists of two consecutive STRONGs.
+        /// It will ignore paragraphs of 200 or longer as that is probably not a title (but maybe an abstract/intro).
         /// </remarks>
         /// <param name="document"></param>
         internal static void CreateHeaders(HtmlDocument document)
         {
             var paras = document.DocumentNode.SelectNodes("//p") ?? Enumerable.Empty<HtmlNode>();
-            foreach (var par in paras)
+            foreach (var par in paras.Where(p => p.InnerText.Length < 200))
             {
                 var brNodes = new List<HtmlNode>();
                 var strongNodes = new List<HtmlNode>();
