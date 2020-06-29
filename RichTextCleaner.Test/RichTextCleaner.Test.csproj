@@ -57,6 +57,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultSettings.cs" />
     <Compile Include="DocTester.cs" />
     <Compile Include="TestTextCleaner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

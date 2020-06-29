@@ -58,6 +58,15 @@ Some paragraph<br/>
 
             Assert.AreEqual(source, html);
         }
+
+        [TestMethod]
+        public void ImageInParagraph_ShouldStay()
+        {
+            // paragraph without text (but with image) got wrongly removed as "empty"
+            var source = "<p><img src=\"http://example.com/image.jpeg\"></p>";
+            var html = DocTester.ProcessSource(source, TextCleaner.RemoveEmptyElements);
+            Assert.IsTrue(html.Contains("<img"));
+        }
     }
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 }

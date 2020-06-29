@@ -74,7 +74,7 @@ namespace RichTextCleaner.Common
         private static readonly Dictionary<string, List<string>> AttributeWhitelist = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
         {
             { "a", new List<string> { "href", "target", "alt", "title", "rel"} },
-            { "img", new List<string> { "src", "srcset", "alt", "title" } },
+            { "img", new List<string> { "src", "srcset", "width", "height", "alt", "title" } },
             { "iframe", new List<string> { "src", "width", "height", "title" } },
         };
 
@@ -749,7 +749,7 @@ namespace RichTextCleaner.Common
         /// Remove several empty elements 
         /// </summary>
         /// <param name="document"></param>
-        private static void RemoveEmptyElements(HtmlDocument document)
+        internal static void RemoveEmptyElements(HtmlDocument document)
         {
             // empty span nodes - remove
             ReplaceEmptyElement("span", " ");
@@ -763,8 +763,8 @@ namespace RichTextCleaner.Common
 
             void ReplaceEmptyElement(string elementname, string replacement)
             {
-                var elements = document.DocumentNode.SelectNodes("//" + elementname + "[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
-                foreach (var element in elements)
+                var elements = document.DocumentNode.SelectNodes("//" + elementname) ?? Enumerable.Empty<HtmlNode>();
+                foreach (var element in elements.Where(e => !e.HasChildNodes && string.IsNullOrWhiteSpace(e.InnerText)))
                 {
                     // insert a text-element to replace the span
                     var space = HtmlNode.CreateNode(replacement);
@@ -773,8 +773,8 @@ namespace RichTextCleaner.Common
             }
             void RemoveEmptyElements(string elementname)
             {
-                var elements = document.DocumentNode.SelectNodes("//" + elementname + "[normalize-space(.) = '']") ?? Enumerable.Empty<HtmlNode>();
-                foreach (var element in elements)
+                var elements = document.DocumentNode.SelectNodes("//" + elementname) ?? Enumerable.Empty<HtmlNode>();
+                foreach (var element in elements.Where(e => !e.HasChildNodes && string.IsNullOrWhiteSpace(e.InnerText)))
                 {
                     element.ParentNode.RemoveChild(element);
                 }
