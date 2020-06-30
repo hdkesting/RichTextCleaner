@@ -71,9 +71,12 @@ namespace RichTextCleaner.Common
         /// <summary>
         /// Whitelist of permitted attributes on specific elements. If element is not mentioned (as key), then no attributes are allowed.
         /// </summary>
+        /// <remarks>
+        /// Do not add "rel" to "a", as Sitecore has its own ideas about that.
+        /// </remarks>
         private static readonly Dictionary<string, List<string>> AttributeWhitelist = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
         {
-            { "a", new List<string> { "href", "target", "alt", "title", "rel"} },
+            { "a", new List<string> { "href", "target", "alt", "title"} },
             { "img", new List<string> { "src", "srcset", "width", "height", "alt", "title" } },
             { "iframe", new List<string> { "src", "width", "height", "title" } },
         };

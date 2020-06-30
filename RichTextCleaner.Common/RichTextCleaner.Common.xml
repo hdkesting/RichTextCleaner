@@ -497,6 +497,9 @@
             <summary>
             Whitelist of permitted attributes on specific elements. If element is not mentioned (as key), then no attributes are allowed.
             </summary>
+            <remarks>
+            Do not add "rel" to "a", as Sitecore has its own ideas about that.
+            </remarks>
         </member>
         <member name="M:RichTextCleaner.Common.TextCleaner.ClearStylingFromHtml(System.String,RichTextCleaner.Common.Support.ICleanerSettings)">
             <summary>

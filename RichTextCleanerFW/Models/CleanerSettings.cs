@@ -141,9 +141,10 @@ namespace RichTextCleanerFW.Models
         }
 
         /// <summary>Gets a value indicating whether to add "rel=noopener" to external links.</summary>
+        /// <remarks>Apparently Sitecore automatically adds this without checking that it is already there.</remarks>
         /// <value>
         ///   <c>true</c> if "rel=noopener" should be added; otherwise, <c>false</c>.</value>
-        public bool AddRelNoOpener => true;
+        public bool AddRelNoOpener => false;
 #pragma warning restore CA1822 // Mark members as static
     }
 }
