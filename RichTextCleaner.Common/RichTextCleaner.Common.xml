@@ -64,7 +64,7 @@
         </member>
         <member name="P:RichTextCleaner.Common.Logging.Logger.LogFolder">
             <summary>
-            Gets the folder that the logs are written to.
+            Gets the folder that the logs are written to. Set through <see cref="M:RichTextCleaner.Common.Logging.Logger.Initialize(System.IO.DirectoryInfo)"/>.
             </summary>
             <value>
             The log folder.
@@ -120,12 +120,12 @@
         </member>
         <member name="F:RichTextCleaner.Common.Logging.LogLevel.Warning">
             <summary>
-            A warning.
+            A warning that may require attention.
             </summary>
         </member>
         <member name="F:RichTextCleaner.Common.Logging.LogLevel.Error">
             <summary>
-            An error (probably includes exception).
+            An error (probably should include exception).
             </summary>
         </member>
         <member name="T:RichTextCleaner.Common.Logging.LogMessage">
@@ -176,7 +176,7 @@
         </member>
         <member name="P:RichTextCleaner.Common.Logging.LogMessage.Exception">
             <summary>
-            Gets the exception.
+            Gets the exception, if any.
             </summary>
             <value>
             The exception.
@@ -209,14 +209,14 @@
         </member>
         <member name="M:RichTextCleaner.Common.Logging.LogWriter.Cleanup">
             <summary>
-            Cleans up old log files.
+            Cleans up old log files, keeping a number of recents ones.
             </summary>
         </member>
         <member name="M:RichTextCleaner.Common.Logging.LogWriter.Flush">
             <summary>
             Flushes all queued messages to the file.
             </summary>
-            <returns><c>true</c> when messages were flushed.</returns>
+            <returns><c>true</c> when messages were flushed, <c>false</c> when queue was empty.</returns>
         </member>
         <member name="T:RichTextCleaner.Common.Support.ICleanerSettings">
             <summary>

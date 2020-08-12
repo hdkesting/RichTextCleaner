@@ -21,7 +21,7 @@ namespace RichTextCleaner.Common.Logging
         private static bool stoppedFlushing;
 
         /// <summary>
-        /// Gets the folder that the logs are written to.
+        /// Gets the folder that the logs are written to. Set through <see cref="Initialize(DirectoryInfo)"/>.
         /// </summary>
         /// <value>
         /// The log folder.
@@ -34,7 +34,7 @@ namespace RichTextCleaner.Common.Logging
         /// <value>
         /// The minimum log level.
         /// </value>
-        public static LogLevel MinLogLevel { get; set; }
+        public static LogLevel MinLogLevel { get; set; } = LogLevel.Debug;
 
         /// <summary>
         /// (Re-)initializes this instance.
@@ -57,6 +57,7 @@ namespace RichTextCleaner.Common.Logging
             emptyFlushCount = 0;
             stoppedFlushing = true;
 
+            // if re-initialized, flush old writer
             logWriter?.Flush();
 
             LogFolder = Path.Combine(basePath.FullName, "logs");
@@ -97,7 +98,7 @@ namespace RichTextCleaner.Common.Logging
         {
             if (logWriter == null)
             {
-                if (String.IsNullOrEmpty(LogFolder))
+                if (string.IsNullOrEmpty(LogFolder))
                 {
                     // cannot initialize, just forget about it
                     return;
@@ -112,7 +113,7 @@ namespace RichTextCleaner.Common.Logging
                 logWriter.Add(msg);
 
                 RestartIfStopped();
-             }
+            }
         }
 
         private static void RestartIfStopped()
