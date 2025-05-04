@@ -54,9 +54,9 @@ namespace RichTextCleaner
             }
 
 
-            var htmllib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
+            var htmlLib = typeof(HtmlAgilityPack.HtmlDocument).Assembly.GetName();
 
-            Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmllib.Name} version {htmllib.Version}.");
+            Logger.Log(LogLevel.Information, "Startup", $"Version {appVersion} has started, using {htmlLib.Name} version {htmlLib.Version}.");
 
             this.Closing += this.MainWindow_Closing;
         }
@@ -260,7 +260,7 @@ namespace RichTextCleaner
             }
         }
 
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
             Debug.WriteLine("MainWindow is closing");
             this.checker?.Close();
