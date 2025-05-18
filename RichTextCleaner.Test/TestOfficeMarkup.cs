@@ -35,8 +35,8 @@ lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
 
             var html = DocTester.ProcessSource(source, doc => TextCleaner.RemoveOfficeMarkup(doc));
 
-            Assert.IsFalse(html.Contains("<o:p>"), "Office markup should have been removed, like <o:p>");
-            Assert.IsFalse(html.Contains("<u5:p>"), "Office markup should have been removed, like <u5:p>");
+            Assert.IsFalse(html.Contains("<o:p>", System.StringComparison.Ordinal), "Office markup should have been removed, like <o:p>");
+            Assert.IsFalse(html.Contains("<u5:p>", System.StringComparison.Ordinal), "Office markup should have been removed, like <u5:p>");
 
         }
     }

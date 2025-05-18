@@ -65,7 +65,7 @@ Some paragraph<br/>
             // paragraph without text (but with image) got wrongly removed as "empty"
             var source = "<p><img src=\"http://example.com/image.jpeg\"></p>";
             var html = DocTester.ProcessSource(source, TextCleaner.RemoveEmptyElements);
-            Assert.IsTrue(html.Contains("<img"));
+            Assert.IsTrue(html.Contains("<img", System.StringComparison.Ordinal));
         }
     }
 #pragma warning restore CA1707 // Identifiers should not contain underscores
