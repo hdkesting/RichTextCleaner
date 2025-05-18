@@ -47,7 +47,7 @@ namespace RichTextCleaner
             if (libVersion != appVersion)
             {
                 Logger.Log(LogLevel.Error, "Startup", $"Version mismatch: app={appVersion}, lib={libVersion}.");
-                MessageBox.Show("The installation didn't succeed properly. Please run the installer to remove the current installation and then install again.",
+                MessageBox.Show("The installation didn't succeed properly (mismatched library version). Please run the installer to remove the current installation and then install again.",
                     "Installation error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown(1);
                 return;
@@ -81,7 +81,6 @@ namespace RichTextCleaner
 
         private async Task CopyFromClipboard()
         {
-#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 var text = ClipboardHelper.GetTextFromClipboard();
@@ -93,7 +92,7 @@ namespace RichTextCleaner
                 else
                 {
                     this.SourceValue = text;
-                    Logger.Log(LogLevel.Debug, nameof(CopyFromClipboard), "Copied text from cliboard");
+                    Logger.Log(LogLevel.Debug, nameof(CopyFromClipboard), "Copied text from clipboard");
                     await this.SetStatus("Copied text from clipboard.").ConfigureAwait(false);
                 }
             }
@@ -102,7 +101,6 @@ namespace RichTextCleaner
                 Logger.Log(LogLevel.Error, nameof(CopyFromClipboard), "Error reading clipboard", ex);
                 MessageBox.Show("There was an error reading from the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         private async void ClearStylingAndCopy(object sender, RoutedEventArgs e)
@@ -114,7 +112,6 @@ namespace RichTextCleaner
         {
             string html = this.SourceValue;
 
-#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 html = TextCleaner.ClearStylingFromHtml(
@@ -137,10 +134,9 @@ namespace RichTextCleaner
             catch (Exception ex)
             {
                 Logger.Log(LogLevel.Error, nameof(ClearStylingAndCopy), "Error writing HTML to clipboard", ex);
-                MessageBox.Show("There was an error writing the cleand HTML to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("There was an error writing the cleaned HTML to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-#pragma warning restore CA1031 // Do not catch general exception types
 
             await this.SetStatus("The cleaned HTML is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
         }
@@ -156,7 +152,6 @@ namespace RichTextCleaner
 
             string text;
 
-#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 text = TextCleaner.HtmlToPlainText(html);
@@ -178,7 +173,6 @@ namespace RichTextCleaner
                 MessageBox.Show("There was an error writing the TEXT to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-#pragma warning restore CA1031 // Do not catch general exception types
 
             this.SourceValue = text;
             await this.SetStatus("The plain TEXT is on the clipboard, use Ctrl-V to paste.").ConfigureAwait(false);
@@ -188,7 +182,6 @@ namespace RichTextCleaner
         {
             string html = this.SourceValue;
 
-#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 ClipboardHelper.CopyPlainTextToClipboard(html);
@@ -199,7 +192,6 @@ namespace RichTextCleaner
                 MessageBox.Show("There was an error writing the source TEXT to the clipboard", "error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-#pragma warning restore CA1031 // Do not catch general exception types
 
             await this.SetStatus("The HTML source is on the clipboard as Text, use Ctrl-V to paste.").ConfigureAwait(false);
         }
@@ -315,7 +307,7 @@ namespace RichTextCleaner
         {
             this.checker?.Links.Clear();
             var links = LinkChecker.FindLinks(this.SourceValue);
-            if (!links.Any())
+            if (links.Count == 0)
             {
                 MessageBox.Show("No links found.");
                 return;

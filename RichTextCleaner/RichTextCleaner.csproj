@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>
@@ -7,9 +8,10 @@
     <StartupObject>RichTextCleaner.App</StartupObject>
     <Authors>Hans Kesting</Authors>
     <Product>Rich Text Cleaner</Product>
-    <AssemblyVersion>3.2.6.0</AssemblyVersion>
-    <FileVersion>3.2.6.0</FileVersion>
-    <Version>3.2.6</Version>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
+    <Version>4.0.0.0</Version>
+    <Copyright>Copyright © Hans Kesting 2020 - 2025</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Icojam-Blue-Bits-Document-check.ico" />

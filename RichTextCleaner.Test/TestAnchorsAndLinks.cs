@@ -15,7 +15,7 @@ namespace RichTextCleaner.Test
             // removes an A without HREF
             var html = DocTester.ProcessSource(source, TextCleaner.RemoveAnchors);
 
-            Assert.IsFalse(html.Contains("<a"));
+            Assert.IsFalse(html.Contains("<a", System.StringComparison.OrdinalIgnoreCase));
         }
 
         [TestMethod]

@@ -18,7 +18,7 @@ namespace RichTextCleaner.Test
 
             var html = DocTester.ProcessSource(source, TextCleaner.RemoveNonCMSElements);
 
-            Assert.IsFalse(html.Contains("<script>"));
+            Assert.IsFalse(html.Contains("<script>", System.StringComparison.Ordinal));
         }
 
         [TestMethod]
@@ -33,9 +33,9 @@ namespace RichTextCleaner.Test
 
             var html = DocTester.ProcessSource(source, TextCleaner.RemoveNonCMSElements);
 
-            Assert.IsFalse(html.Contains("<script>"));
-            Assert.IsFalse(html.Contains("<noscript>"));
-            Assert.IsTrue(html.Contains("<p>Text</p>"));
+            Assert.IsFalse(html.Contains("<script>", System.StringComparison.Ordinal));
+            Assert.IsFalse(html.Contains("<noscript>", System.StringComparison.Ordinal));
+            Assert.IsTrue(html.Contains("<p>Text</p>", System.StringComparison.Ordinal));
         }
 
         [TestMethod]
@@ -48,7 +48,7 @@ namespace RichTextCleaner.Test
 </body>";
             var html = DocTester.ProcessSource(source, TextCleaner.RemoveNonCMSElements);
 
-            Assert.IsTrue(html.Contains("<iframe>"));
+            Assert.IsTrue(html.Contains("<iframe>", System.StringComparison.Ordinal));
         }
     }
 #pragma warning restore CA1707 // Identifiers should not contain underscores
