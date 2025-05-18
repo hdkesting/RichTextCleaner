@@ -9,15 +9,15 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\RichTextCleaner.Common\RichTextCleaner.Common.csproj" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VersionCheckAnalyzer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.*" />
-    <PackageReference Include="Microsoft.NetCore.Analyzers" Version="3.0.0" />
-    <PackageReference Include="Microsoft.NetFramework.Analyzers" Version="3.0.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.8.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.8.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
