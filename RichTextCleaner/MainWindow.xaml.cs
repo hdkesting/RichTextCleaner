@@ -47,7 +47,7 @@ namespace RichTextCleaner
             if (libVersion != appVersion)
             {
                 Logger.Log(LogLevel.Error, "Startup", $"Version mismatch: app={appVersion}, lib={libVersion}.");
-                MessageBox.Show("The installation didn't succeed properly. Please run the installer to remove the current installation and then install again.",
+                MessageBox.Show("The installation didn't succeed properly (mismatched library version). Please run the installer to remove the current installation and then install again.",
                     "Installation error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown(1);
                 return;
